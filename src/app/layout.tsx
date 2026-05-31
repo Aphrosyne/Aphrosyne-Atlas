@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import ThemeProvider from '@/components/layout/ThemeProvider'
+import Navbar from '@/components/layout/Navbar'
 import BackToTop from '@/components/layout/BackToTop'
 import { SITE } from '@/lib/constants'
 
@@ -46,6 +47,7 @@ export default function RootLayout({
         </div>
 
         <ThemeProvider>
+          <Navbar />
           <main className="flex-1 flex flex-col">{children}</main>
           <BackToTop />
         </ThemeProvider>

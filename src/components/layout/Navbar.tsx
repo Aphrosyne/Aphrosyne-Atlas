@@ -11,6 +11,9 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const pathname = usePathname()
 
+  // Hide on homepage — it has its own card launchpad layout
+  if (pathname === '/') return null
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-bg/80 backdrop-blur-md">
       <nav className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
