@@ -1,35 +1,21 @@
-import AnimatedSection from '../shared/AnimatedSection'
-
-const skills = [
-  { name: 'C / C++', level: 90 },
-  { name: 'Rust', level: 75 },
-  { name: 'Python', level: 80 },
-  { name: 'Embedded Linux', level: 70 },
-  { name: 'React / Next.js', level: 65 },
-  { name: 'Go', level: 60 },
-]
+const skills = ['C / C++', 'Rust', 'Python', 'Go', 'Embedded Linux', 'Next.js']
 
 export default function SkillsShowcase() {
   return (
-    <AnimatedSection className="mx-auto max-w-5xl px-4 py-20" delay={0.2}>
-      <h2 className="text-2xl font-semibold tracking-tight">Skills &amp; Tools</h2>
-      <p className="mt-2 text-muted">Technologies I work with regularly.</p>
-      <div className="mt-8 grid gap-5 sm:grid-cols-2">
-        {skills.map((skill, i) => (
-          <div key={skill.name}>
-            <div className="flex items-center justify-between text-sm">
-              <span className="font-medium text-fg">{skill.name}</span>
-              <span className="text-muted">{skill.level}%</span>
-            </div>
-            <div className="mt-1.5 h-2 w-full rounded-full bg-zinc-200 dark:bg-zinc-700">
-              <div
-                className="h-full rounded-full bg-accent transition-all duration-700"
-                style={{ width: `${skill.level}%` }}
-              />
-            </div>
-          </div>
+    <div className="w-full rounded-xl border border-border bg-surface/70 p-4">
+      <span className="text-xs font-medium text-muted uppercase tracking-wider">
+        Skills
+      </span>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {skills.map((skill) => (
+          <span
+            key={skill}
+            className="rounded-full border border-border bg-surface/50 px-3 py-1 text-xs text-muted"
+          >
+            {skill}
+          </span>
         ))}
       </div>
-    </AnimatedSection>
+    </div>
   )
 }
