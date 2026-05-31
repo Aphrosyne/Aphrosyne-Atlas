@@ -34,7 +34,6 @@
 }
 
 body {
-  background: var(--color-bg);
   color: var(--color-fg);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
   transition: background-color 0.3s ease, color 0.3s ease;

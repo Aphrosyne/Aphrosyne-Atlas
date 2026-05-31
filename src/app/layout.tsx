@@ -5,6 +5,7 @@ import ThemeProvider from '@/components/layout/ThemeProvider'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import BackToTop from '@/components/layout/BackToTop'
+import { SITE } from '@/lib/constants'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -36,7 +37,16 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable}`}
     >
-      <body className="min-h-screen flex flex-col bg-bg text-fg transition-colors">
+      <body className="min-h-screen flex flex-col text-fg transition-colors">
+        {/* Fixed background layer */}
+        <div className="fixed inset-0 -z-10 bg-bg">
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url(${SITE.bgImage})` }}
+          />
+          <div className="absolute inset-0 bg-bg/60 backdrop-blur-[15px]" />
+        </div>
+
         <ThemeProvider>
           <Navbar />
           <main className="flex-1">{children}</main>
