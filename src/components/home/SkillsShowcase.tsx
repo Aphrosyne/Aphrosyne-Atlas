@@ -2,7 +2,7 @@ const skills = ['C / C++', 'Rust', 'Python', 'Go', 'Embedded Linux', 'Next.js']
 
 export default function SkillsShowcase() {
   return (
-    <div className="w-full rounded-lg border border-border bg-surface/70 p-4">
+    <div className="w-full rounded-lg border border-border bg-surface/40 p-4">
       <span className="text-xs font-medium text-muted uppercase tracking-wider">
         Skills
       </span>

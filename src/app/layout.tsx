@@ -4,7 +4,7 @@ import './globals.css'
 import ThemeProvider from '@/components/layout/ThemeProvider'
 import Navbar from '@/components/layout/Navbar'
 import BackToTop from '@/components/layout/BackToTop'
-import { SITE } from '@/lib/constants'
+import GlowDots from '@/components/shared/GlowDots'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -37,13 +37,10 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable}`}
     >
       <body className="min-h-screen flex flex-col text-fg transition-colors">
-        {/* Fixed background layer */}
+        {/* Fixed background: random glowing dots + heavy frosted glass overlay */}
         <div className="fixed inset-0 -z-10 bg-bg">
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${SITE.bgImage})` }}
-          />
-          <div className="absolute inset-0 bg-bg/60 backdrop-blur-[15px]" />
+          <GlowDots />
+          <div className="absolute inset-0 bg-bg/55 backdrop-blur-[10px]" />
         </div>
 
         <ThemeProvider>

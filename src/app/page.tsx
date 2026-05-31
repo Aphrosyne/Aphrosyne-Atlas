@@ -52,7 +52,7 @@ export default async function Home() {
 
         {/* Brand card — flies in from left */}
         <AnimatedEntrance direction="left" className="w-full">
-          <div className="w-full rounded-lg border border-border bg-surface/70 p-5 text-center">
+          <div className="w-full rounded-lg border border-border bg-surface/40 p-5 text-center">
             <span className="text-lg font-semibold tracking-tight">aphrosyne</span>
             <p className="mt-0.5 text-sm text-muted">
               Embedded systems &amp; creative code.
@@ -71,7 +71,7 @@ export default async function Home() {
             >
               <Link
                 href={action.href}
-                className="group flex flex-1 flex-col items-center gap-2 rounded-lg border border-border bg-surface/70 p-4 text-center transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/50 hover:shadow-sm"
+                className="group flex flex-1 flex-col items-center gap-2 rounded-lg border border-border bg-surface/40 p-4 text-center transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/50 hover:shadow-sm"
               >
                 <span className="text-fg/70 group-hover:text-accent transition-colors">
                   {action.icon}
@@ -94,7 +94,7 @@ export default async function Home() {
           <AnimatedEntrance direction="left" delay={0.2} className="w-full">
             <Link
               href={`/blog/${latest.slug}`}
-              className="group flex w-full rounded-lg border border-border bg-surface/70 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/50 hover:shadow-sm"
+              className="group flex w-full rounded-lg border border-border bg-surface/40 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/50 hover:shadow-sm"
             >
               <div className="flex items-center justify-between">
                 <span className="text-xs font-medium text-muted uppercase tracking-wider">
