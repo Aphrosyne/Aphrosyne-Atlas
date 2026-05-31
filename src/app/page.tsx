@@ -10,9 +10,10 @@ const actions = [
     href: '/blog',
     dir: 'bottom' as const,
     delay: 0.08,
+    hue: 'blue',
     icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
       </svg>
     ),
   },
@@ -22,9 +23,10 @@ const actions = [
     href: '/projects',
     dir: 'top' as const,
     delay: 0.16,
+    hue: 'amber',
     icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
       </svg>
     ),
   },
@@ -34,95 +36,140 @@ const actions = [
     href: '/about',
     dir: 'bottom' as const,
     delay: 0.24,
+    hue: 'violet',
     icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
       </svg>
     ),
   },
-]
+] as const
+
+const hueStyles = {
+  blue: {
+    gradient: 'from-blue-500/10 via-blue-400/5 to-transparent',
+    border: 'hover:border-blue-500/30',
+    shadow: 'hover:shadow-blue-500/8',
+    iconColor: 'group-hover:text-blue-500',
+  },
+  amber: {
+    gradient: 'from-amber-500/10 via-amber-400/5 to-transparent',
+    border: 'hover:border-amber-500/30',
+    shadow: 'hover:shadow-amber-500/8',
+    iconColor: 'group-hover:text-amber-500',
+  },
+  violet: {
+    gradient: 'from-violet-500/10 via-violet-400/5 to-transparent',
+    border: 'hover:border-violet-500/30',
+    shadow: 'hover:shadow-violet-500/8',
+    iconColor: 'group-hover:text-violet-500',
+  },
+}
 
 export default async function Home() {
   const posts = await getRecentPosts(1)
   const latest = posts[0]
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center px-4">
-      <div className="flex w-full max-w-lg flex-col items-center gap-3">
+    <div className="flex flex-1 flex-col items-center justify-center px-4 py-16">
+      <div className="flex w-full max-w-xl flex-col items-center gap-5">
 
-        {/* Brand card — flies in from left */}
+        {/* ── Brand card ── */}
         <AnimatedEntrance direction="left" className="w-full">
-          <div className="w-full rounded-lg border border-border bg-surface/40 p-5 text-center">
-            <span className="text-lg font-semibold tracking-tight">aphrosyne</span>
-            <p className="mt-0.5 text-sm text-muted">
+          <div className="group relative w-full overflow-hidden rounded-xl border border-border/50 bg-surface/30 backdrop-blur-xl p-6 text-center transition-all duration-500 hover:border-border/70 hover:shadow-lg hover:shadow-accent/5">
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent" />
+            <div className="absolute -top-24 left-1/2 h-48 w-3/4 -translate-x-1/2 rounded-full bg-accent/[0.04] blur-3xl transition-opacity duration-500 group-hover:opacity-70" />
+            <div className="absolute right-5 top-5 h-1.5 w-1.5 rounded-full bg-accent/30" />
+            <span className="relative block text-xl font-bold tracking-tight text-fg">
+              aphrosyne
+            </span>
+            <p className="relative mt-1.5 text-sm text-muted/80 font-light tracking-wide">
               Embedded systems &amp; creative code.
             </p>
           </div>
         </AnimatedEntrance>
 
-        {/* Action cards — 3-column grid, each card flies in from its own direction */}
-        <div className="grid w-full grid-cols-3 gap-3">
-          {actions.map((action) => (
-            <AnimatedEntrance
-              key={action.label}
-              direction={action.dir}
-              delay={action.delay}
-              className="flex"
-            >
-              <Link
-                href={action.href}
-                className="group flex flex-1 flex-col items-center gap-2 rounded-lg border border-border bg-surface/40 p-4 text-center transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/50 hover:shadow-sm"
+        {/* ── Action cards ── */}
+        <div className="grid w-full grid-cols-3 gap-3 sm:gap-4">
+          {actions.map((action) => {
+            const s = hueStyles[action.hue]
+            return (
+              <AnimatedEntrance
+                key={action.label}
+                direction={action.dir}
+                delay={action.delay}
+                className="flex"
               >
-                <span className="text-fg/70 group-hover:text-accent transition-colors">
-                  {action.icon}
-                </span>
-                <div>
-                  <div className="text-sm font-semibold text-fg group-hover:text-accent transition-colors">
-                    {action.label}
+                <Link
+                  href={action.href}
+                  className={`group relative flex flex-1 flex-col items-center gap-3 overflow-hidden rounded-xl border border-border/50 bg-surface/30 backdrop-blur-xl p-5 text-center transition-all duration-300 ${s.border} ${s.shadow} hover:-translate-y-0.5 hover:shadow-lg`}
+                >
+                  <div className={`absolute inset-0 bg-gradient-to-b ${s.gradient} opacity-0 transition-opacity duration-500 group-hover:opacity-100`} />
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <span className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-accent/[0.04] text-fg/50 transition-all duration-300 group-hover:scale-110">
+                    <span className={`transition-colors duration-300 ${s.iconColor}`}>
+                      {action.icon}
+                    </span>
+                  </span>
+                  <div className="relative">
+                    <div className={`text-sm font-semibold text-fg/90 transition-colors duration-300 group-hover:text-accent ${s.iconColor}`}>
+                      {action.label}
+                    </div>
+                    <div className="mt-0.5 text-[11px] text-muted/60 leading-snug">
+                      {action.desc}
+                    </div>
                   </div>
-                  <div className="mt-0.5 text-[11px] text-muted leading-tight">
-                    {action.desc}
-                  </div>
-                </div>
-              </Link>
-            </AnimatedEntrance>
-          ))}
+                </Link>
+              </AnimatedEntrance>
+            )
+          })}
         </div>
 
-        {/* Latest post card — flies in from left */}
+        {/* ── Latest post card ── */}
         {latest && (
           <AnimatedEntrance direction="left" delay={0.2} className="w-full">
             <Link
               href={`/blog/${latest.slug}`}
-              className="group flex w-full rounded-lg border border-border bg-surface/40 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/50 hover:shadow-sm"
+              className="group relative block w-full overflow-hidden rounded-xl border border-border/50 bg-surface/30 backdrop-blur-xl pl-5 pr-5 pt-4 pb-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-accent/25 hover:shadow-lg hover:shadow-accent/5"
             >
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-medium text-muted uppercase tracking-wider">
-                  Latest Post
+              {/* ★ Left accent bar — impossible to miss */}
+              <div className="absolute left-0 top-3 bottom-3 w-0.5 rounded-full bg-gradient-to-b from-accent/60 via-accent/40 to-transparent transition-all duration-300 group-hover:from-accent group-hover:via-accent/60" />
+
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
+              <div className="absolute -right-8 top-1/2 h-40 w-40 -translate-y-1/2 rounded-full bg-accent/[0.03] blur-3xl transition-opacity duration-500 group-hover:opacity-70" />
+
+              {/* Row 1: badge + date */}
+              <div className="relative flex items-center justify-between">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-accent/8 px-2.5 py-0.5 text-[10px] font-semibold text-accent uppercase tracking-widest">
+                  <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" />
+                  Latest
                 </span>
-                <span className="text-[11px] text-muted">{latest.date}</span>
+                {latest.date && (
+                  <span className="text-[11px] text-muted/50">{latest.date}</span>
+                )}
               </div>
-              <div className="mt-1.5 flex items-center justify-between">
-                <span className="text-sm font-semibold text-fg group-hover:text-accent transition-colors">
-                  {latest.title}
-                </span>
-                <svg
-                  className="ml-2 w-4 h-4 text-muted group-hover:text-accent transition-colors"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </div>
-              <p className="mt-1 text-xs text-muted leading-relaxed line-clamp-1">
-                {latest.excerpt}
-              </p>
+
+              {/* Row 2: title */}
+              <h3 className="relative mt-3 text-base font-semibold text-fg/90 transition-colors duration-300 group-hover:text-accent">
+                {latest.title}
+              </h3>
+
+              {/* Row 3: excerpt + arrow */}
+              {latest.excerpt && (
+                <p className="relative mt-1.5 text-sm text-muted/60 leading-relaxed">
+                  {latest.excerpt}
+                  <span className="inline-flex ml-1 align-middle text-muted/25 transition-all duration-300 group-hover:text-accent group-hover:translate-x-0.5">
+                    <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                    </svg>
+                  </span>
+                </p>
+              )}
             </Link>
           </AnimatedEntrance>
         )}
 
-        {/* Skills card — flies in from right */}
+        {/* ── Skills card ── */}
         <AnimatedEntrance direction="right" delay={0.28} className="w-full">
           <SkillsShowcase />
         </AnimatedEntrance>

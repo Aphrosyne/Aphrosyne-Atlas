@@ -73,14 +73,19 @@ src/
 2. `Add frosted-glass background layer with configurable cover image` — 图片背景
 3. `Redesign homepage as centered launchpad with card-only layout` — 卡片式首页
 4. `Add multi-directional fly-in entrance animation for homepage cards` — 飞入动画
-5. Current — glow dots background + transparency tweaks + glow fade-in
+5. `Replace static image background with random SVG glow dots` — 发光圆点背景
+6. `Polish homepage card styling with hue-based accents and glassmorphism` — 卡片风格翻新
 
 ## Current Style Parameters
 
 | 参数 | 值 |
 |------|-----|
-| 卡片圆角 | `rounded-lg` (8px) |
-| 卡片背景 | `bg-surface/40` |
+| 卡片圆角 | `rounded-xl` (12px) |
+| 卡片边框 | `border-border/50` |
+| 卡片背景 | `bg-surface/30 backdrop-blur-xl` |
+| 卡片hover | 上浮 + 阴影 + 渐变色叠加 |
+| 操作卡片配色 | Blog→蓝色, Projects→琥珀色, About→紫色 |
+| 最新文章卡片 | 左侧渐变装饰条 + "Latest" pulse badge |
 | 遮罩透明度 | `bg-bg/55` |
 | 模糊度 | `backdrop-blur-[10px]` |
 | 光点数量 | 3-4 |
