@@ -3,8 +3,9 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import ThemeProvider from '@/components/layout/ThemeProvider'
 import Navbar from '@/components/layout/Navbar'
+import Footer from '@/components/layout/Footer'
 import BackToTop from '@/components/layout/BackToTop'
-import GlowDots from '@/components/shared/GlowDots'
+import Backdrop from '@/components/shared/Backdrop'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -37,15 +38,15 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable}`}
     >
       <body className="min-h-screen flex flex-col text-fg transition-colors">
-        {/* Fixed background: random glowing dots + heavy frosted glass overlay */}
-        <div className="fixed inset-0 -z-10 bg-bg">
-          <GlowDots />
-          <div className="absolute inset-0 bg-bg/55 backdrop-blur-[10px]" />
+        {/* Fixed background — auto-detects format */}
+        <div className="fixed inset-0 -z-10">
+          <Backdrop />
         </div>
 
         <ThemeProvider>
           <Navbar />
           <main className="flex-1 flex flex-col">{children}</main>
+          <Footer />
           <BackToTop />
         </ThemeProvider>
       </body>
