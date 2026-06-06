@@ -20,7 +20,7 @@ export default async function Home() {
 
       {/* ═══ SECTION 1 — Minimal Hero ═══ */}
       <section className="relative flex flex-col items-center justify-center min-h-screen px-4 text-center">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-accent/[0.03] blur-3xl pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 rounded-full bg-accent/3 blur-3xl pointer-events-none" />
 
         <p className="text-sm text-muted/60 tracking-[0.2em] uppercase mb-3">Hello, I&apos;m</p>
         <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-fg mb-4">
