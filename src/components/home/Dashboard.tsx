@@ -27,6 +27,8 @@ function IconGH() {
   )
 }
 
+/* ─── Animation Variants ─── */
+
 const containerVariants = {
   hidden: {},
   visible: {
@@ -43,13 +45,23 @@ const cardVariants = {
   },
 }
 
+/* ─── Glass card style (pure CSS, cross-browser) ─── */
+
+const GLASS =
+  'rounded-3xl overflow-hidden ' +
+  'bg-white/[0.03] backdrop-blur-[15px] ' +
+  'border-t border-white/20 border-b border-white/5 ' +
+  'shadow-[0_15px_35px_rgba(0,0,0,0.12)] ' +
+  'hover:shadow-[0_18px_40px_rgba(37,99,235,0.1)] ' +
+  'transition-shadow duration-500'
+
 function Card({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
     <motion.div
       variants={cardVariants}
-      whileHover={{ y: -4, scale: 1.015, boxShadow: '0 10px 40px -10px rgba(37, 99, 235, 0.12)' }}
+      whileHover={{ y: -4, scale: 1.015 }}
       whileTap={{ scale: 0.985 }}
-      className={`rounded-2xl border border-border/50 bg-surface/30 backdrop-blur-xl p-5 hover:border-accent/20 transition-colors duration-300 ${className}`}
+      className={`${GLASS} p-5 ${className}`}
     >
       {children}
     </motion.div>
@@ -60,19 +72,21 @@ function ProjectSubCard({ project }: { project: DashboardProps['projects'][numbe
   return (
     <motion.div
       whileHover={{ y: -2, scale: 1.02 }}
-      className="rounded-xl bg-surface/30 border border-border/30 p-4 hover:border-accent/20 transition-colors duration-200 group cursor-pointer"
+      className="rounded-2xl overflow-hidden bg-white/[0.02] backdrop-blur-[12px] border-t border-white/15 border-b border-white/5 p-4 shadow-[0_10px_25px_rgba(0,0,0,0.1)] hover:shadow-[0_14px_30px_rgba(37,99,235,0.08)] transition-shadow duration-500 group cursor-pointer"
     >
       <div className="text-lg mb-2">🔧</div>
-      <div className="text-sm font-medium text-fg/80 group-hover:text-accent transition-colors">{project.title}</div>
-      <div className="text-[11px] text-muted/50 leading-snug mt-1 line-clamp-2">{project.description}</div>
+      <div className="text-sm font-medium text-white/80 group-hover:text-accent transition-colors">{project.title}</div>
+      <div className="text-[11px] text-white/50 leading-snug mt-1 line-clamp-2">{project.description}</div>
     </motion.div>
   )
 }
 
+/* ─── Dashboard ─── */
+
 export default function Dashboard({ siteName, recentPosts, projects, skills }: DashboardProps) {
   return (
     <section id="content" className="px-4 pb-20 max-w-5xl mx-auto">
-      <p className="text-center text-[11px] text-muted/30 tracking-[0.15em] uppercase mb-3">Explore</p>
+      <p className="text-center text-[11px] text-white/30 tracking-[0.15em] uppercase mb-3">Explore</p>
       <div className="w-8 h-px bg-accent/30 mx-auto mb-12" />
 
       <motion.div
@@ -88,11 +102,11 @@ export default function Dashboard({ siteName, recentPosts, projects, skills }: D
         <Card className="flex flex-col items-center justify-center text-center gap-3 py-8">
           <div className="w-14 h-14 rounded-full bg-gradient-to-br from-accent to-violet-500 flex items-center justify-center text-white font-bold text-lg">A</div>
           <div>
-            <div className="text-sm font-semibold text-fg">{siteName}</div>
-            <div className="text-[11px] text-muted/50">Embedded · Creative</div>
+            <div className="text-sm font-semibold text-white">{siteName}</div>
+            <div className="text-[11px] text-white/50">Embedded · Creative</div>
           </div>
           <div className="flex gap-2 mt-1">
-            <a href="https://github.com/aphrosyne" className="w-8 h-8 rounded-lg bg-surface/50 border border-border/30 flex items-center justify-center text-muted/40 hover:text-fg hover:border-border/50 transition-all">
+            <a href="https://github.com/aphrosyne" className="w-8 h-8 rounded-lg bg-surface/50 border border-border/30 flex items-center justify-center text-white/40 hover:text-white hover:border-border/50 transition-all">
               <IconGH />
             </a>
           </div>
@@ -100,7 +114,7 @@ export default function Dashboard({ siteName, recentPosts, projects, skills }: D
 
         {/* Latest posts */}
         <Card>
-          <div className="text-[10px] text-muted/40 tracking-widest uppercase mb-3">Recent Posts</div>
+          <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Recent Posts</div>
           {recentPosts.slice(0, 3).map((p) => (
             <Link key={p.slug} href={`/blog/${p.slug}`}
               className="flex items-center gap-3 py-2 px-1.5 rounded-lg -mx-1.5 transition-colors hover:bg-surface/40 group"
@@ -109,8 +123,8 @@ export default function Dashboard({ siteName, recentPosts, projects, skills }: D
                 📄
               </div>
               <div className="min-w-0">
-                <div className="text-sm font-medium text-fg/80 truncate group-hover:text-accent transition-colors">{p.title}</div>
-                <div className="text-[11px] text-muted/40">{p.date}</div>
+                <div className="text-sm font-medium text-white/80 truncate group-hover:text-accent transition-colors">{p.title}</div>
+                <div className="text-[11px] text-white/40">{p.date}</div>
               </div>
             </Link>
           ))}
@@ -123,9 +137,9 @@ export default function Dashboard({ siteName, recentPosts, projects, skills }: D
           <Card className="flex items-center gap-4 p-4">
             <div className="w-12 h-12 rounded-full bg-gradient-to-br from-accent to-violet-500 flex items-center justify-center text-white font-bold text-lg shrink-0">A</div>
             <div>
-              <div className="text-xs text-muted/50">Welcome back</div>
-              <div className="text-base font-semibold text-fg">
-                {siteName} <span className="text-muted/40 font-normal text-sm">· Embedded Developer</span>
+              <div className="text-xs text-white/50">Welcome back</div>
+              <div className="text-base font-semibold text-white">
+                {siteName} <span className="text-white/40 font-normal text-sm">· Embedded Developer</span>
               </div>
             </div>
           </Card>
@@ -139,15 +153,15 @@ export default function Dashboard({ siteName, recentPosts, projects, skills }: D
               { num: 3, label: 'Years' },
             ].map((s, i) => (
               <div key={s.label} className="flex flex-col items-center gap-0.5">
-                <CountUp to={s.num} delay={i * 0.15} className="text-lg font-semibold text-fg/90" />
-                <span className="text-[10px] text-muted/40">{s.label}</span>
+                <CountUp to={s.num} delay={i * 0.15} className="text-lg font-semibold text-white/90" />
+                <span className="text-[10px] text-white/40">{s.label}</span>
               </div>
             ))}
           </Card>
 
           {/* Projects showcase */}
           <Card>
-            <div className="text-[10px] text-muted/40 tracking-widest uppercase mb-4">Projects</div>
+            <div className="text-[10px] text-white/40 tracking-widest uppercase mb-4">Projects</div>
             <div className="grid grid-cols-2 gap-3">
               {projects.slice(0, 4).map((p) => (
                 <Link key={p.slug} href={`/projects/${p.slug}`}>
@@ -162,10 +176,10 @@ export default function Dashboard({ siteName, recentPosts, projects, skills }: D
 
         {/* Skills */}
         <Card>
-          <div className="text-[10px] text-muted/40 tracking-widest uppercase mb-3">Skills</div>
+          <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Skills</div>
           <div className="flex flex-wrap gap-1.5">
             {skills.map((s) => (
-              <span key={s} className="rounded-lg border border-border/30 bg-surface/30 px-2.5 py-1 text-[11px] text-muted/60 hover:border-accent/20 hover:text-fg/80 transition-colors cursor-default">
+              <span key={s} className="rounded-lg border border-border/30 bg-surface/30 px-2.5 py-1 text-[11px] text-white/60 hover:border-accent/20 hover:text-white/80 transition-colors cursor-default">
                 {s}
               </span>
             ))}
@@ -174,14 +188,14 @@ export default function Dashboard({ siteName, recentPosts, projects, skills }: D
 
         {/* Quick links */}
         <Card>
-          <div className="text-[10px] text-muted/40 tracking-widest uppercase mb-3">Quick Links</div>
+          <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Quick Links</div>
           <div className="flex flex-col gap-1">
             {QUICK_LINKS.map((l) => (
               <Link key={l.label} href={l.href}
                 className="flex items-center justify-between py-2 px-2 rounded-lg hover:bg-surface/40 transition-colors group"
               >
-                <span className="text-sm text-fg/70 group-hover:text-accent transition-colors">{l.label}</span>
-                <span className="text-[11px] text-muted/40 group-hover:text-muted/60">{l.desc}</span>
+                <span className="text-sm text-white/70 group-hover:text-accent transition-colors">{l.label}</span>
+                <span className="text-[11px] text-white/40 group-hover:text-white/60">{l.desc}</span>
               </Link>
             ))}
           </div>
@@ -189,13 +203,8 @@ export default function Dashboard({ siteName, recentPosts, projects, skills }: D
 
         {/* Contact */}
         <Card className="text-center">
-          <div className="text-[10px] text-muted/40 tracking-widest uppercase mb-3">Get in Touch</div>
-          <p className="text-xs text-muted/50 mb-3 leading-relaxed">Have a question or want to collaborate?</p>
-          <a href="mailto:hello@aphrosyne.dev"
-            className="inline-flex items-center gap-2 rounded-full bg-accent/10 px-4 py-2 text-xs text-accent hover:bg-accent/20 transition-colors"
-          >
-            Say Hello
-          </a>
+          <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Get in Touch</div>
+          <p className="text-xs text-white/50 leading-relaxed">Have a question or want to collaborate?</p>
         </Card>
 
       </motion.div>

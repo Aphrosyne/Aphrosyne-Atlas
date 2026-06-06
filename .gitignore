@@ -36,6 +36,9 @@ yarn-error.log*
 # claude
 .claude/
 
+# reference files
+.ref/
+
 # vercel
 .vercel
 
