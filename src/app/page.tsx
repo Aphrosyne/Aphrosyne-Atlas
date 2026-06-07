@@ -62,27 +62,35 @@ export default async function Home() {
       <div
         className="absolute pointer-events-none overflow-hidden"
         style={{
-          top: '15%',
-          right: '-30%',
+          bottom: '15%',
+          left: '-30%',
           width: '160vw',
           height: '56px',
           transform: 'rotate(-40deg)',
-          transformOrigin: 'right center',
+          transformOrigin: 'left center',
+          filter: 'drop-shadow(0 8px 12px rgba(0,0,0,0.12)) drop-shadow(0 2px 4px rgba(0,0,0,0.06))',
         }}
       >
         {/* Background + borders */}
-        <div className="absolute inset-0 border-y border-border/30 bg-surface/20 backdrop-blur-sm" />
-        {/* Scrolling text — rotates with parent, no italic */}
+        <div className="absolute inset-0 rounded-md border-y border-border/40 bg-surface/25 backdrop-blur-sm shadow-[inset_0_1px_0_rgba(255,255,255,0.04),inset_0_-1px_0_rgba(0,0,0,0.06)]" />
+        {/* Fade edges */}
+        <div className="absolute inset-y-0 left-0 w-16 sm:w-24 bg-gradient-to-r from-surface/40 to-transparent z-10 pointer-events-none" />
+        <div className="absolute inset-y-0 right-0 w-16 sm:w-24 bg-gradient-to-r from-transparent to-surface/40 z-10 pointer-events-none" />
+        {/* Scrolling text — rotates with parent */}
         <div
-          className="flex whitespace-nowrap h-full items-center"
-          style={{ animation: 'bannerScroll 25s linear infinite' }}
+          className="banner-track flex whitespace-nowrap h-full items-center"
+          style={{ animation: 'bannerScroll 28s linear infinite', willChange: 'transform' }}
         >
-          {Array.from({ length: 24 }).map((_, i) => (
-            <span key={i} className="inline-flex items-center gap-10 sm:gap-14 mx-4 sm:mx-6">
-              <span className="text-2xl sm:text-3xl font-bold tracking-[0.12em] text-fg/[0.05] select-none">
-                Aphrosyne
-              </span>
-              <span className="h-2 w-2 rounded-full bg-accent/15 shrink-0" />
+          {[...Array(2)].map((_, copy) => (
+            <span key={copy} className="inline-flex items-center">
+              {Array.from({ length: 24 }).map((_, i) => (
+                <span key={i} className="inline-flex items-center gap-10 sm:gap-14 mx-4 sm:mx-6">
+                  <span className="text-2xl sm:text-3xl font-bold tracking-[0.12em] bg-gradient-to-r from-fg/5 via-fg/15 to-fg/5 bg-clip-text text-transparent select-none">
+                    Aphrosyne
+                  </span>
+                  <span className="h-2 w-2 rounded-full bg-accent/25 shrink-0" />
+                </span>
+              ))}
             </span>
           ))}
         </div>
