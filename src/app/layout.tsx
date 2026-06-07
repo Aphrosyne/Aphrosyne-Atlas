@@ -5,7 +5,6 @@ import ThemeProvider from '@/components/layout/ThemeProvider'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import BackToTop from '@/components/layout/BackToTop'
-import FloatingBanner from '@/components/layout/FloatingBanner'
 import Backdrop from '@/components/shared/Backdrop'
 
 const geistSans = Geist({
@@ -49,7 +48,6 @@ export default function RootLayout({
           <main className="flex-1 flex flex-col">{children}</main>
           <Footer />
           <BackToTop />
-          <FloatingBanner />
         </ThemeProvider>
       </body>
     </html>
