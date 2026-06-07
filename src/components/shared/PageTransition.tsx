@@ -10,8 +10,8 @@ export default function PageTransition({
   return (
     <motion.div
       className="flex flex-1 flex-col"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       transition={{ duration: 0.4, ease: 'easeOut' }}
     >
       {children}
