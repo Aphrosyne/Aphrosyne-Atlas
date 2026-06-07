@@ -1,0 +1,43 @@
+export const metadata = {
+  title: '/branch 拯救了我的对话',
+  date: '2026-06-08',
+  tags: ['claude-code', 'tools', 'workflow'],
+  excerpt: '一次 rewind 误操作差点丢了半天的工作。结果 /branch 命令才是正确的恢复姿势。',
+  readingTime: '3 min',
+}
+
+下午在写前端，用 Claude Code 重构导航栏和 Dashboard。改了好几个小时，Hero 入场动画、社交图标共享、BackToTop 防闪烁、背景硬编码……一堆零零碎碎的小优化。
+
+## Rewind 的坑
+
+我本来在 master 主对话里干活，中途想回看之前的某个状态，用了 rewind。结果这不是只回退几步——它像是整条对话链被截断了，之前改过但还没 commit 的文件状态全乱了。
+
+更麻烦的是，rewind 操作取消不了，问的 AI ， AI 说能用 /resume 来恢复，结果不管是 /resume 还是 claude --resume 都只能恢复到 rewind 之后的状态。
+
+## 手动恢复的噩梦
+
+我找到了个工具 "claude-file-recovery" 还以为能直接恢复claude的对话和文件，但是用了才发现只能读取编辑目录来选择文件进行改动恢复。
+
+还只能按照文件一个个看，不能按照改动顺序看之前改了什么，有点鸡肋，但好歹能恢复。
+
+至少 cc 用了 rewind 之后不会删掉 对话目录 jsonl 文件里面的内容，靠着这个工具和 cc switch 记录的对话内容，把重要的文件改动都恢复了。
+
+折腾了半天。然后我突然想起来——还有一个命令没试过。
+
+## /branch 才是正解
+
+`/branch` 本质上是从当前对话分叉出一条新对话，新分支带着原始对话的完整上下文。在主对话里被 rewind 搞得支离破碎没关系——开个 branch，之前的对话状态全在。
+
+```
+/branch masterB
+```
+
+新对话一开，所有文件改动完好无损，diff 也对得上。亏我之前手动一点点恢复——要是早用这命令，十分钟就完事了。
+
+## 教训
+
+1. **rewind 前先 commit**。没提交的改动就是薛定谔的代码。
+2. **遇到对话事故用 /branch，不要手动恢复**。分支对话继承原始上下文，不受主对话 rewind 影响。
+3. **Claude Code 的 /branch 不只是分支管理，也是对话状态的快照**。把它当备份用。
+
+写这篇 blog 的时候代码已经 commit 了。下次绝不会再 mano-a-mano 手动恢复了。
