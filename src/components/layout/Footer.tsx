@@ -5,8 +5,8 @@ export default function Footer() {
   const year = new Date().getFullYear()
 
   return (
-    <footer className="mt-auto border-t border-white/10 bg-white/40 backdrop-blur-sm">
-      <div className="mx-auto max-w-5xl px-4 py-6 flex flex-col sm:flex-row items-center justify-between gap-2">
+    <footer className="mt-auto px-4 pb-4">
+      <div className="mx-auto max-w-5xl rounded-2xl bg-black/50 backdrop-blur-md border border-white/10 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-2">
         {/* Left block — copyright + links */}
         <div className="flex items-center gap-3 text-xs text-white/50">
           <span>&copy; {year} {SITE.name}. All rights reserved.</span>

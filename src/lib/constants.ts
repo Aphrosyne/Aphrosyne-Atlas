@@ -8,8 +8,25 @@ export const SITE = {
 
 export const NAV_ITEMS = [
   { label: 'Home', href: '/' },
-  { label: 'Blog', href: '/blog' },
-  { label: 'Projects', href: '/projects' },
+  {
+    label: 'Blog',
+    href: '/blog',
+    children: [
+      { label: 'All Posts', href: '/blog' },
+      { label: 'Tags', href: '/blog?view=tags' },
+      { label: 'RSS Feed', href: '/api/blog' },
+    ],
+  },
+  {
+    label: 'Projects',
+    href: '/projects',
+    children: [
+      { label: 'All Projects', href: '/projects' },
+      { label: 'Aphrosyne Site', href: '/projects/aphrosyne-site' },
+      { label: 'Embedded Toolbox', href: '/projects/embedded-toolbox' },
+      { label: 'CLI Tools', href: '/projects/cli-tools' },
+    ],
+  },
   { label: 'About', href: '/about' },
 ] as const
 
