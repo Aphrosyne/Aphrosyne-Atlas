@@ -32,5 +32,7 @@ export const NAV_ITEMS = [
 
 export const SOCIAL_LINKS = {
   github: 'https://github.com/aphrosyne',
-  // Add more as needed
+  email: 'mailto:your-email@example.com',
+  qq: 'https://wpa.qq.com/msgrd?v=3&uin=你的QQ号',
+  bilibili: 'https://space.bilibili.com/你的UID',
 } as const

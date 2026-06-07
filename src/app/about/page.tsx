@@ -1,68 +1,120 @@
 import type { Metadata } from 'next'
+import type { JSX } from 'react'
 import PageTransition from '@/components/shared/PageTransition'
 import AnimatedSection from '@/components/shared/AnimatedSection'
+import MarqueeTechStack from '@/components/shared/MarqueeTechStack'
+import { SOCIAL_LINKS } from '@/lib/constants'
+
+function superellipsePath(n: number, points = 48): string {
+  const coords: string[] = []
+  for (let i = 0; i < points; i++) {
+    const t = (i / points) * Math.PI * 2
+    const ct = Math.cos(t)
+    const st = Math.sin(t)
+    const x = 0.5 + 0.5 * Math.pow(Math.abs(ct), 2 / n) * Math.sign(ct)
+    const y = 0.5 + 0.5 * Math.pow(Math.abs(st), 2 / n) * Math.sign(st)
+    coords.push(`${x.toFixed(5)},${y.toFixed(5)}`)
+  }
+  return `M ${coords.join(' L ')} Z`
+}
+
+const AVATAR_CLIP_PATH = superellipsePath(3)
+
+const socialIcons: Record<string, JSX.Element> = {
+  github: (
+    <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+  ),
+  email: (
+    <g transform="translate(-1.2, -1.2) scale(1.1)">
+      <path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z" />
+    </g>
+  ),
+  qq: (
+    <path d="M21.395 15.035a40 40 0 0 0-.803-2.264l-1.079-2.695c.001-.032.014-.562.014-.836C19.526 4.632 17.351 0 12 0S4.474 4.632 4.474 9.241c0 .274.013.804.014.836l-1.08 2.695a39 39 0 0 0-.802 2.264c-1.021 3.283-.69 4.643-.438 4.673.54.065 2.103-2.472 2.103-2.472 0 1.469.756 3.387 2.394 4.771-.612.188-1.363.479-1.845.835-.434.32-.379.646-.301.778.343.578 5.883.369 7.482.189 1.6.18 7.14.389 7.483-.189.078-.132.132-.458-.301-.778-.483-.356-1.233-.646-1.846-.836 1.637-1.384 2.393-3.302 2.393-4.771 0 0 1.563 2.537 2.103 2.472.251-.03.581-1.39-.438-4.673" />
+  ),
+  bilibili: (
+    <path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373Z" />
+  ),
+}
 
 export const metadata: Metadata = {
   title: 'About',
   description: 'Embedded systems engineer, tinkerer, and builder.',
 }
 
-const timeline = [
-  {
-    year: '2025 – Present',
-    title: 'Embedded Systems Engineer',
-    description:
-      'Working on embedded Linux and RTOS-based systems. Rust adoption, CI/CD for firmware, and tooling automation.',
-  },
-  {
-    year: '2023 – 2025',
-    title: 'Firmware Developer',
-    description:
-      'Developed bare-metal and RTOS firmware for STM32 and ESP32 microcontrollers. Built test harnesses and hardware-in-the-loop validation.',
-  },
-  {
-    year: '2021 – 2023',
-    title: 'Hardware Engineer',
-    description:
-      'Designed PCBs, wrote low-level drivers, and debugged protocols (I2C, SPI, UART, CAN) on custom hardware.',
-  },
-  {
-    year: '2019 – 2021',
-    title: 'Electronics & Embedded Intern',
-    description:
-      'Started the journey — learning C, assembly, and digital logic design on 8-bit microcontrollers.',
-  },
-]
-
 export default function AboutPage() {
   return (
     <PageTransition>
       <div className="mx-auto max-w-3xl px-4 py-16">
-        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">About</h1>
-        <p className="mt-4 text-muted leading-relaxed">
-          Embedded systems engineer by trade, tinkerer by nature. I work at the
-          intersection of hardware and software, building things that bridge the
-          digital and physical worlds.
-        </p>
-        <p className="mt-4 text-muted leading-relaxed">
-          This site is my corner of the internet — a place to document what I
-          learn, share projects, and occasionally write about things that
-          interest me.
-        </p>
+        <div className="rounded-2xl bg-bg/20 backdrop-blur-xl border border-white/5 p-8 sm:p-10">
 
-        <AnimatedSection className="mt-16">
-          <h2 className="text-2xl font-semibold tracking-tight">Experience</h2>
-          <div className="mt-8 space-y-8">
-            {timeline.map((item) => (
-              <div key={item.year} className="relative pl-6 border-l-2 border-border">
-                <div className="absolute left-[-5px] top-1.5 h-2.5 w-2.5 rounded-full bg-accent" />
-                <span className="text-xs font-medium text-accent">{item.year}</span>
-                <h3 className="mt-1 font-semibold text-fg">{item.title}</h3>
-                <p className="mt-1 text-sm text-muted leading-relaxed">{item.description}</p>
-              </div>
+          {/* Avatar — superellipse */}
+          <div className="flex justify-center mb-6">
+            <svg width="0" height="0" className="absolute">
+              <defs>
+                <clipPath id="about-avatar-clip" clipPathUnits="objectBoundingBox">
+                  <path d={AVATAR_CLIP_PATH} />
+                </clipPath>
+              </defs>
+            </svg>
+            <div className="relative w-20 h-20 group">
+              <div
+                className="absolute -inset-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-spin"
+                style={{
+                  clipPath: 'url(#about-avatar-clip)',
+                  background: '#f7a1c4',
+                  animationDuration: '4s',
+                }}
+              />
+              <img
+                src="/images/avatar/avatar.jpg"
+                alt="Avatar"
+                className="relative w-20 h-20 object-cover"
+                style={{ clipPath: 'url(#about-avatar-clip)' }}
+              />
+            </div>
+          </div>
+
+          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl text-center">关于</h1>
+          <div className="mt-3 text-center text-sm text-fg">
+            <p>创建于 2026-06-01</p>
+            <p>最后编辑 2026-06-08</p>
+          </div>
+          <hr className="mt-8 border-0 h-[2px] bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+          <p className="mt-8 text-fg leading-relaxed">
+            一个兴趣使然的人，喜欢学有趣的东西
+          </p>
+          <p className="mt-4 text-fg leading-relaxed">
+            还没想好写什么喵
+          </p>
+
+          <p className="mt-6 text-center text-fg/80">
+            🔨 当前正在：学习前端，构建个人网站
+          </p>
+
+          <AnimatedSection className="mt-14">
+            <MarqueeTechStack />
+          </AnimatedSection>
+
+          {/* Social Links */}
+          <div className="mt-10 flex justify-center gap-5">
+            {Object.entries(SOCIAL_LINKS).map(([key, href]) => (
+              <a
+                key={key}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-9 h-9 rounded-lg bg-surface/50 border border-border/30 flex items-center justify-center text-white/40 hover:text-white hover:border-white/30 transition-all"
+                title={key}
+              >
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-4.5 h-4.5">
+                  {socialIcons[key]}
+                </svg>
+              </a>
             ))}
           </div>
-        </AnimatedSection>
+
+        </div>
       </div>
     </PageTransition>
   )
