@@ -6,6 +6,22 @@ import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { NAV_ITEMS } from '@/lib/constants'
 
+/** Generate SVG path for superellipse |x|^n + |y|^n = 1 (objectBoundingBox coords) */
+function superellipsePath(n: number, points = 48): string {
+  const coords: string[] = []
+  for (let i = 0; i < points; i++) {
+    const t = (i / points) * Math.PI * 2
+    const ct = Math.cos(t)
+    const st = Math.sin(t)
+    const x = 0.5 + 0.5 * Math.pow(Math.abs(ct), 2 / n) * Math.sign(ct)
+    const y = 0.5 + 0.5 * Math.pow(Math.abs(st), 2 / n) * Math.sign(st)
+    coords.push(`${x.toFixed(5)},${y.toFixed(5)}`)
+  }
+  return `M ${coords.join(' L ')} Z`
+}
+
+const AVATAR_CLIP_PATH = superellipsePath(3)
+
 function isParentActive(pathname: string, href: string): boolean {
   if (href === '/') return pathname === '/'
   return pathname === href || pathname.startsWith(href + '/')
@@ -110,14 +126,32 @@ export default function Navbar() {
   const pathname = usePathname()
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-transparent">
-      <nav className="mx-auto flex max-w-5xl items-center justify-between px-4 h-14">
-        {/* Logo */}
-        <Link
-          href="/"
-          className="text-sm font-semibold tracking-tight text-white/70 hover:text-accent transition-colors"
-        >
-          aphrosyne
+    <header className="sticky top-0 z-50 w-full bg-transparent pt-3">
+      <nav className="mx-auto flex max-w-5xl items-center justify-between px-4 h-12">
+        {/* Avatar - superellipse |x|^3 + |y|^3 = 1 */}
+        <svg width="0" height="0" className="absolute">
+          <defs>
+            <clipPath id="avatar-clip" clipPathUnits="objectBoundingBox">
+              <path d={AVATAR_CLIP_PATH} />
+            </clipPath>
+          </defs>
+        </svg>
+        <Link href="/" className="shrink-0 relative group">
+          {/* Rotating purple border ring on hover */}
+          <div
+            className="absolute -inset-[1.5px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-spin"
+            style={{
+              clipPath: 'url(#avatar-clip)',
+              background: '#f7a1c4',
+              animationDuration: '4s',
+            }}
+          />
+          <img
+            src="/images/avatar/avatar.jpg"
+            alt="Avatar"
+            className="relative w-12 h-12 object-cover"
+            style={{ clipPath: 'url(#avatar-clip)' }}
+          />
         </Link>
 
         {/* Pill navigation */}

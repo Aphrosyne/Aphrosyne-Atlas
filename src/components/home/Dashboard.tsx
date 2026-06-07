@@ -32,17 +32,32 @@ function IconGH() {
 const containerVariants = {
   hidden: {},
   visible: {
-    transition: { staggerChildren: 0.08, delayChildren: 0.2 },
+    transition: { staggerChildren: 0.08, delayChildren: 0.15 },
   },
 }
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 40 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { type: 'spring' as const, stiffness: 300, damping: 24 },
-  },
+type Direction = 'left' | 'right' | 'top' | 'bottom'
+
+const OFFSETS: Record<Direction, { x: number; y: number }> = {
+  left:   { x: -300, y:   0 },
+  right:  { x:  300, y:   0 },
+  top:    { x:    0, y: -200 },
+  bottom: { x:    0, y:  200 },
+}
+
+const EXPO_EASE = [0.16, 1, 0.3, 1] as const
+
+function cardVariants(dir: Direction) {
+  const o = OFFSETS[dir]
+  return {
+    hidden: { opacity: 0, x: o.x, y: o.y },
+    visible: {
+      opacity: 1,
+      x: 0,
+      y: 0,
+      transition: { duration: 0.7, ease: EXPO_EASE },
+    },
+  }
 }
 
 /* ─── Glass card style (pure CSS, cross-browser) ─── */
@@ -52,13 +67,17 @@ const GLASS =
   'bg-white/[0.03] backdrop-blur-[15px] ' +
   'border-t border-white/20 border-b border-white/5 ' +
   'shadow-[0_15px_35px_rgba(0,0,0,0.12)] ' +
-  'hover:shadow-[0_18px_40px_rgba(37,99,235,0.1)] ' +
+  'hover:shadow-[0_18px_40px_rgba(75,169,178,0.1)] ' +
   'transition-shadow duration-500'
 
-function Card({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+function Card({ children, className = '', direction = 'bottom' }: {
+  children: React.ReactNode
+  className?: string
+  direction?: Direction
+}) {
   return (
     <motion.div
-      variants={cardVariants}
+      variants={cardVariants(direction)}
       whileHover={{ y: -4, scale: 1.015 }}
       whileTap={{ scale: 0.985 }}
       className={`${GLASS} p-5 ${className}`}
@@ -72,7 +91,7 @@ function ProjectSubCard({ project }: { project: DashboardProps['projects'][numbe
   return (
     <motion.div
       whileHover={{ y: -2, scale: 1.02 }}
-      className="rounded-2xl overflow-hidden bg-white/[0.02] backdrop-blur-[12px] border-t border-white/15 border-b border-white/5 p-4 shadow-[0_10px_25px_rgba(0,0,0,0.1)] hover:shadow-[0_14px_30px_rgba(37,99,235,0.08)] transition-shadow duration-500 group cursor-pointer"
+      className="rounded-2xl overflow-hidden bg-white/[0.02] backdrop-blur-[12px] border-t border-white/15 border-b border-white/5 p-4 shadow-[0_10px_25px_rgba(0,0,0,0.1)] hover:shadow-[0_14px_30px_rgba(75,169,178,0.08)] transition-shadow duration-500 group cursor-pointer"
     >
       <div className="text-lg mb-2">🔧</div>
       <div className="text-sm font-medium text-white/80 group-hover:text-accent transition-colors">{project.title}</div>
@@ -99,7 +118,7 @@ export default function Dashboard({ siteName, recentPosts, projects, skills }: D
         {/* ─── Left Sidebar ─── */}
 
         {/* Bio + Social */}
-        <Card className="flex flex-col items-center justify-center text-center gap-3 py-8">
+        <Card direction="left" className="flex flex-col items-center justify-center text-center gap-3 py-8">
           <div className="w-14 h-14 rounded-full bg-gradient-to-br from-accent to-violet-500 flex items-center justify-center text-white font-bold text-lg">A</div>
           <div>
             <div className="text-sm font-semibold text-white">{siteName}</div>
@@ -113,7 +132,7 @@ export default function Dashboard({ siteName, recentPosts, projects, skills }: D
         </Card>
 
         {/* Latest posts */}
-        <Card>
+        <Card direction="left">
           <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Recent Posts</div>
           {recentPosts.slice(0, 3).map((p) => (
             <Link key={p.slug} href={`/blog/${p.slug}`}
@@ -134,7 +153,7 @@ export default function Dashboard({ siteName, recentPosts, projects, skills }: D
 
         <div className="flex flex-col gap-4 lg:gap-5">
           {/* Welcome */}
-          <Card className="flex items-center gap-4 p-4">
+          <Card direction="top" className="flex items-center gap-4 p-4">
             <div className="w-12 h-12 rounded-full bg-gradient-to-br from-accent to-violet-500 flex items-center justify-center text-white font-bold text-lg shrink-0">A</div>
             <div>
               <div className="text-xs text-white/50">Welcome back</div>
@@ -145,7 +164,7 @@ export default function Dashboard({ siteName, recentPosts, projects, skills }: D
           </Card>
 
           {/* Stats */}
-          <Card className="flex items-center justify-around py-4">
+          <Card direction="bottom" className="flex items-center justify-around py-4">
             {[
               { num: projects.length, label: 'Projects' },
               { num: recentPosts.length, label: 'Posts' },
@@ -160,7 +179,7 @@ export default function Dashboard({ siteName, recentPosts, projects, skills }: D
           </Card>
 
           {/* Projects showcase */}
-          <Card>
+          <Card direction="bottom">
             <div className="text-[10px] text-white/40 tracking-widest uppercase mb-4">Projects</div>
             <div className="grid grid-cols-2 gap-3">
               {projects.slice(0, 4).map((p) => (
@@ -175,7 +194,7 @@ export default function Dashboard({ siteName, recentPosts, projects, skills }: D
         {/* ─── Right Sidebar ─── */}
 
         {/* Skills */}
-        <Card>
+        <Card direction="right">
           <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Skills</div>
           <div className="flex flex-wrap gap-1.5">
             {skills.map((s) => (
@@ -187,7 +206,7 @@ export default function Dashboard({ siteName, recentPosts, projects, skills }: D
         </Card>
 
         {/* Quick links */}
-        <Card>
+        <Card direction="right">
           <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Quick Links</div>
           <div className="flex flex-col gap-1">
             {QUICK_LINKS.map((l) => (
@@ -202,7 +221,7 @@ export default function Dashboard({ siteName, recentPosts, projects, skills }: D
         </Card>
 
         {/* Contact */}
-        <Card className="text-center">
+        <Card direction="right" className="text-center">
           <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Get in Touch</div>
           <p className="text-xs text-white/50 leading-relaxed">Have a question or want to collaborate?</p>
         </Card>
