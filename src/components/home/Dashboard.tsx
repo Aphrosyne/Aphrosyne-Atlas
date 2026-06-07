@@ -3,6 +3,8 @@
 import { motion, type Variants } from 'framer-motion'
 import Link from 'next/link'
 import CountUp from '@/components/shared/CountUp'
+import socialIcons from '@/components/shared/SocialIcons'
+import { SOCIAL_LINKS } from '@/lib/constants'
 import type { PostMetadata } from '@/types/post'
 
 interface DashboardProps {
@@ -18,14 +20,20 @@ const QUICK_LINKS = [
   { label: 'About', href: '/about', desc: 'Who I am' },
 ]
 
-/* ─── Icons ─── */
-function IconGH() {
-  return (
-    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-    </svg>
-  )
+function superellipsePath(n: number, points = 48): string {
+  const coords: string[] = []
+  for (let i = 0; i < points; i++) {
+    const t = (i / points) * Math.PI * 2
+    const ct = Math.cos(t)
+    const st = Math.sin(t)
+    const x = 0.5 + 0.5 * Math.pow(Math.abs(ct), 2 / n) * Math.sign(ct)
+    const y = 0.5 + 0.5 * Math.pow(Math.abs(st), 2 / n) * Math.sign(st)
+    coords.push(`${x.toFixed(5)},${y.toFixed(5)}`)
+  }
+  return `M ${coords.join(' L ')} Z`
 }
+
+const AVATAR_CLIP_PATH = superellipsePath(3)
 
 /* ─── Animation Variants ─── */
 
@@ -62,7 +70,8 @@ const GLASS =
   'border-t border-white/20 border-b border-white/5 ' +
   'shadow-[0_15px_35px_rgba(0,0,0,0.12)] ' +
   'hover:shadow-[0_18px_40px_rgba(75,169,178,0.1)] ' +
-  'transition-shadow duration-500'
+  'transition-shadow duration-500 ' +
+  'transform-gpu'
 
 function Card({ children, className = '', direction = 'bottom' }: {
   children: React.ReactNode
@@ -113,15 +122,48 @@ export default function Dashboard({ siteName, recentPosts, projects, skills }: D
 
         {/* Bio + Social */}
         <Card direction="left" className="flex flex-col items-center justify-center text-center gap-3 py-8">
-          <div className="w-14 h-14 rounded-full bg-gradient-to-br from-accent to-violet-500 flex items-center justify-center text-white font-bold text-lg">A</div>
+          <svg width="0" height="0" aria-hidden="true">
+            <defs>
+              <clipPath id="bio-avatar-clip" clipPathUnits="objectBoundingBox">
+                <path d={AVATAR_CLIP_PATH} />
+              </clipPath>
+            </defs>
+          </svg>
+          <div className="relative w-16 h-16 group">
+            <div
+              className="absolute -inset-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-spin"
+              style={{
+                clipPath: 'url(#bio-avatar-clip)',
+                background: '#f7a1c4',
+                animationDuration: '4s',
+              }}
+            />
+            <img
+              src="/images/avatar/avatar.jpg"
+              alt="Avatar"
+              className="relative w-16 h-16 object-cover"
+              style={{ clipPath: 'url(#bio-avatar-clip)' }}
+            />
+          </div>
           <div>
             <div className="text-sm font-semibold text-white">{siteName}</div>
-            <div className="text-[11px] text-white/50">Embedded · Creative</div>
+            <div className="text-[11px] text-white/50">设计 · 创造</div>
           </div>
-          <div className="flex gap-2 mt-1">
-            <a href="https://github.com/aphrosyne" className="w-8 h-8 rounded-lg bg-surface/50 border border-border/30 flex items-center justify-center text-white/40 hover:text-white hover:border-border/50 transition-all">
-              <IconGH />
-            </a>
+          <div className="grid grid-cols-2 gap-4 mt-2">
+            {Object.entries(SOCIAL_LINKS).map(([key, href]) => (
+              <a
+                key={key}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-8 h-8 rounded-lg bg-surface/50 border border-border/30 flex items-center justify-center text-white/40 hover:text-white hover:border-white/30 transition-all"
+                title={key}
+              >
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">
+                  {socialIcons[key]}
+                </svg>
+              </a>
+            ))}
           </div>
         </Card>
 
@@ -147,13 +189,10 @@ export default function Dashboard({ siteName, recentPosts, projects, skills }: D
 
         <div className="flex flex-col gap-4 lg:gap-5">
           {/* Welcome */}
-          <Card direction="top" className="flex items-center gap-4 p-4">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-accent to-violet-500 flex items-center justify-center text-white font-bold text-lg shrink-0">A</div>
-            <div>
-              <div className="text-xs text-white/50">Welcome back</div>
-              <div className="text-base font-semibold text-white">
-                {siteName} <span className="text-white/40 font-normal text-sm">· Embedded Developer</span>
-              </div>
+          <Card direction="top" className="p-4">
+            <div className="text-xs text-white/50">欢迎回来</div>
+            <div className="text-base font-semibold text-white">
+              {siteName} <span className="text-white/40 font-normal text-sm">· 新发现</span>
             </div>
           </Card>
 

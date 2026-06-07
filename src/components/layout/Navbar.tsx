@@ -69,18 +69,16 @@ function NavDropdown({
         {label}
       </Link>
 
-      {/* Desktop: hover dropdown */}
+      {/* Desktop: link with hover dropdown */}
       <div
         className="hidden md:block relative"
         onMouseEnter={onEnterTrigger}
         onMouseLeave={onLeaveTrigger}
       >
-        <div
-          role="button"
-          tabIndex={0}
+        <Link
+          href={href}
           aria-expanded={open}
-          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpen(true) } }}
-          className={`flex items-center gap-1 rounded-full px-4 py-1.5 text-[13px] font-medium cursor-pointer select-none transition-colors ${triggerClass}`}
+          className={`flex items-center gap-1 rounded-full px-4 py-1.5 text-[13px] font-medium select-none transition-colors ${triggerClass}`}
         >
           {label}
           <svg
@@ -96,7 +94,7 @@ function NavDropdown({
               d="M19 9l-7 7-7-7"
             />
           </svg>
-        </div>
+        </Link>
 
         <AnimatePresence>
           {open && (
