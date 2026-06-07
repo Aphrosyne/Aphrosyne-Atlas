@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, type Variants } from 'framer-motion'
 import Link from 'next/link'
 import CountUp from '@/components/shared/CountUp'
 import type { PostMetadata } from '@/types/post'
@@ -47,17 +47,11 @@ const OFFSETS: Record<Direction, { x: number; y: number }> = {
 
 const EXPO_EASE = [0.16, 1, 0.3, 1] as const
 
-function cardVariants(dir: Direction) {
-  const o = OFFSETS[dir]
-  return {
-    hidden: { opacity: 0, x: o.x, y: o.y },
-    visible: {
-      opacity: 1,
-      x: 0,
-      y: 0,
-      transition: { duration: 0.7, ease: EXPO_EASE },
-    },
-  }
+const CARD_VARIANTS: Record<Direction, Variants> = {
+  left:   { hidden: { opacity: 0, x: OFFSETS.left.x,   y: OFFSETS.left.y   }, visible: { opacity: 1, x: 0, y: 0, transition: { duration: 0.7, ease: EXPO_EASE } } },
+  right:  { hidden: { opacity: 0, x: OFFSETS.right.x,  y: OFFSETS.right.y  }, visible: { opacity: 1, x: 0, y: 0, transition: { duration: 0.7, ease: EXPO_EASE } } },
+  top:    { hidden: { opacity: 0, x: OFFSETS.top.x,    y: OFFSETS.top.y    }, visible: { opacity: 1, x: 0, y: 0, transition: { duration: 0.7, ease: EXPO_EASE } } },
+  bottom: { hidden: { opacity: 0, x: OFFSETS.bottom.x, y: OFFSETS.bottom.y }, visible: { opacity: 1, x: 0, y: 0, transition: { duration: 0.7, ease: EXPO_EASE } } },
 }
 
 /* ─── Glass card style (pure CSS, cross-browser) ─── */
@@ -77,7 +71,7 @@ function Card({ children, className = '', direction = 'bottom' }: {
 }) {
   return (
     <motion.div
-      variants={cardVariants(direction)}
+      variants={CARD_VARIANTS[direction]}
       whileHover={{ y: -4, scale: 1.015 }}
       whileTap={{ scale: 0.985 }}
       className={`${GLASS} p-5 ${className}`}

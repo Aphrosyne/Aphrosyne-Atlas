@@ -76,6 +76,10 @@ function NavDropdown({
         onMouseLeave={onLeaveTrigger}
       >
         <div
+          role="button"
+          tabIndex={0}
+          aria-expanded={open}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpen(true) } }}
           className={`flex items-center gap-1 rounded-full px-4 py-1.5 text-[13px] font-medium cursor-pointer select-none transition-colors ${triggerClass}`}
         >
           {label}
@@ -185,7 +189,7 @@ export default function Navbar() {
         </div>
 
         {/* Spacer */}
-        <div className="w-16" />
+        <div className="w-12" />
       </nav>
     </header>
   )

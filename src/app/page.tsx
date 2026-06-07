@@ -13,7 +13,7 @@ export default async function Home() {
     <div className="overflow-x-hidden">
 
       {/* ═══ SECTION 1 — Minimal Hero ═══ */}
-      <section className="relative flex flex-col items-center justify-center min-h-screen px-4 pt-14 text-center overflow-hidden">
+      <section className="relative flex flex-col items-center justify-center min-h-screen px-4 text-center overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 rounded-full bg-accent/3 blur-3xl pointer-events-none" />
 
         <p className="text-sm text-white/60 tracking-[0.2em] uppercase mb-3">Hello, I&apos;m</p>
