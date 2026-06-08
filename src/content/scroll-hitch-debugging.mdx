@@ -1,0 +1,51 @@
+export const metadata = {
+  title: '排查了一个莫名其妙的滚动卡顿问题',
+  date: '2026-06-09',
+  tags: ['frontend', 'debugging', 'framer-motion'],
+  excerpt: 'Dashboard 刷新后首次滚动会卡一下。排查了 4 个小时，原因完全出乎意料。',
+  readingTime: '5 min',
+}
+
+Dashboard 页面有个诡异的问题：刷新之后第一次向下滚动，鼠标滚轮只能动一点点，然后就卡住了。之后再滚就正常了。
+
+## 排查过程
+
+我先怀疑 API 请求——GitHub 和一言的 `fetch` 会不会在滚动时触发重渲染。把 API 全禁了，还是卡。
+
+Backdrop 背景模糊？禁了。没区别。
+
+`whileInView` 入场动画？全部去掉。好了！但之前同样的动画怎么没事？
+
+于是我开始二分查找：从已知正常的提交（`b828a9e`）开始，一步步把改动加回来。每加一个就测试一遍。
+
+试了很久，终于定位到：把外层 `motion.div` 从 `grid` 改成 `flex flex-col` 再包一层嵌套 div，就是那个改动引入了问题。但为什么？flex 和 grid 在渲染上有什么不同？
+
+其实也不是。真正的问题是：**网格外面的独立 `whileInView` 动画太多了**。一言卡片一个，GitHub 卡片一个，加上标签云，三个独立的 framer-motion 动画在滚动时各自触发。它们没有统一的协调器（stagger container），浏览器同时处理多个 IntersectionObserver 回调 + React 状态更新，主线程忙不过来。
+
+## 解决方案
+
+把 GitHub 和一言塞进 Dashboard 已有的 stagger 网格里。这样所有飞入动画由同一个时间线调度，不会同时抢资源。
+
+```tsx
+// ❌ 独立的 whileInView，各自为政
+<motion.div whileInView={{ opacity: 1, y: 0 }}>一言</motion.div>
+<motion.div whileInView={{ opacity: 1, y: 0 }}>GitHub</motion.div>
+
+// ✅ 放进同一个 stagger 容器，统一协调
+<motion.div variants={containerVariants} initial="hidden" whileInView="visible">
+  <Card variants={cardVariants} />  {/* 博客 */}
+  <Card variants={cardVariants} />  {/* GitHub */}
+  <Card variants={cardVariants} />  {/* 一言 */}
+</motion.div>
+```
+
+标签云保持在外面——它是纯 CSS 动画，不和 React 交互。
+
+## 教训
+
+1. **二分查找是调试复杂 UI 问题的最有效手段**。抽象推理半天不如 `git stash` 回去实测。
+2. **framer-motion 的 `whileInView` 不是免费的**。多个独立 observer 同时触发会导致主线程竞争。尽量用 stagger 容器统一管理。
+3. **CSS 驱动的动画（`animation-timeline: view()`）是最后的备选**。不经过 React，零重渲染，适合不需要交互的装饰性动画。
+4. **不要同时排查多个变量**。每次只改一个东西，确认结果再继续。
+
+四个小时。最后 commit 了 5 个修复提交，又 squash 成一个。
