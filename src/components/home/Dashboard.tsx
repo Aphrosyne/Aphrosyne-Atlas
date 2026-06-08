@@ -66,8 +66,8 @@ const CARD_VARIANTS: Record<Direction, Variants> = {
 
 const GLASS =
   'rounded-3xl overflow-hidden ' +
-  'bg-white/[0.03] backdrop-blur-[15px] ' +
-  'border-t border-white/20 border-b border-white/5 ' +
+  'bg-white/3 backdrop-blur-[15px] ' +
+  'border-t border-t-white/20 border-b border-b-white/5 ' +
   'shadow-[0_15px_35px_rgba(0,0,0,0.12)] ' +
   'hover:shadow-[0_18px_40px_rgba(75,169,178,0.1)] ' +
   'transition-shadow duration-500 ' +
@@ -94,7 +94,7 @@ function ProjectSubCard({ project }: { project: DashboardProps['projects'][numbe
   return (
     <motion.div
       whileHover={{ y: -2, scale: 1.02 }}
-      className="rounded-2xl overflow-hidden bg-white/[0.02] backdrop-blur-[12px] border-t border-white/15 border-b border-white/5 p-4 shadow-[0_10px_25px_rgba(0,0,0,0.1)] hover:shadow-[0_14px_30px_rgba(75,169,178,0.08)] transition-shadow duration-500 group cursor-pointer"
+      className="rounded-2xl overflow-hidden bg-white/2 backdrop-blur-md border-t border-t-white/15 border-b border-b-white/5 p-4 shadow-[0_10px_25px_rgba(0,0,0,0.1)] hover:shadow-[0_14px_30px_rgba(75,169,178,0.08)] transition-shadow duration-500 group cursor-pointer"
     >
       <div className="text-lg mb-2">🔧</div>
       <div className="text-sm font-medium text-white/80 group-hover:text-accent transition-colors">{project.title}</div>
@@ -131,7 +131,7 @@ export default function Dashboard({ siteName, recentPosts, projects, skills }: D
           </svg>
           <div className="relative w-16 h-16 group">
             <div
-              className="absolute -inset-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-spin"
+              className="absolute -inset-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-spin"
               style={{
                 clipPath: 'url(#bio-avatar-clip)',
                 background: '#f7a1c4',
@@ -174,7 +174,7 @@ export default function Dashboard({ siteName, recentPosts, projects, skills }: D
             <Link key={p.slug} href={`/blog/${p.slug}`}
               className="flex items-center gap-3 py-2 px-1.5 rounded-lg -mx-1.5 transition-colors hover:bg-surface/40 group"
             >
-              <div className="w-10 h-10 rounded-lg bg-accent/[0.06] flex items-center justify-center shrink-0 text-sm group-hover:bg-accent/10 transition-colors">
+              <div className="w-10 h-10 rounded-lg bg-accent/6 flex items-center justify-center shrink-0 text-sm group-hover:bg-accent/10 transition-colors">
                 📄
               </div>
               <div className="min-w-0">

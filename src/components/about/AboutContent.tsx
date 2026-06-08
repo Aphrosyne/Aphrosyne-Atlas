@@ -40,7 +40,7 @@ export default function AboutContent() {
           </svg>
           <div className="relative w-20 h-20 group">
             <div
-              className="absolute -inset-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-spin"
+              className="absolute -inset-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-spin"
               style={{
                 clipPath: 'url(#about-avatar-clip)',
                 background: '#f7a1c4',
@@ -61,7 +61,7 @@ export default function AboutContent() {
           <p>创建于 2026-06-01</p>
           <p>最后编辑 2026-06-08</p>
         </div>
-        <hr className="mt-8 border-0 h-[2px] bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+        <hr className="mt-8 border-0 h-0.5 bg-linear-to-r from-transparent via-white/40 to-transparent" />
         <p className="mt-8 text-fg leading-relaxed">
           一个兴趣使然的人，喜欢学有趣的东西
         </p>

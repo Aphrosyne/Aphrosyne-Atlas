@@ -29,7 +29,7 @@ function MarqueeRow({ items, reverse }: { items: string[]; reverse?: boolean }) 
         {doubled.map((tech, i) => (
           <span
             key={`${tech}-${i}`}
-            className="shrink-0 select-none rounded-full border border-white/10 bg-white/[0.30] backdrop-blur-lg px-3.5 py-1 text-sm text-white whitespace-nowrap"
+            className="shrink-0 select-none rounded-full border border-white/10 bg-white/30 backdrop-blur-lg px-3.5 py-1 text-sm text-white whitespace-nowrap"
           >
             {tech}
           </span>
@@ -41,7 +41,7 @@ function MarqueeRow({ items, reverse }: { items: string[]; reverse?: boolean }) 
 
 export default function MarqueeTechStack() {
   return (
-    <div className="group rounded-xl border border-white/10 bg-white/[0.03] py-5">
+    <div className="group rounded-xl border border-white/10 bg-white/3 py-5">
       <MarqueeRow items={row1} />
       <MarqueeRow items={row2} reverse />
     </div>

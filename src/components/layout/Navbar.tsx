@@ -105,7 +105,7 @@ function NavDropdown({
               transition={{ duration: 0.2, ease: 'easeOut' }}
               onMouseEnter={onEnterMenu}
               onMouseLeave={onLeaveMenu}
-              className="absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 min-w-[150px] rounded-2xl bg-black/50 backdrop-blur-md border border-white/10 shadow-[0_15px_35px_rgba(0,0,0,0.3)] overflow-hidden"
+              className="absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 min-w-37.5 rounded-2xl bg-black/50 backdrop-blur-md border border-white/10 shadow-[0_15px_35px_rgba(0,0,0,0.3)] overflow-hidden"
             >
               {children.map((child) => (
                 <Link
@@ -141,7 +141,7 @@ export default function Navbar() {
         <Link href="/" className="shrink-0 relative group">
           {/* Rotating purple border ring on hover */}
           <div
-            className="absolute -inset-[1.5px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-spin"
+            className="absolute -inset-0.375 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-spin"
             style={{
               clipPath: 'url(#avatar-clip)',
               background: '#f7a1c4',
