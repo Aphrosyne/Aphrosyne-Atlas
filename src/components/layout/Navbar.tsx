@@ -141,7 +141,7 @@ export default function Navbar() {
         <Link href="/" className="shrink-0 relative group">
           {/* Rotating purple border ring on hover */}
           <div
-            className="absolute -inset-0.375 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-spin"
+            className="absolute -inset-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-spin"
             style={{
               clipPath: 'url(#avatar-clip)',
               background: '#f7a1c4',
