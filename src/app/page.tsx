@@ -4,8 +4,6 @@ import { SITE } from '@/lib/constants'
 import HeroSection from '@/components/home/HeroSection'
 import Dashboard from '@/components/home/Dashboard'
 
-const skills = ['C / C++', 'Rust', 'Python', 'Go', 'Embedded Linux', 'Next.js']
-
 export default async function Home() {
   const recentPosts = await getRecentPosts(3)
 
@@ -20,7 +18,6 @@ export default async function Home() {
         siteName={SITE.name}
         recentPosts={recentPosts}
         projects={projects}
-        skills={skills}
       />
     </div>
   )
