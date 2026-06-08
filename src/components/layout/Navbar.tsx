@@ -62,7 +62,7 @@ function NavDropdown({
       {/* Mobile: plain link, no dropdown */}
       <Link
         href={href}
-        className={`md:hidden rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors ${
+        className={`md:hidden rounded-full px-4 py-1.5 text-[13px] font-semibold transition-colors ${
           active ? 'bg-accent text-white shadow-sm' : 'text-white/60'
         }`}
       >
@@ -78,7 +78,7 @@ function NavDropdown({
         <Link
           href={href}
           aria-expanded={open}
-          className={`flex items-center gap-1 rounded-full px-4 py-1.5 text-[13px] font-medium select-none transition-colors ${triggerClass}`}
+          className={`flex items-center gap-1 rounded-full px-4 py-1.5 text-[13px] font-semibold select-none transition-colors ${triggerClass}`}
         >
           {label}
           <svg
@@ -174,7 +174,7 @@ export default function Navbar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors ${
+                className={`rounded-full px-4 py-1.5 text-[13px] font-semibold transition-colors ${
                   isActive
                     ? 'bg-accent text-white shadow-sm'
                     : 'text-white/60 hover:text-white'

@@ -7,27 +7,29 @@ export const SITE = {
 } as const
 
 export const NAV_ITEMS = [
-  { label: 'Home', href: '/' },
+  { label: '首页', href: '/' },
   {
-    label: 'Blog',
+    label: '博客',
     href: '/blog',
     children: [
-      { label: 'All Posts', href: '/blog' },
-      { label: 'Tags', href: '/blog?view=tags' },
-      { label: 'RSS Feed', href: '/api/blog' },
+      { label: '全部文章', href: '/blog' },
+      { label: '标签', href: '/blog?view=tags' },
+      { label: 'RSS 订阅', href: '/api/blog' },
     ],
   },
   {
-    label: 'Projects',
+    label: '项目',
     href: '/projects',
     children: [
-      { label: 'All Projects', href: '/projects' },
-      { label: 'Aphrosyne Site', href: '/projects/aphrosyne-site' },
-      { label: 'Embedded Toolbox', href: '/projects/embedded-toolbox' },
-      { label: 'CLI Tools', href: '/projects/cli-tools' },
+      { label: '全部项目', href: '/projects' },
+      { label: '本站', href: '/projects/aphrosyne-site' },
+      { label: '嵌入式工具箱', href: '/projects/embedded-toolbox' },
+      { label: 'CLI 工具', href: '/projects/cli-tools' },
     ],
   },
-  { label: 'About', href: '/about' },
+  { label: '演示', href: '/playground' },
+  { label: '推荐', href: '/recommendations' },
+  { label: '关于', href: '/about' },
 ] as const
 
 export const SOCIAL_LINKS = {

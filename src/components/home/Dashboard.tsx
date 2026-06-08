@@ -42,20 +42,13 @@ const containerVariants = {
 
 type Direction = 'left' | 'right' | 'top' | 'bottom'
 
-const OFFSETS: Record<Direction, { x: number; y: number }> = {
-  left:   { x: -300, y:   0 },
-  right:  { x:  300, y:   0 },
-  top:    { x:    0, y: -200 },
-  bottom: { x:    0, y:  200 },
-}
-
 const EXPO_EASE = [0.16, 1, 0.3, 1] as const
 
 const CARD_VARIANTS: Record<Direction, Variants> = {
-  left:   { hidden: { opacity: 0, x: OFFSETS.left.x,   y: OFFSETS.left.y   }, visible: { opacity: 1, x: 0, y: 0, transition: { duration: 0.7, ease: EXPO_EASE } } },
-  right:  { hidden: { opacity: 0, x: OFFSETS.right.x,  y: OFFSETS.right.y  }, visible: { opacity: 1, x: 0, y: 0, transition: { duration: 0.7, ease: EXPO_EASE } } },
-  top:    { hidden: { opacity: 0, x: OFFSETS.top.x,    y: OFFSETS.top.y    }, visible: { opacity: 1, x: 0, y: 0, transition: { duration: 0.7, ease: EXPO_EASE } } },
-  bottom: { hidden: { opacity: 0, x: OFFSETS.bottom.x, y: OFFSETS.bottom.y }, visible: { opacity: 1, x: 0, y: 0, transition: { duration: 0.7, ease: EXPO_EASE } } },
+  left:   { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.5, ease: EXPO_EASE } } },
+  right:  { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.5, ease: EXPO_EASE } } },
+  top:    { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.5, ease: EXPO_EASE } } },
+  bottom: { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.5, ease: EXPO_EASE } } },
 }
 
 const GLASS =
@@ -171,7 +164,7 @@ export default function Dashboard({ siteName, recentPosts, projects }: Dashboard
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: '-50px' }}
+        viewport={{ once: true, amount: 0.1 }}
         className="flex flex-col gap-4 lg:gap-5"
       >
         {/* Row 1: Bio + Posts + GitHub */}
