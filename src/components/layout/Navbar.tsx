@@ -191,10 +191,22 @@ export default function Navbar() {
         {/* Search */}
         <button
           onClick={() => setSearchOpen(true)}
-          className="w-12 h-12 flex items-center justify-center text-white/40 hover:text-white transition-colors"
+          className="relative w-12 h-12 flex items-center justify-center text-white/40 hover:text-white transition-colors cursor-pointer group"
           aria-label="搜索"
         >
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <span
+            className="absolute -inset-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-spin"
+            style={{
+              clipPath: 'url(#avatar-clip)',
+              background: '#4ba9b2',
+              animationDuration: '4s',
+            }}
+          />
+          <span
+            className="absolute inset-0 bg-neutral-900/60 backdrop-blur-xl transition-colors"
+            style={{ clipPath: 'url(#avatar-clip)' }}
+          />
+          <svg className="relative w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
         </button>
