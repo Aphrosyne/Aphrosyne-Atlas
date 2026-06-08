@@ -10,15 +10,8 @@ export default async function Home() {
   return (
     <div className="overflow-x-hidden">
 
-      {/* ═══ SECTION 1 — Animated Hero ═══ */}
       <HeroSection />
-
-      {/* ═══ SECTION 2 — Animated Bento Dashboard ═══ */}
-      <Dashboard
-        siteName={SITE.name}
-        recentPosts={recentPosts}
-        projects={projects}
-      />
+      <Dashboard siteName={SITE.name} recentPosts={recentPosts} projects={projects} />
     </div>
   )
 }

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { NAV_ITEMS } from '@/lib/constants'
+import SearchModal from '@/components/layout/SearchModal'
 
 /** Generate SVG path for superellipse |x|^n + |y|^n = 1 (objectBoundingBox coords) */
 function superellipsePath(n: number, points = 48): string {
@@ -126,6 +127,7 @@ function NavDropdown({
 
 export default function Navbar() {
   const pathname = usePathname()
+  const [searchOpen, setSearchOpen] = useState(false)
 
   return (
     <header className="sticky top-0 z-50 w-full bg-transparent pt-3">
@@ -186,9 +188,18 @@ export default function Navbar() {
           })}
         </div>
 
-        {/* Spacer */}
-        <div className="w-12" />
+        {/* Search */}
+        <button
+          onClick={() => setSearchOpen(true)}
+          className="w-12 h-12 flex items-center justify-center text-white/40 hover:text-white transition-colors"
+          aria-label="搜索"
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </button>
       </nav>
+      <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
     </header>
   )
 }
