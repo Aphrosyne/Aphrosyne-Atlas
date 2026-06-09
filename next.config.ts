@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   output: 'standalone',
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
+  serverExternalPackages: ['NeteaseCloudMusicApi'],
 }
 
 const withMDX = createMDX({

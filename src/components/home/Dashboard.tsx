@@ -1,10 +1,14 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { motion, type Variants } from 'framer-motion'
 import Link from 'next/link'
 import socialIcons from '@/components/shared/SocialIcons'
 import TagCloud from '@/components/home/TagCloud'
+import ClockCard from '@/components/home/ClockCard'
+import MusicPlayer from '@/components/home/MusicPlayer'
+import FFTVisualizer from '@/components/home/FFTVisualizer'
+import SteamCard from '@/components/home/SteamCard'
 import { SOCIAL_LINKS } from '@/lib/constants'
 import type { PostMetadata } from '@/types/post'
 
@@ -16,11 +20,6 @@ interface DashboardProps {
   projects: { slug: string; title: string; description: string }[]
 }
 
-const QUICK_LINKS = [
-  { label: 'Blog', href: '/blog', desc: 'Thoughts & notes' },
-  { label: 'Projects', href: '/projects', desc: 'Stuff I built' },
-  { label: 'About', href: '/about', desc: 'Who I am' },
-]
 
 function superellipsePath(n: number, points = 48): string {
   const coords: string[] = []
@@ -92,22 +91,11 @@ function Card({ children, className = '', direction = 'bottom' }: {
   )
 }
 
-function ProjectSubCard({ project }: { project: DashboardProps['projects'][number] }) {
-  return (
-    <motion.div
-      whileHover={{ y: -2, scale: 1.02 }}
-      className="rounded-2xl overflow-hidden bg-white/2 backdrop-blur-md border-t border-t-white/15 border-b border-b-white/5 p-4 shadow-[0_10px_25px_rgba(0,0,0,0.1)] hover:shadow-[0_14px_30px_rgba(75,169,178,0.08)] transition-shadow duration-500 group cursor-pointer"
-    >
-      <div className="text-lg mb-2">🔧</div>
-      <div className="text-sm font-medium text-white/80 group-hover:text-accent transition-colors">{project.title}</div>
-      <div className="text-[11px] text-white/50 leading-snug mt-1 line-clamp-2">{project.description}</div>
-    </motion.div>
-  )
-}
-
 /* ─── Dashboard ─── */
 
 export default function Dashboard({ siteName, recentPosts, projects }: DashboardProps) {
+  const analyserRef = useRef<AnalyserNode | null>(null)
+  const [analyser, setAnalyser] = useState<AnalyserNode | null>(null)
   return (
     <section id="content" className="px-4 pb-20 max-w-5xl mx-auto">
       <p className="text-center text-[11px] text-white/30 tracking-[0.15em] uppercase mb-3">Explore</p>
@@ -118,9 +106,9 @@ export default function Dashboard({ siteName, recentPosts, projects }: Dashboard
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: '-50px' }}
-        className="grid grid-cols-1 md:grid-cols-[220px_1fr_240px] gap-4 lg:gap-5"
+        className="grid grid-cols-1 md:grid-cols-[180px_1fr_1fr_180px] gap-4 lg:gap-5"
       >
-        {/* ─── Left Sidebar ─── */}
+        {/* ─── Row 1: Bio | TagCloud (2x2) | Clock ─── */}
 
         {/* Bio + Social */}
         <Card direction="left" className="flex flex-col items-center justify-center text-center gap-3 py-8">
@@ -169,6 +157,18 @@ export default function Dashboard({ siteName, recentPosts, projects }: Dashboard
           </div>
         </Card>
 
+        {/* TagCloud — center, spans 2 cols x 2 rows */}
+        <div className="md:col-start-2 md:row-start-1 md:col-span-2 md:row-span-2 flex items-center justify-center">
+          <TagCloud tags={TECH_TAGS} />
+        </div>
+
+        {/* Clock */}
+        <Card direction="right" className="flex items-center justify-center">
+          <ClockCard />
+        </Card>
+
+        {/* ─── Row 2: Recent Posts | (TagCloud) | Music Player ─── */}
+
         {/* Latest posts */}
         <Card direction="left">
           <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Recent Posts</div>
@@ -187,54 +187,34 @@ export default function Dashboard({ siteName, recentPosts, projects }: Dashboard
           ))}
         </Card>
 
-        {/* ─── Main Area ─── */}
+        {/* Music Player */}
+        <Card direction="right" className="flex items-center justify-center">
+          <MusicPlayer onAnalyser={a => { analyserRef.current = a; setAnalyser(a) }} />
+        </Card>
 
-        <div className="flex flex-col gap-4 lg:gap-5">
-          {/* Welcome */}
-          <Card direction="top" className="p-4">
-            <div className="text-xs text-white/50">欢迎回来</div>
-            <div className="text-base font-semibold text-white">
-              {siteName} <span className="text-white/40 font-normal text-sm">· 新发现</span>
-            </div>
-          </Card>
-
-          {/* Quick Links */}
-          <Card direction="bottom" className="flex items-center justify-around py-4">
-            {QUICK_LINKS.map((l) => (
-              <Link key={l.label} href={l.href}
-                className="flex flex-col items-center gap-0.5 text-white/50 hover:text-accent transition-colors"
-              >
-                <span className="text-sm font-semibold">{l.label}</span>
-                <span className="text-[10px] text-white/30">{l.desc}</span>
-              </Link>
-            ))}
-          </Card>
-
-          {/* Projects showcase */}
-          <Card direction="bottom">
-            <div className="text-[10px] text-white/40 tracking-widest uppercase mb-4">Projects</div>
-            <div className="grid grid-cols-2 gap-3">
-              {projects.slice(0, 4).map((p) => (
-                <Link key={p.slug} href={`/projects/${p.slug}`}>
-                  <ProjectSubCard project={p} />
-                </Link>
-              ))}
-            </div>
-          </Card>
-        </div>
-
-        {/* ─── Right Sidebar ─── */}
+        {/* ─── Row 3: Hitokoto | FFT | Steam | GitHub ─── */}
 
         {/* Hitokoto */}
         <HitokotoCard />
+
+        {/* FFT Visualizer */}
+        <Card direction="bottom" className="p-3">
+          <div className="text-[10px] text-white/40 tracking-widest uppercase mb-2">Audio</div>
+          <div className="h-20">
+            <FFTVisualizer analyser={analyser} />
+          </div>
+        </Card>
+
+        {/* Steam */}
+        <Card direction="bottom">
+          <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Steam</div>
+          <SteamCard />
+        </Card>
 
         {/* GitHub */}
         <GitHubRepos />
 
       </motion.div>
-
-      {/* Extras — outside animated container */}
-      <TagCloud tags={TECH_TAGS} />
 
     </section>
   )
@@ -245,7 +225,7 @@ export default function Dashboard({ siteName, recentPosts, projects }: Dashboard
 function HitokotoCard() {
   const [quote, setQuote] = useState<string | null>(null)
   useEffect(() => {
-    fetch('https://v1.hitokoto.cn/?c=i&encode=json')
+    fetch('/api/hitokoto')
       .then(r => r.json()).then(d => setQuote(d.hitokoto))
       .catch(() => setQuote('薄暝柳隙人独立，数点雨痕待江凝。'))
   }, [])
