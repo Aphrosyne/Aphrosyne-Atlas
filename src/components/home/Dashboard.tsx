@@ -117,6 +117,21 @@ const GRID = {
   hitokoto:      'md:col-start-1   md:col-span-7 md:row-start-6 md:row-span-1',
 } as const
 
+/* ─── 飞入方向 — 底部卡片不能用 bottom，否则卡滚动 ─── */
+const DIR: Record<keyof typeof GRID, Direction> = {
+  bio:           'left',
+  posts:         'top',
+  projects:      'left',
+  tagcloud:      'bottom',
+  memes:         'right',
+  status:        'right',
+  clock:         'right',
+  playground:    'left',
+  contributions: 'bottom',
+  player:        'right',
+  hitokoto:      'left',
+}
+
 export default function Dashboard({ siteName, recentPosts, projects, tags }: DashboardProps) {
   const analyserRef = useRef<AnalyserNode | null>(null)
   const [analyser, setAnalyser] = useState<AnalyserNode | null>(null)
@@ -129,11 +144,8 @@ export default function Dashboard({ siteName, recentPosts, projects, tags }: Das
         viewport={{ once: true, margin: '-50px' }}
         className="grid grid-cols-1 md:grid-cols-12 grid-rows-[repeat(6,minmax(120px,auto))] gap-4 lg:gap-5"
       >
-        {/* ─── 12列 grid，每张卡片用 col-start/col-span/row-start/row-span 定位 ─── */}
-        {/* ─── 改数字就能调位置，比如 col-start-1 → col-start-5 ─── */}
-
         {/* Bio */}
-        <Card direction="left" className={`${GRID.bio} flex flex-col gap-3 py-6`}>
+        <Card direction={DIR.bio} className={`${GRID.bio} flex flex-col gap-3 py-6`}>
           <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Profile</div>
           <div className="flex flex-col items-center gap-3 flex-1 justify-center">
             <svg width="0" height="0" aria-hidden="true">
@@ -146,18 +158,9 @@ export default function Dashboard({ siteName, recentPosts, projects, tags }: Das
             <div className="relative w-16 h-16 group">
               <div
                 className="absolute -inset-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-spin"
-                style={{
-                  clipPath: 'url(#bio-avatar-clip)',
-                  background: '#f7a1c4',
-                  animationDuration: '4s',
-                }}
+                style={{ clipPath: 'url(#bio-avatar-clip)', background: '#f7a1c4', animationDuration: '4s' }}
               />
-              <img
-                src="/images/avatar/avatar.jpg"
-                alt="Avatar"
-                className="relative w-16 h-16 object-cover"
-                style={{ clipPath: 'url(#bio-avatar-clip)' }}
-              />
+              <img src="/images/avatar/avatar.jpg" alt="Avatar" className="relative w-16 h-16 object-cover" style={{ clipPath: 'url(#bio-avatar-clip)' }} />
             </div>
             <div>
               <div className="text-sm font-semibold text-white">{siteName}</div>
@@ -165,17 +168,8 @@ export default function Dashboard({ siteName, recentPosts, projects, tags }: Das
             </div>
             <div className="flex gap-3 mt-2">
               {Object.entries(SOCIAL_LINKS).map(([key, href]) => (
-                <a
-                  key={key}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-8 h-8 rounded-lg bg-surface/50 border border-border/30 flex items-center justify-center text-white/40 hover:text-white hover:border-white/30 transition-all"
-                  title={key}
-                >
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">
-                    {socialIcons[key]}
-                  </svg>
+                <a key={key} href={href} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-lg bg-surface/50 border border-border/30 flex items-center justify-center text-white/40 hover:text-white hover:border-white/30 transition-all" title={key}>
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">{socialIcons[key]}</svg>
                 </a>
               ))}
             </div>
@@ -183,15 +177,11 @@ export default function Dashboard({ siteName, recentPosts, projects, tags }: Das
         </Card>
 
         {/* Posts */}
-        <Card direction="left" className={GRID.posts}>
+        <Card direction={DIR.posts} className={GRID.posts}>
           <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Recent Posts</div>
           {recentPosts.slice(0, 3).map((p) => (
-            <Link key={p.slug} href={`/blog/${p.slug}`}
-              className="flex items-center gap-3 py-2 px-1.5 rounded-lg -mx-1.5 transition-colors hover:bg-surface/40 group"
-            >
-              <div className="w-10 h-10 rounded-lg bg-accent/6 flex items-center justify-center shrink-0 text-sm group-hover:bg-accent/10 transition-colors">
-                📄
-              </div>
+            <Link key={p.slug} href={`/blog/${p.slug}`} className="flex items-center gap-3 py-2 px-1.5 rounded-lg -mx-1.5 transition-colors hover:bg-surface/40 group">
+              <div className="w-10 h-10 rounded-lg bg-accent/6 flex items-center justify-center shrink-0 text-sm group-hover:bg-accent/10 transition-colors">📄</div>
               <div className="min-w-0">
                 <div className="text-sm font-medium text-white/80 truncate group-hover:text-accent transition-colors">{p.title}</div>
                 <div className="text-[11px] text-white/40">{p.date}</div>
@@ -200,70 +190,54 @@ export default function Dashboard({ siteName, recentPosts, projects, tags }: Das
           ))}
         </Card>
 
-        {/* Hitokoto */}
-        <Card direction="left" className={`${GRID.hitokoto} !backdrop-blur-none`}>
-          <HitokotoCard />
-        </Card>
-
-        {/* Memes */}
-        <Card direction="right" className={`${GRID.memes} flex flex-col`}>
-          <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Memes</div>
-          <div className="flex-1 flex items-center justify-center">
-            <MemCard />
-          </div>
-        </Card>
-
-        {/* TagCloud */}
-        <Card direction="bottom" className={`${GRID.tagcloud} flex items-center justify-center`}>
-          <TagCloud tags={tags} />
-        </Card>
-
-        {/* Clock */}
-        <Card direction="right" className={`${GRID.clock} flex flex-col`}>
-          <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Clock</div>
-          <div className="flex-1 flex items-center justify-center">
-            <ClockCard />
-          </div>
-        </Card>
-
-        {/* Player — FFT + Music */}
-        <Card direction="right" className={`${GRID.player} flex flex-col`}>
-          <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Music</div>
-          <div className="h-24 mb-3">
-            <FFTVisualizer analyser={analyser} />
-          </div>
-          <MusicPlayer onAnalyser={a => { analyserRef.current = a; setAnalyser(a) }} />
-        </Card>
-
         {/* Projects */}
-        <Card direction="right" className={GRID.projects}>
+        <Card direction={DIR.projects} className={GRID.projects}>
           <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Projects</div>
           <div className="grid grid-cols-2 gap-3">
             {projects.slice(0, 4).map((p) => (
-              <Link key={p.slug} href={`/projects/${p.slug}`}>
-                <ProjectSubCard project={p} />
-              </Link>
+              <Link key={p.slug} href={`/projects/${p.slug}`}><ProjectSubCard project={p} /></Link>
             ))}
           </div>
         </Card>
 
+        {/* TagCloud */}
+        <Card direction={DIR.tagcloud} className={`${GRID.tagcloud} flex items-center justify-center`}>
+          <TagCloud tags={tags} />
+        </Card>
+
+        {/* Memes */}
+        <Card direction={DIR.memes} className={`${GRID.memes} flex flex-col`}>
+          <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Memes</div>
+          <div className="flex-1 flex items-center justify-center"><MemCard /></div>
+        </Card>
+
         {/* Status */}
-        <Card direction="left" className={GRID.status}>
-          <StatusCard />
+        <Card direction={DIR.status} className={GRID.status}><StatusCard /></Card>
+
+        {/* Clock */}
+        <Card direction={DIR.clock} className={`${GRID.clock} flex flex-col`}>
+          <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Clock</div>
+          <div className="flex-1 flex items-center justify-center"><ClockCard /></div>
         </Card>
 
         {/* Playground */}
-        <Card direction="bottom" className={`${GRID.playground} flex flex-col`}>
+        <Card direction={DIR.playground} className={`${GRID.playground} flex flex-col`}>
           <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Playground</div>
-          <Link href="/playground" className="flex-1 flex items-center justify-center group">
-            <PlaygroundThumb />
-          </Link>
+          <Link href="/playground" className="flex-1 flex items-center justify-center group"><PlaygroundThumb /></Link>
         </Card>
 
         {/* Contributions */}
-        <Card direction="right" className={`${GRID.contributions} overflow-x-auto`}>
-          <ContributionsGraph />
+        <Card direction={DIR.contributions} className={`${GRID.contributions} overflow-x-auto`}><ContributionsGraph /></Card>
+
+        {/* Player — FFT + Music */}
+        <Card direction={DIR.player} className={`${GRID.player} flex flex-col`}>
+          <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Music</div>
+          <div className="h-24 mb-3"><FFTVisualizer analyser={analyser} /></div>
+          <MusicPlayer onAnalyser={a => { analyserRef.current = a; setAnalyser(a) }} />
         </Card>
+
+        {/* Hitokoto */}
+        <Card direction={DIR.hitokoto} className={GRID.hitokoto}><HitokotoCard /></Card>
 
       </motion.div>
 
@@ -314,9 +288,9 @@ function ContributionsGraph() {
     <>
       <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Contributions</div>
       {weeks.length === 0 && <p className="text-[11px] text-white/30">加载中...</p>}
-      <div className="flex gap-[3px] overflow-hidden pb-1">
+      <div className="flex gap-0.75 overflow-hidden pb-1">
         {[...weeks].reverse().map((week, wi) => (
-          <div key={wi} className="flex flex-col gap-[3px]">
+          <div key={wi} className="flex flex-col gap-0.75">
             {week.contributionDays.map((day) => {
               const level = day.contributionCount === 0
                 ? 0
@@ -332,7 +306,7 @@ function ContributionsGraph() {
                 <div
                   key={day.date}
                   title={`${day.date}: ${day.contributionCount} contributions`}
-                  className={`w-[11px] h-[11px] rounded-[2px] ${colors[level]} transition-colors`}
+                  className={`w-2.75 h-2.75 rounded-xs ${colors[level]} transition-colors`}
                 />
               )
             })}

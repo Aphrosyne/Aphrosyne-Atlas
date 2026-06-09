@@ -107,6 +107,24 @@ Use built-in spacing scale instead of arbitrary pixel values where possible (1 =
 h-0.5                /* 2px  — not h-[2px] */
 -inset-0.375         /* 1.5px — not -inset-[1.5px] */
 min-w-37.5           /* 150px — not min-w-[150px] */
+gap-0.75             /* 3px  — not gap-[3px] */
+w-2.75 / h-2.75     /* 11px — not w-[11px] / h-[11px] */
+```
+
+### Important modifier
+Use suffix syntax `class!`, not prefix `!class`:
+```css
+/* ✅ CORRECT */
+backdrop-blur-none!
+/* ❌ WRONG */
+!backdrop-blur-none
+```
+
+### Border radius
+Use named utilities for standard values:
+```css
+/* ✅ CORRECT */
+rounded-xs         /* 2px — not rounded-[2px] */
 ```
 
 ### Backdrop blur

@@ -1,9 +1,9 @@
 export const metadata = {
-  title: 'backdrop-blur 在 grid gap 边界产生诡异分隔线',
-  date: '2026-06-09',
-  tags: ['frontend', 'css', 'debugging'],
-  excerpt: 'Dashboard 卡片之间出现一条莫名的阴影分隔线，排查发现是 backdrop-blur 在 grid gap 边界的渲染问题。',
-  readingTime: '3 min',
+  title: '两个诡异的渲染问题：backdrop-blur 分隔线 + 底部元素 bottom 飞入卡顿',
+  date: '2026-06-10',
+  tags: ['frontend', 'css', 'debugging', 'framer-motion'],
+  excerpt: 'Dashboard 卡片的两个奇怪 bug：backdrop-blur 在 grid gap 边界产生分隔线，底部卡片用 bottom 方向飞入会卡滚动。',
+  readingTime: '6 min',
 }
 
 Dashboard 用 CSS Grid 布局，卡片之间有 `gap-4` 的间距。大部分卡片看起来正常，但一言（Hitokoto）卡片的上方总有一条隐约的分隔线——像是阴影，又像是边框。
@@ -28,7 +28,7 @@ Dashboard 用 CSS Grid 布局，卡片之间有 `gap-4` 的间距。大部分卡
 
 ## 解决方案
 
-给一言卡片加 `!backdrop-blur-none`，用 Tailwind 的 `!important` 覆盖 GLASS 样式里的 `backdrop-blur-[15px]`：
+最初给一言卡片加了 `!backdrop-blur-none` 来强制去掉模糊，分隔线消失了。
 
 ```tsx
 <Card direction="left" className={`${GRID.hitokoto} !backdrop-blur-none`}>
@@ -36,13 +36,44 @@ Dashboard 用 CSS Grid 布局，卡片之间有 `gap-4` 的间距。大部分卡
 </Card>
 ```
 
-去掉模糊后，卡片背景变成纯半透明黑色（`bg-white/3`），视觉上和其他带模糊的卡片差别不大，但分隔线彻底消失了。
+但后来在解决第二个问题（见下文）时，重新调整了卡片顺序和飞入方向。调整后即使去掉 `!backdrop-blur-none`，分隔线也不再出现。说明 `backdrop-blur` 的视觉伪影和卡片在 DOM 中的上下文有关——不同的相邻元素、不同的飞入方向会影响模糊算法在边界处的混合结果。
 
-## 总结
+## 小结
 
-`backdrop-blur` 在以下场景会产生意外的视觉伪影：
+`backdrop-blur` 在以下场景可能产生视觉伪影：
 
 - 元素紧邻透明/半透明的 gap 区域
-- 元素背后有高对比度的边界（比如深色背景和更深处的模糊混合）
+- 元素背后有高对比度的边界
+- 伪影的出现和 DOM 顺序、动画方向有关，不一定稳定复现
 
-遇到类似的「莫名阴影/分隔线」问题，可以优先排查 `backdrop-blur`。
+遇到类似的「莫名阴影/分隔线」问题，可以优先排查 `backdrop-blur`，但不必急着加 hack——先试试调整元素顺序或动画方向。
+
+---
+
+## 第二个问题：底部卡片用 `bottom` 方向飞入会卡滚动
+
+解决了分隔线之后，又遇到了一个更诡异的问题：Dashboard 卡片的入场动画会导致首次滚动卡顿。
+
+### 现象
+
+刷新页面后，第一次向下滚动时鼠标滚轮只能动一点点，然后就卡住了。之后再滚就正常了。
+
+### 排查
+
+用穷举法测试：
+
+- 把一言卡片（最后一行）的飞入方向从 `bottom` 改成 `left`——不卡了。
+- 把播放器挪到最后一行，飞入方向用 `top`——不卡。然后把方向改成 `bottom`——卡了。
+- 把时钟挪到最后一行，飞入方向用 `top`——不卡。改成 `bottom`——卡了。
+
+结论：**位于 grid 最底部的卡片，不能用 `direction="bottom"` 飞入**。
+
+### 原因
+
+Framer Motion 的 `whileInView` 会在元素进入视口时触发动画。当卡片在页面最底部且用 `bottom` 方向飞入时，动画从 `y: 80`（向下偏移）过渡到 `y: 0`。在动画开始的瞬间，卡片向下偏移 80px 导致页面高度增加，浏览器需要重新计算滚动区域。这个重计算触发了滚动事件，而滚动事件又触发了 `whileInView` 的重新检测，形成一个短暂的反馈循环，表现为首次滚动卡顿。
+
+其他方向不会触发这个问题，因为 `x` 方向的偏移不影响页面高度，`top` 方向的偏移是向上（不会增加页面底部高度）。
+
+### 解决方案
+
+最底部的卡片避免使用 `direction="bottom"`，改用 `left`、`right` 或 `top`。
