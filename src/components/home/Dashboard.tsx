@@ -121,7 +121,7 @@ export default function Dashboard({ siteName, recentPosts, projects, tags }: Das
   const analyserRef = useRef<AnalyserNode | null>(null)
   const [analyser, setAnalyser] = useState<AnalyserNode | null>(null)
   return (
-    <section id="content" className="px-4 pb-20 max-w-5xl mx-auto">
+    <section id="content" className="px-4 pb-12 max-w-5xl mx-auto">
       <motion.div
         variants={containerVariants}
         initial="hidden"
@@ -395,16 +395,25 @@ function PlaygroundThumb() {
 
 function StatusCard() {
   const [status, setStatus] = useState<{ status: string; emoji?: string } | null>(null)
+  const [bouncing, setBouncing] = useState(false)
   useEffect(() => {
     fetch(`https://gist.githubusercontent.com/Aphrosyne/534c12c92c01c3eb2901cb41b4c81c64/raw?t=${Date.now()}`, { cache: 'no-store' })
       .then(r => r.json())
       .then(data => setStatus(data))
       .catch(() => {})
   }, [])
+  const handleClick = () => { setBouncing(true); setTimeout(() => setBouncing(false), 300) }
   return (
     <>
       <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Status</div>
-      <p className="text-sm text-white/70">
+      <p
+        className="text-sm text-white/70 cursor-pointer select-none"
+        onClick={handleClick}
+        style={{
+          transform: bouncing ? 'scale(1.2)' : 'scale(1)',
+          transition: 'transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1)',
+        }}
+      >
         {status ? `${status.emoji || ''} ${status.status}` : '加载中...'}
       </p>
     </>
@@ -427,7 +436,7 @@ function MemCard() {
       src={`/images/mems/${idx}.jpg`}
       alt="meme"
       onClick={handleClick}
-      className="max-h-28 rounded-lg cursor-pointer select-none"
+      className="max-h-28 rounded-2xl cursor-pointer select-none"
       style={{
         transform: bouncing ? 'scale(1.2)' : 'scale(1)',
         transition: 'transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1)',
