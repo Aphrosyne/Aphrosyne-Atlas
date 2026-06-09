@@ -201,7 +201,7 @@ export default function Dashboard({ siteName, recentPosts, projects, tags }: Das
         </Card>
 
         {/* Hitokoto */}
-        <Card direction="left" className={GRID.hitokoto}>
+        <Card direction="left" className={`${GRID.hitokoto} !backdrop-blur-none`}>
           <HitokotoCard />
         </Card>
 

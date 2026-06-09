@@ -8,7 +8,7 @@ const CONTENT_DIR = path.join(process.cwd(), 'src/content')
 /** Parse the `export const metadata = {…}` block from raw MDX text. */
 function parseMetadataFromFile(filePath: string): Record<string, unknown> {
   const content = fs.readFileSync(filePath, 'utf-8')
-  const match = content.match(/export\s+const\s+metadata\s*=\s*({[\s\S]*?})\n/)
+  const match = content.match(/export\s+const\s+metadata\s*=\s*({[\s\S]*?})\r?\n/)
   if (!match) return {}
 
   try {

@@ -1,0 +1,48 @@
+export const metadata = {
+  title: 'backdrop-blur 在 grid gap 边界产生诡异分隔线',
+  date: '2026-06-09',
+  tags: ['frontend', 'css', 'debugging'],
+  excerpt: 'Dashboard 卡片之间出现一条莫名的阴影分隔线，排查发现是 backdrop-blur 在 grid gap 边界的渲染问题。',
+  readingTime: '3 min',
+}
+
+Dashboard 用 CSS Grid 布局，卡片之间有 `gap-4` 的间距。大部分卡片看起来正常，但一言（Hitokoto）卡片的上方总有一条隐约的分隔线——像是阴影，又像是边框。
+
+## 现象
+
+一言卡片位于第 6 行，横跨 7 列。它上方是 Playground 卡片（col 1-3）和 Contributions 卡片（col 4-7），中间有一条 grid gap。那条分隔线就出现在 gap 对应的位置，横贯一言卡片顶部。
+
+一开始以为是卡片的 `box-shadow` 泄漏到了 gap 里。把默认阴影去掉了，还在。
+
+以为是 `border-t-white/20` 的上边框。不是。
+
+以为是 `overflow-hidden` 没生效。加了 `!important`，也没用。
+
+## 原因
+
+最后把一言卡片的 `backdrop-blur-[15px]` 去掉——分隔线消失了。
+
+`backdrop-blur` 会对元素背后的内容做高斯模糊。当卡片紧邻一个 gap（透明区域）时，模糊算法会把 gap 的透明像素和卡片边缘的像素混合，在边界处产生一条可见的过渡带。这条过渡带看起来就像一条阴影分隔线。
+
+其他卡片没这个问题，是因为它们上方要么没有 gap，要么 gap 很小不容易察觉。一言卡片横跨两列，上方恰好有两个卡片之间的 gap，过渡带被拉到了整行宽度，非常显眼。
+
+## 解决方案
+
+给一言卡片加 `!backdrop-blur-none`，用 Tailwind 的 `!important` 覆盖 GLASS 样式里的 `backdrop-blur-[15px]`：
+
+```tsx
+<Card direction="left" className={`${GRID.hitokoto} !backdrop-blur-none`}>
+  <HitokotoCard />
+</Card>
+```
+
+去掉模糊后，卡片背景变成纯半透明黑色（`bg-white/3`），视觉上和其他带模糊的卡片差别不大，但分隔线彻底消失了。
+
+## 总结
+
+`backdrop-blur` 在以下场景会产生意外的视觉伪影：
+
+- 元素紧邻透明/半透明的 gap 区域
+- 元素背后有高对比度的边界（比如深色背景和更深处的模糊混合）
+
+遇到类似的「莫名阴影/分隔线」问题，可以优先排查 `backdrop-blur`。
