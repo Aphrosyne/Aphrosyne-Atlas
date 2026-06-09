@@ -41,26 +41,26 @@ const AVATAR_CLIP_PATH = superellipsePath(3)
 const containerVariants = {
   hidden: {},
   visible: {
-    transition: { staggerChildren: 0.08, delayChildren: 0.15 },
+    transition: { staggerChildren: 0.06, delayChildren: 0.1 },
   },
 }
 
 type Direction = 'left' | 'right' | 'top' | 'bottom'
 
 const OFFSETS: Record<Direction, { x: number; y: number }> = {
-  left:   { x: -300, y:   0 },
-  right:  { x:  300, y:   0 },
-  top:    { x:    0, y: -200 },
-  bottom: { x:    0, y:  200 },
+  left:   { x: -120, y:   0 },
+  right:  { x:  120, y:   0 },
+  top:    { x:    0, y: -80 },
+  bottom: { x:    0, y:  80 },
 }
 
 const EXPO_EASE = [0.16, 1, 0.3, 1] as const
 
 const CARD_VARIANTS: Record<Direction, Variants> = {
-  left:   { hidden: { opacity: 0, x: OFFSETS.left.x,   y: OFFSETS.left.y   }, visible: { opacity: 1, x: 0, y: 0, transition: { duration: 0.7, ease: EXPO_EASE } } },
-  right:  { hidden: { opacity: 0, x: OFFSETS.right.x,  y: OFFSETS.right.y  }, visible: { opacity: 1, x: 0, y: 0, transition: { duration: 0.7, ease: EXPO_EASE } } },
-  top:    { hidden: { opacity: 0, x: OFFSETS.top.x,    y: OFFSETS.top.y    }, visible: { opacity: 1, x: 0, y: 0, transition: { duration: 0.7, ease: EXPO_EASE } } },
-  bottom: { hidden: { opacity: 0, x: OFFSETS.bottom.x, y: OFFSETS.bottom.y }, visible: { opacity: 1, x: 0, y: 0, transition: { duration: 0.7, ease: EXPO_EASE } } },
+  left:   { hidden: { opacity: 0, x: OFFSETS.left.x,   y: OFFSETS.left.y   }, visible: { opacity: 1, x: 0, y: 0, transition: { duration: 0.5, ease: EXPO_EASE } } },
+  right:  { hidden: { opacity: 0, x: OFFSETS.right.x,  y: OFFSETS.right.y  }, visible: { opacity: 1, x: 0, y: 0, transition: { duration: 0.5, ease: EXPO_EASE } } },
+  top:    { hidden: { opacity: 0, x: OFFSETS.top.x,    y: OFFSETS.top.y    }, visible: { opacity: 1, x: 0, y: 0, transition: { duration: 0.5, ease: EXPO_EASE } } },
+  bottom: { hidden: { opacity: 0, x: OFFSETS.bottom.x, y: OFFSETS.bottom.y }, visible: { opacity: 1, x: 0, y: 0, transition: { duration: 0.5, ease: EXPO_EASE } } },
 }
 
 /* ─── Glass card style (pure CSS, cross-browser) ─── */
@@ -82,11 +82,22 @@ function Card({ children, className = '', direction = 'bottom' }: {
   return (
     <motion.div
       variants={CARD_VARIANTS[direction]}
-      whileHover={{ y: -4, scale: 1.015 }}
-      whileTap={{ scale: 0.985 }}
+      whileHover={{ y: -3 }}
       className={`${GLASS} p-5 ${className}`}
     >
       {children}
+    </motion.div>
+  )
+}
+
+function ProjectSubCard({ project }: { project: DashboardProps['projects'][number] }) {
+  return (
+    <motion.div
+      whileHover={{ y: -2, scale: 1.02 }}
+      className="rounded-2xl overflow-hidden bg-white/2 backdrop-blur-md border-t border-t-white/15 border-b border-b-white/5 p-3 shadow-[0_10px_25px_rgba(0,0,0,0.1)] hover:shadow-[0_14px_30px_rgba(75,169,178,0.08)] transition-shadow duration-500 group cursor-pointer"
+    >
+      <div className="text-sm font-medium text-white/80 group-hover:text-accent transition-colors truncate">{project.title}</div>
+      <div className="text-[11px] text-white/50 leading-snug mt-1 line-clamp-2">{project.description}</div>
     </motion.div>
   )
 }
@@ -98,20 +109,18 @@ export default function Dashboard({ siteName, recentPosts, projects }: Dashboard
   const [analyser, setAnalyser] = useState<AnalyserNode | null>(null)
   return (
     <section id="content" className="px-4 pb-20 max-w-5xl mx-auto">
-      <p className="text-center text-[11px] text-white/30 tracking-[0.15em] uppercase mb-3">Explore</p>
-      <div className="w-8 h-px bg-accent/30 mx-auto mb-12" />
-
       <motion.div
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: '-50px' }}
-        className="grid grid-cols-1 md:grid-cols-[180px_1fr_1fr_180px] gap-4 lg:gap-5"
+        className="grid grid-cols-1 md:grid-cols-[1fr_2fr_1fr] gap-4 lg:gap-5"
       >
-        {/* ─── Row 1: Bio | TagCloud (2x2) | Clock ─── */}
+        {/* ─── Row 1: Bio | TagCloud(跨2行) | Clock ─── */}
 
         {/* Bio + Social */}
-        <Card direction="left" className="flex flex-col items-center justify-center text-center gap-3 py-8">
+        <Card direction="left" className="flex flex-col items-center justify-center text-center gap-3 py-6">
+          <div className="text-[10px] text-white/40 tracking-widest uppercase">Profile</div>
           <svg width="0" height="0" aria-hidden="true">
             <defs>
               <clipPath id="bio-avatar-clip" clipPathUnits="objectBoundingBox">
@@ -157,19 +166,7 @@ export default function Dashboard({ siteName, recentPosts, projects }: Dashboard
           </div>
         </Card>
 
-        {/* TagCloud — center, spans 2 cols x 2 rows */}
-        <div className="md:col-start-2 md:row-start-1 md:col-span-2 md:row-span-2 flex items-center justify-center">
-          <TagCloud tags={TECH_TAGS} />
-        </div>
-
-        {/* Clock */}
-        <Card direction="right" className="flex items-center justify-center">
-          <ClockCard />
-        </Card>
-
-        {/* ─── Row 2: Recent Posts | (TagCloud) | Music Player ─── */}
-
-        {/* Latest posts */}
+        {/* Recent posts */}
         <Card direction="left">
           <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Recent Posts</div>
           {recentPosts.slice(0, 3).map((p) => (
@@ -187,32 +184,60 @@ export default function Dashboard({ siteName, recentPosts, projects }: Dashboard
           ))}
         </Card>
 
-        {/* Music Player */}
-        <Card direction="right" className="flex items-center justify-center">
-          <MusicPlayer onAnalyser={a => { analyserRef.current = a; setAnalyser(a) }} />
+        {/* GitHub */}
+        <GitHubRepos />
+
+        {/* ─── Row 2: Hitokoto | (TagCloud) | Music ─── */}
+
+        {/* Projects showcase */}
+        <Card direction="bottom" className="">
+          <div className="text-[10px] text-white/40 tracking-widest uppercase mb-4">Projects</div>
+          <div className="grid grid-cols-2 gap-3">
+            {projects.slice(0, 4).map((p) => (
+              <Link key={p.slug} href={`/projects/${p.slug}`}>
+                <ProjectSubCard project={p} />
+              </Link>
+            ))}
+          </div>
         </Card>
 
-        {/* ─── Row 3: Hitokoto | FFT | Steam | GitHub ─── */}
+        {/* TagCloud — center, spans 2 rows */}
+        <div className="md:col-start-2 flex items-center justify-center">
+          <TagCloud tags={TECH_TAGS} />
+        </div>
+
+        {/* Clock */}
+        <Card direction="right" className="flex flex-col items-center justify-center gap-2">
+          <div className="text-[10px] text-white/40 tracking-widest uppercase">Clock</div>
+          <ClockCard />
+        </Card>
+
+        {/* ─── Row 3: Posts | Projects | FFT ─── */}
 
         {/* Hitokoto */}
         <HitokotoCard />
 
-        {/* FFT Visualizer */}
-        <Card direction="bottom" className="p-3">
-          <div className="text-[10px] text-white/40 tracking-widest uppercase mb-2">Audio</div>
-          <div className="h-20">
-            <FFTVisualizer analyser={analyser} />
-          </div>
-        </Card>
+        {/* Music + FFT — stacked in one cell */}
+        <div className="grid grid-rows-2 gap-4 lg:gap-5">
+          <Card direction="right" className="flex flex-col justify-center">
+            <div className="text-[10px] text-white/40 tracking-widest uppercase mb-2">Music</div>
+            <MusicPlayer onAnalyser={a => { analyserRef.current = a; setAnalyser(a) }} />
+          </Card>
+          <Card direction="bottom" className="p-3">
+            <div className="text-[10px] text-white/40 tracking-widest uppercase mb-2">Audio</div>
+            <div className="h-20">
+              <FFTVisualizer analyser={analyser} />
+            </div>
+          </Card>
+        </div>
+
+        {/* ─── Row 4: Steam | GitHub ─── */}
 
         {/* Steam */}
-        <Card direction="bottom">
+        <Card direction="left" className="min-h-100">
           <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Steam</div>
           <SteamCard />
         </Card>
-
-        {/* GitHub */}
-        <GitHubRepos />
 
       </motion.div>
 
@@ -230,7 +255,8 @@ function HitokotoCard() {
       .catch(() => setQuote('薄暝柳隙人独立，数点雨痕待江凝。'))
   }, [])
   return (
-    <Card direction="right" className="text-center py-4">
+    <Card direction="left" className="text-center py-4">
+      <div className="text-[10px] text-white/40 tracking-widest uppercase mb-2">Hitokoto</div>
       <p className="text-xs text-white/50 italic leading-relaxed">{quote ? `「${quote}」` : `加载中...`}</p>
     </Card>
   )
