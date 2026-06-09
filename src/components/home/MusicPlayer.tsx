@@ -98,12 +98,6 @@ export default function MusicPlayer({ onAnalyser }: { onAnalyser?: (analyser: An
     }
   }, [song])
 
-  const seek = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!audioRef.current || !song) return
-    const rect = e.currentTarget.getBoundingClientRect()
-    audioRef.current.currentTime = ((e.clientX - rect.left) / rect.width) * song.duration
-  }, [song])
-
   const formatSec = (s: number) => {
     const m = Math.floor(s / 60)
     const sec = Math.floor(s % 60)
@@ -138,16 +132,11 @@ export default function MusicPlayer({ onAnalyser }: { onAnalyser?: (analyser: An
 
       {/* Progress bar */}
       <div className="flex items-center gap-2">
-        <span className="text-[10px] text-white/30 w-8 text-right font-mono">
+        <span className="text-[14px] text-white/50 w-8 text-right font-mono">
           {formatSec(currentTime)}
         </span>
-        <div className="flex-1 h-1 rounded-full bg-white/10 overflow-hidden cursor-pointer" onClick={seek}>
-          <div
-            className="h-full bg-accent rounded-full transition-all duration-200"
-            style={{ width: `${progress * 100}%` }}
-          />
-        </div>
-        <span className="text-[10px] text-white/30 w-8 font-mono">
+        <DragSlider value={progress} onChange={v => { if (audioRef.current && song) audioRef.current.currentTime = v * song.duration }} />
+        <span className="text-[14px] text-white/50 w-8 font-mono">
           {song ? formatSec(song.duration) : '0:00'}
         </span>
       </div>
@@ -172,27 +161,54 @@ export default function MusicPlayer({ onAnalyser }: { onAnalyser?: (analyser: An
       </div>
 
       {/* Volume */}
-      <div className="flex items-center justify-center gap-2">
-        <svg className="w-3 h-3 text-white/30" fill="currentColor" viewBox="0 0 24 24">
+      <div className="flex items-center gap-2 px-1" onDoubleClick={() => setVolume(DEFAULT_VOLUME)}>
+        <svg className="w-4 h-4 text-white/50 shrink-0" fill="currentColor" viewBox="4 4 20 20">
           <path d="M3 9v6h4l5 5V4L7 9zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02" />
         </svg>
-        <input
-          type="range"
-          min="0"
-          max="1"
-          step="0.01"
-          value={volume}
-          onChange={e => setVolume(Number(e.target.value))}
-          className="w-16 h-1 accent-accent cursor-pointer"
-        />
-        <button
-          onClick={() => setVolume(DEFAULT_VOLUME)}
-          className="text-[9px] text-white/30 hover:text-white/60 transition-colors cursor-pointer"
-          aria-label="恢复默认音量"
-        >
+        <DragSlider value={volume} onChange={v => setVolume(Math.round(v * 10) / 10)} />
+        <span className="text-[14px] text-white/50 w-6 text-right font-mono">
           {Math.round(volume * 100)}%
-        </button>
+        </span>
       </div>
+    </div>
+  )
+}
+
+function DragSlider({ value, onChange }: { value: number; onChange: (v: number) => void }) {
+  const trackRef = useRef<HTMLDivElement>(null)
+  const dragging = useRef(false)
+
+  const calc = useCallback((clientX: number) => {
+    const rect = trackRef.current?.getBoundingClientRect()
+    if (!rect) return
+    onChange(Math.max(0, Math.min(1, (clientX - rect.left) / rect.width)))
+  }, [onChange])
+
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      if (!dragging.current) return
+      e.preventDefault()
+      calc(e.clientX)
+    }
+    const onUp = () => { dragging.current = false }
+    document.addEventListener('mousemove', onMove)
+    document.addEventListener('mouseup', onUp)
+    return () => {
+      document.removeEventListener('mousemove', onMove)
+      document.removeEventListener('mouseup', onUp)
+    }
+  }, [calc])
+
+  return (
+    <div
+      ref={trackRef}
+      className="flex-1 h-1 rounded-full bg-white/10 overflow-hidden cursor-pointer"
+      onMouseDown={e => { dragging.current = true; calc(e.clientX) }}
+    >
+      <div
+        className="h-full bg-accent rounded-full transition-[width] duration-75"
+        style={{ width: `${value * 100}%` }}
+      />
     </div>
   )
 }

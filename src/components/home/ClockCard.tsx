@@ -37,7 +37,7 @@ export default function ClockCard() {
       <div className="text-2xl font-mono font-light tracking-wider text-white">
         {formatTime(now)}
       </div>
-      <div className="text-[11px] text-white/40">
+      <div className="text-sm text-white/60">
         {formatDate(now)}
       </div>
     </div>
