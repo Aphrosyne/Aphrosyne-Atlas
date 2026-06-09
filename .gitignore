@@ -35,6 +35,8 @@ yarn-error.log*
 
 # claude
 .claude/
+.agents/
+skills-lock.json
 
 # reference files
 .ref/
