@@ -50,7 +50,7 @@ export default function MusicPlayer({ onAnalyser }: { onAnalyser?: (analyser: An
   // Apply volume to audio element
   useEffect(() => {
     if (audioRef.current) audioRef.current.volume = volume
-  }, [volume, blobUrl, song])
+  }, [volume])
 
   // Cleanup blob URL
   useEffect(() => {

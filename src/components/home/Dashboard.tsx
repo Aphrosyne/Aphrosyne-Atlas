@@ -134,7 +134,6 @@ const DIR: Record<keyof typeof GRID, Direction> = {
 }
 
 export default function Dashboard({ siteName, recentPosts, projects, tags }: DashboardProps) {
-  const analyserRef = useRef<AnalyserNode | null>(null)
   const [analyser, setAnalyser] = useState<AnalyserNode | null>(null)
   return (
     <section id="content" className="px-4 pb-12 max-w-5xl mx-auto">
@@ -180,7 +179,7 @@ export default function Dashboard({ siteName, recentPosts, projects, tags }: Das
         {/* Posts */}
         <Card direction={DIR.posts} className={GRID.posts}>
           <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Recent Posts</div>
-          {recentPosts.slice(0, 3).map((p) => (
+          {recentPosts.map((p) => (
             <Link key={p.slug} href={`/blog/${p.slug}`} className="flex items-center gap-3 py-2 px-1.5 rounded-lg -mx-1.5 transition-colors hover:bg-surface/40 group">
               <div className="w-10 h-10 rounded-lg bg-accent/6 flex items-center justify-center shrink-0 text-sm group-hover:bg-accent/10 transition-colors">📄</div>
               <div className="min-w-0">
@@ -234,7 +233,7 @@ export default function Dashboard({ siteName, recentPosts, projects, tags }: Das
         <Card direction={DIR.player} className={`${GRID.player} flex flex-col`}>
           <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Music</div>
           <div className="h-24 mb-3"><FFTVisualizer analyser={analyser} /></div>
-          <MusicPlayer onAnalyser={a => { analyserRef.current = a; setAnalyser(a) }} />
+          <MusicPlayer onAnalyser={a => setAnalyser(a)} />
         </Card>
 
         {/* Hitokoto */}
@@ -273,6 +272,8 @@ interface ContributionWeek {
   contributionDays: ContributionDay[]
 }
 
+const LEVEL_COLORS = ['bg-white/5', 'bg-accent/20', 'bg-accent/40', 'bg-accent/60', 'bg-accent/80']
+
 function ContributionsGraph() {
   const [weeks, setWeeks] = useState<ContributionWeek[]>([])
   useEffect(() => {
@@ -295,21 +296,12 @@ function ContributionsGraph() {
           return (
           <div key={i} className="flex flex-col gap-0.75">
             {week.contributionDays.map((day) => {
-              const level = day.contributionCount === 0
-                ? 0
-                : day.contributionCount < max * 0.25
-                  ? 1
-                  : day.contributionCount < max * 0.5
-                    ? 2
-                    : day.contributionCount < max * 0.75
-                      ? 3
-                      : 4
-              const colors = ['bg-white/5', 'bg-accent/20', 'bg-accent/40', 'bg-accent/60', 'bg-accent/80']
+              const level = day.contributionCount === 0 ? 0 : Math.min(4, Math.ceil((day.contributionCount / max) * 4))
               return (
                 <div
                   key={day.date}
                   title={`${day.date}: ${day.contributionCount} contributions`}
-                  className={`w-2.75 h-2.75 rounded-xs ${colors[level]} transition-colors`}
+                  className={`w-2.75 h-2.75 rounded-xs ${LEVEL_COLORS[level]} transition-colors`}
                 />
               )
             })}
@@ -319,6 +311,18 @@ function ContributionsGraph() {
     </>
   )
 }
+
+const THUMB_PARTICLE_DOTS = Array.from({ length: 20 }, (_, i) => {
+  const s = Math.sin(i * 127.1 + 311.7) * 43758.5453
+  const t = Math.sin(i * 269.5 + 183.3) * 43758.5453
+  const u = Math.sin(i * 419.2 + 371.1) * 43758.5453
+  return {
+    x: 15 + (s - Math.floor(s)) * 70,
+    y: 10 + (t - Math.floor(t)) * 80,
+    r: 1.5 + (u - Math.floor(u)) * 2.5,
+    o: 0.3 + ((s - Math.floor(s)) * 0.5),
+  }
+})
 
 function PlaygroundThumb() {
   const [variant, setVariant] = useState(0)
@@ -349,18 +353,7 @@ function PlaygroundThumb() {
       </div>
     )
   }
-  // Particles thumbnail — static scatter dots (deterministic seed)
-  const dots = Array.from({ length: 20 }, (_, i) => {
-    const s = Math.sin(i * 127.1 + 311.7) * 43758.5453
-    const t = Math.sin(i * 269.5 + 183.3) * 43758.5453
-    const u = Math.sin(i * 419.2 + 371.1) * 43758.5453
-    return {
-      x: 15 + (s - Math.floor(s)) * 70,
-      y: 10 + (t - Math.floor(t)) * 80,
-      r: 1.5 + (u - Math.floor(u)) * 2.5,
-      o: 0.3 + ((s - Math.floor(s)) * 0.5),
-    }
-  })
+  const dots = THUMB_PARTICLE_DOTS
   return (
     <svg viewBox="0 0 100 100" className="w-14 h-14 group-hover:scale-110 transition-transform duration-300">
       {dots.map((d, i) => (

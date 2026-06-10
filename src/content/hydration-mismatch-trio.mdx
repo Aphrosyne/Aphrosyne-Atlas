@@ -65,8 +65,29 @@ useEffect(() => {
 <button className={`${ready ? 'hover:bg-white/20' : 'opacity-30 pointer-events-none'}`}>
 ```
 
+## 第四个：`useRef(Math.random()).current`
+
+后来在 Playground 缩略图里又踩了一次：为了让组件零重渲染，用 `useRef(Math.random()).current` 取一个随机种子。自认为 `useRef` 只初始化一次，两边一样——错了。
+
+```tsx
+// ❌ SSR 和客户端各跑一次 Math.random()，值不同
+const variant = useRef(Math.random()).current
+// SSR 渲染 <svg>（particles），客户端渲染 <div>（cube）→ mismatch
+```
+
+`useRef` 的初始化参数只在 mount 时执行，但 SSR 和客户端分别 mount，所以 `Math.random()` 仍然跑两次。
+
+解法：和 `useState` 一样，初始值固定，`useEffect` 延迟设值。
+
+```tsx
+// ✅ SSR 固定渲染 cube，客户端 mount 后再随机
+const [variant, setVariant] = useState(0)
+useEffect(() => { setVariant(Math.random()) }, [])
+```
+
 ## 教训
 
 1. **`useState` 的初始化函数不是纯客户端的**——SSR 时也会执行。凡是有副作用的（时间、随机数、`window`），一律用 `null` 初始 + `useEffect` 延迟。
-2. **`disabled={null}` 在 React 里等于移除属性**，和 `disabled={true}` 不同。如果 SSR 和客户端对同一个条件判断的值不一致，就会 hydration mismatch。最安全的做法是用 CSS class 替代 HTML boolean attribute。
-3. **Dev server 的编译缓存可能让你以为修了但没修**。改完代码还报错，先 `rm -rf .next` 再试。
+2. **`useRef(Math.random()).current` 也不行**——SSR 和客户端分别 mount，`useRef` 初始化各跑一次，值不同。
+3. **`disabled={null}` 在 React 里等于移除属性**，和 `disabled={true}` 不同。如果 SSR 和客户端对同一个条件判断的值不一致，就会 hydration mismatch。最安全的做法是用 CSS class 替代 HTML boolean attribute。
+4. **Dev server 的编译缓存可能让你以为修了但没修**。改完代码还报错，先 `rm -rf .next` 再试。
