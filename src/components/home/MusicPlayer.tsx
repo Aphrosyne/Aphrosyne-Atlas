@@ -11,6 +11,8 @@ interface SongData {
   duration: number
 }
 
+const DEFAULT_VOLUME = 0.5
+
 export default function MusicPlayer({ onAnalyser }: { onAnalyser?: (analyser: AnalyserNode) => void }) {
   const [song, setSong] = useState<SongData | null>(null)
   const [playing, setPlaying] = useState(false)
@@ -18,7 +20,6 @@ export default function MusicPlayer({ onAnalyser }: { onAnalyser?: (analyser: An
   const [loading, setLoading] = useState(true)
   const [blobUrl, setBlobUrl] = useState<string | null>(null)
   const [ready, setReady] = useState(false)
-  const DEFAULT_VOLUME = 0.5
   const [volume, setVolume] = useState(DEFAULT_VOLUME)
 
   const audioRef = useRef<HTMLAudioElement>(null)
@@ -190,12 +191,20 @@ function DragSlider({ value, onChange }: { value: number; onChange: (v: number) 
       e.preventDefault()
       calc(e.clientX)
     }
+    const onTouchMove = (e: TouchEvent) => {
+      if (!dragging.current) return
+      calc(e.touches[0].clientX)
+    }
     const onUp = () => { dragging.current = false }
     document.addEventListener('mousemove', onMove)
     document.addEventListener('mouseup', onUp)
+    document.addEventListener('touchmove', onTouchMove, { passive: true })
+    document.addEventListener('touchend', onUp)
     return () => {
       document.removeEventListener('mousemove', onMove)
       document.removeEventListener('mouseup', onUp)
+      document.removeEventListener('touchmove', onTouchMove)
+      document.removeEventListener('touchend', onUp)
     }
   }, [calc])
 
@@ -204,6 +213,7 @@ function DragSlider({ value, onChange }: { value: number; onChange: (v: number) 
       ref={trackRef}
       className="flex-1 h-1 rounded-full bg-white/10 overflow-hidden cursor-pointer"
       onMouseDown={e => { dragging.current = true; calc(e.clientX) }}
+      onTouchStart={e => { dragging.current = true; calc(e.touches[0].clientX) }}
     >
       <div
         className="h-full bg-accent rounded-full transition-[width] duration-75"

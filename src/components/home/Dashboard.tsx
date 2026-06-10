@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
+import { useBounce } from '@/lib/useBounce'
 import { motion, type Variants } from 'framer-motion'
 import Link from 'next/link'
 import socialIcons from '@/components/shared/SocialIcons'
@@ -289,8 +290,10 @@ function ContributionsGraph() {
       <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Contributions</div>
       {weeks.length === 0 && <p className="text-[11px] text-white/30">加载中...</p>}
       <div className="flex gap-0.75 overflow-hidden pb-1">
-        {[...weeks].reverse().map((week, wi) => (
-          <div key={wi} className="flex flex-col gap-0.75">
+        {weeks.map((_w, i) => {
+          const week = weeks[weeks.length - 1 - i]
+          return (
+          <div key={i} className="flex flex-col gap-0.75">
             {week.contributionDays.map((day) => {
               const level = day.contributionCount === 0
                 ? 0
@@ -311,7 +314,7 @@ function ContributionsGraph() {
               )
             })}
           </div>
-        ))}
+        )})}
       </div>
     </>
   )
@@ -369,25 +372,17 @@ function PlaygroundThumb() {
 
 function StatusCard() {
   const [status, setStatus] = useState<{ status: string; emoji?: string } | null>(null)
-  const [bouncing, setBouncing] = useState(false)
+  const { bounce, bounceStyle } = useBounce()
   useEffect(() => {
     fetch(`https://gist.githubusercontent.com/Aphrosyne/534c12c92c01c3eb2901cb41b4c81c64/raw?t=${Date.now()}`, { cache: 'no-store' })
       .then(r => r.json())
       .then(data => setStatus(data))
       .catch(() => {})
   }, [])
-  const handleClick = () => { setBouncing(true); setTimeout(() => setBouncing(false), 300) }
   return (
     <>
       <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Status</div>
-      <p
-        className="text-sm text-white/70 cursor-pointer select-none"
-        onClick={handleClick}
-        style={{
-          transform: bouncing ? 'scale(1.2)' : 'scale(1)',
-          transition: 'transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1)',
-        }}
-      >
+      <p className="text-sm text-white/70 cursor-pointer select-none" onClick={bounce} style={bounceStyle}>
         {status ? `${status.emoji || ''} ${status.status}` : '加载中...'}
       </p>
     </>
@@ -398,23 +393,15 @@ const MEM_COUNT = 1 // 改这个数字，对应 public/images/mems/ 下的图片
 
 function MemCard() {
   const [idx] = useState(() => Math.floor(Math.random() * MEM_COUNT))
-  const [bouncing, setBouncing] = useState(false)
-
-  const handleClick = () => {
-    setBouncing(true)
-    setTimeout(() => setBouncing(false), 300)
-  }
+  const { bounce, bounceStyle } = useBounce()
 
   return (
     <img
       src={`/images/mems/${idx}.jpg`}
       alt="meme"
-      onClick={handleClick}
+      onClick={bounce}
       className="max-h-28 rounded-2xl cursor-pointer select-none"
-      style={{
-        transform: bouncing ? 'scale(1.2)' : 'scale(1)',
-        transition: 'transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1)',
-      }}
+      style={bounceStyle}
     />
   )
 }
