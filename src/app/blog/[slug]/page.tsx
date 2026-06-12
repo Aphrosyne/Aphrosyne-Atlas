@@ -38,7 +38,7 @@ export default async function BlogPostPage({ params }: Props) {
         <div className="relative">
           <div className="mx-auto max-w-5xl px-4 py-12 relative">
             {/* Back link */}
-            <Link href="/blog" className="inline-flex items-center gap-1 text-sm text-black/50 hover:text-accent transition-colors mb-8">
+            <Link href="/blog" className="inline-flex items-center gap-1 text-sm text-fg/50 hover:text-accent transition-colors mb-8">
               ← 返回博客
             </Link>
 
@@ -53,15 +53,15 @@ export default async function BlogPostPage({ params }: Props) {
                 {/* Prev / Next */}
                 <nav className="mt-12 flex gap-4">
                   {prev ? (
-                    <Link href={`/blog/${prev.slug}`} className="flex-1 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 p-4 hover:bg-white/8 transition-colors">
-                      <span className="text-xs text-black/40">上一篇</span>
-                      <p className="mt-1 text-sm text-black/70 truncate">{prev.title}</p>
+                    <Link href={`/blog/${prev.slug}`} className="flex-1 rounded-xl bg-surface/40 backdrop-blur-sm border border-border/10 p-4 hover:bg-surface/60 transition-colors">
+                      <span className="text-xs text-fg/40">上一篇</span>
+                      <p className="mt-1 text-sm text-fg/70 truncate">{prev.title}</p>
                     </Link>
                   ) : <div className="flex-1" />}
                   {next ? (
-                    <Link href={`/blog/${next.slug}`} className="flex-1 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 p-4 hover:bg-white/8 transition-colors text-right">
-                      <span className="text-xs text-black/40">下一篇</span>
-                      <p className="mt-1 text-sm text-black/70 truncate">{next.title}</p>
+                    <Link href={`/blog/${next.slug}`} className="flex-1 rounded-xl bg-surface/40 backdrop-blur-sm border border-border/10 p-4 hover:bg-surface/60 transition-colors text-right">
+                      <span className="text-xs text-fg/40">下一篇</span>
+                      <p className="mt-1 text-sm text-fg/70 truncate">{next.title}</p>
                     </Link>
                   ) : <div className="flex-1" />}
                 </nav>
