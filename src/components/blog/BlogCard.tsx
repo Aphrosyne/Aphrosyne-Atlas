@@ -6,27 +6,29 @@ interface BlogCardProps {
   date: string
   excerpt: string
   tags: string[]
+  onTagClick?: (tag: string) => void
 }
 
-export default function BlogCard({ slug, title, date, excerpt, tags }: BlogCardProps) {
+export default function BlogCard({ slug, title, date, excerpt, tags, onTagClick }: BlogCardProps) {
   return (
     <Link
       href={`/blog/${slug}`}
-      className="group rounded-2xl bg-white/8 backdrop-blur-sm border-t border-t-white/15 border-b border-b-white/5 shadow-[0_10px_25px_rgba(0,0,0,0.08)] p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_14px_30px_rgba(75,169,178,0.08)]"
+      className="group rounded-2xl bg-white/50 backdrop-blur-sm border border-white/40 p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_14px_30px_rgba(0,0,0,0.12)]"
     >
-      <time className="text-xs text-white/80">{date}</time>
-      <h3 className="mt-2 font-semibold text-white group-hover:text-accent transition-colors">
+      <time className="text-xs text-black/70">{date}</time>
+      <h3 className="mt-2 font-semibold text-black/70">
         {title}
       </h3>
-      <p className="mt-2 text-sm text-white/50 leading-relaxed line-clamp-3">{excerpt}</p>
+      <p className="mt-2 text-sm text-black/45 leading-relaxed line-clamp-3">{excerpt}</p>
       <div className="mt-4 flex flex-wrap gap-2">
         {tags.map((tag) => (
-          <span
+          <button
             key={tag}
-            className="rounded-full bg-white/12 px-2 py-0.5 text-xs text-white/50 hover:text-white hover:bg-white/20 transition-colors"
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); onTagClick?.(tag) }}
+            className="rounded-full bg-black/5 text-xs text-black/70 px-2 py-0.5 hover:bg-white/70 hover:text-accent transition-colors cursor-pointer"
           >
             {tag}
-          </span>
+          </button>
         ))}
       </div>
     </Link>

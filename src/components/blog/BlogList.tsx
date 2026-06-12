@@ -36,7 +36,7 @@ export default function BlogList({ posts }: { posts: PostMetadata[] }) {
             className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
               !activeTag
                 ? 'bg-accent text-white'
-                : 'bg-white/50 backdrop-blur-sm text-black/70 hover:text-white hover:bg-white/12'
+                : 'bg-white/50 backdrop-blur-sm text-black/70 hover:bg-white/70 hover:text-accent'
             }`}
           >
             All
@@ -48,7 +48,7 @@ export default function BlogList({ posts }: { posts: PostMetadata[] }) {
               className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
                 activeTag === tag
                   ? 'bg-accent text-white'
-                  : 'bg-white/50 backdrop-blur-sm text-black/70 hover:text-white hover:bg-white/12'
+                  : 'bg-white/50 backdrop-blur-sm text-black/70 hover:bg-white/70 hover:text-accent'
               }`}
             >
               {tag}
@@ -63,7 +63,7 @@ export default function BlogList({ posts }: { posts: PostMetadata[] }) {
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((post) => (
-            <BlogCard key={post.slug} {...post} />
+            <BlogCard key={post.slug} {...post} onTagClick={setActiveTag} />
           ))}
         </div>
       )}
