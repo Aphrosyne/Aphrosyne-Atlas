@@ -90,6 +90,16 @@ transition-[transform,box-shadow]
 transition-[transform,box-shadow,background-color]
 ```
 
+## `transform-gpu` 不是万金油
+
+`transform-gpu` 只是 `transform: translateZ(0)`，强制元素提升到 GPU 合成层。它**能**解决部分 CSS `transition` 导致的卡顿问题，但**不能**解决：
+
+- Framer Motion 的 opacity 动画延迟
+- backdrop-filter 在 opacity 0 元素上的渲染问题
+- 浏览器层爆炸（太多 GPU 层反而更慢）
+
+**不要用 `transform-gpu` 来糊弄用户、掩盖真正的渲染问题。** 遇到 blur 闪烁等问题，先查动画结构是否合理（动画和 blur 是否在同一个元素上），而不是无脑加 GPU 加速。
+
 ## Directional border colors
 
 Use per-direction color classes to avoid override:

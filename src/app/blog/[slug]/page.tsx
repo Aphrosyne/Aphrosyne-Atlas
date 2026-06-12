@@ -5,6 +5,7 @@ import { getPostSlugs, getAdjacentPosts } from '@/lib/posts'
 import PageTransition from '@/components/shared/PageTransition'
 import PostHeader from '@/components/blog/PostHeader'
 import TableOfContents from '@/components/blog/TableOfContents'
+import CopyAttribution from '@/components/blog/CopyAttribution'
 import type { PostMetadata } from '@/types/post'
 
 type Props = {
@@ -45,10 +46,12 @@ export default async function BlogPostPage({ params }: Props) {
             <div className="flex gap-8 justify-center">
               {/* Main content */}
               <div className="max-w-4xl flex-1 min-w-0">
-                <article className="prose dark:prose-invert prose-headings:font-semibold prose-a:text-accent prose-a:no-underline [&_a:hover]:text-avatar-ring [&_a]:transition-colors prose-hr:border-t-2 prose-hr:border-fg [&_table]:border-2 [&_table]:border-fg [&_th]:border-2 [&_th]:border-fg [&_th]:px-3 [&_th]:py-2 [&_td]:border-2 [&_td]:border-fg [&_td]:px-3 [&_td]:py-2 [&_thead_tr]:bg-accent/50 [&_tbody_tr:nth-child(even)]:bg-surface/70 prose-pre:border-0 prose-pre:bg-transparent prose-code:rounded prose-code:bg-code-bg/40 [&_pre_code]:bg-transparent prose-code:px-1.5 prose-code:py-0.5 prose-code:text-sm max-w-none">
-                  <PostHeader {...meta} />
-                  <Post />
-                </article>
+                <CopyAttribution slug={slug}>
+                  <article className="prose dark:prose-invert prose-headings:font-semibold prose-a:text-accent prose-a:no-underline [&_a:hover]:text-avatar-ring [&_a]:transition-colors prose-hr:border-t-2 prose-hr:border-fg [&_table]:border-2 [&_table]:border-fg [&_th]:border-2 [&_th]:border-fg [&_th]:px-3 [&_th]:py-2 [&_td]:border-2 [&_td]:border-fg [&_td]:px-3 [&_td]:py-2 [&_thead_tr]:bg-accent/50 [&_tbody_tr:nth-child(even)]:bg-surface/70 prose-pre:border-0 prose-pre:bg-transparent prose-code:rounded prose-code:bg-code-bg/40 [&_pre_code]:bg-transparent prose-code:px-1.5 prose-code:py-0.5 prose-code:text-sm max-w-none">
+                    <PostHeader {...meta} />
+                    <Post />
+                  </article>
+                </CopyAttribution>
 
                 {/* Prev / Next */}
                 <nav className="mt-12 flex gap-4">

@@ -79,9 +79,73 @@ return (
 )
 ```
 
+## BlogCard 模糊闪现：动画和 blur 不能分层
+
+列表页的卡片用了 `bg-surface/50 backdrop-blur-sm`，放在 `PageTransition` 里。页面加载时卡片先出现（无 blur），等 PageTransition 的 `opacity: 0 → 1` 动画结束后 blur 才突然出现。
+
+原因和备忘里之前记录的 PageTransition 蒙版闪烁**不同**：
+
+| 场景 | 原因 | 解法 |
+|------|------|------|
+| 详情页全屏蒙版 | 蒙版在 PageTransition 内部，跟着动画 fade in | 把蒙版移到 PageTransition 外面 |
+| BlogCard 模糊 | PageTransition 是父级，对子级的 `backdrop-filter` 效果没有帮助 | 去掉父级 PageTransition，把动画直接写在卡片的 motion 组件上 |
+
+为什么 Card 的解法不同：蒙版是**背景装饰**，可以移出去独立渲染。卡片是**内容本身**，没法拆成两半。
+
+### 正确的模式（参考 AboutContent）
+
+动画和 `backdrop-blur` **必须在同一个元素上**：
+
+```tsx
+// ✅ 动画和 blur 同一个元素
+<motion.a
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ duration: 0.35, delay: index * 0.06 }}
+  className="bg-surface/50 backdrop-blur-sm border..."
+>
+  卡片内容
+</motion.a>
+
+// ❌ 父级动画 + 子级 blur → 模糊延迟
+<PageTransition>          ← opacity 动画在这
+  <div>                   ← blur 在这，两层分离
+    <BlogCard />          ← blur 延迟渲染
+  </div>
+</PageTransition>
+```
+
+## Footer 高度跳动：ThemeToggle hydration 缺位
+
+刷新页面后 Footer 的高度会突然跳一下——圆角矩形的 Footer 在页面加载完成后高度突然增加，带动整个页面向上位移。
+
+原因和 `hydration-mismatch-trio.mdx` 里记录的 PlaygroundThumb 是同一类问题：
+
+```tsx
+// ❌ 服务端返回 null，客户端挂载后才渲染按钮 — 高度突变
+if (!mounted) return null
+return <button>☾</button>
+```
+
+服务端 HTML 中 Footer 里没有这个按钮（高度为 0），客户端 hydration 后按钮凭空出现，Footer 高度瞬变。
+
+### 解法
+
+不用 `return null`，改用不可见但等高的占位符：
+
+```tsx
+// ✅ 始终渲染按钮，占位字符保持高度一致
+<button>
+  {mounted ? (theme === 'dark' ? '☾' : '☀') : ' '}
+</button>
+```
+
+` `（non-breaking space）在服务端和客户端都占据相同高度，hydration 后不会有布局位移。
+
 ## 总结
 
 - 全屏蒙版用 `fixed inset-0` 而非 `min-h-screen`，确保覆盖 header/footer
 - 半透明白蒙版 + 深色正文的搭配比全暗色更有阅读感
 - 透明度需要反复调，太低识清晰度差，太高对比强烈
 - Navbar/Footer 的暗色风格和白色蒙版有冲突，透明度压低后勉强能接受
+- 服务端返回 `null` 的组件会导致 hydration 后高度突变，始终用占位符代替

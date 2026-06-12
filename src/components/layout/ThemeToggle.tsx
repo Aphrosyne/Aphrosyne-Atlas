@@ -9,14 +9,13 @@ export default function ThemeToggle() {
 
   useEffect(() => { setMounted(true) }, [])
 
-  if (!mounted) return null
-
   return (
     <button
       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
       className="text-xl text-fg/50 hover:text-accent transition-colors cursor-pointer"
+      aria-label="切换主题"
     >
-      {theme === 'dark' ? '☾' : '☀'}
+      {mounted ? (theme === 'dark' ? '☾' : '☀') : ' '}
     </button>
   )
 }

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { motion } from 'framer-motion'
 import type { PostMetadata } from '@/types/post'
 import BlogCard from './BlogCard'
 
@@ -22,7 +23,12 @@ export default function BlogList({ posts }: { posts: PostMetadata[] }) {
   return (
     <div>
       {/* Search & filter */}
-      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4, ease: 'easeOut', delay: 0.1 }}
+        className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+      >
         <input
           type="text"
           placeholder="Search posts…"
@@ -55,15 +61,15 @@ export default function BlogList({ posts }: { posts: PostMetadata[] }) {
             </button>
           ))}
         </div>
-      </div>
+      </motion.div>
 
       {/* Grid */}
       {filtered.length === 0 ? (
         <p className="py-12 text-center text-fg/30">No posts found.</p>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((post) => (
-            <BlogCard key={post.slug} {...post} onTagClick={setActiveTag} />
+          {filtered.map((post, i) => (
+            <BlogCard key={post.slug} {...post} index={i} onTagClick={setActiveTag} />
           ))}
         </div>
       )}

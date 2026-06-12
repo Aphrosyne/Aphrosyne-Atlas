@@ -1,4 +1,6 @@
-import Link from 'next/link'
+'use client'
+
+import { motion } from 'framer-motion'
 
 interface BlogCardProps {
   slug: string
@@ -6,14 +8,19 @@ interface BlogCardProps {
   date: string
   excerpt: string
   tags: string[]
+  index: number
   onTagClick?: (tag: string) => void
 }
 
-export default function BlogCard({ slug, title, date, excerpt, tags, onTagClick }: BlogCardProps) {
+export default function BlogCard({ slug, title, date, excerpt, tags, index, onTagClick }: BlogCardProps) {
   return (
-    <Link
+    <motion.a
       href={`/blog/${slug}`}
-      className="group rounded-2xl bg-surface/50 backdrop-blur-sm border border-border/40 p-5 transition-[transform,box-shadow] duration-300 transform-gpu hover:-translate-y-1 hover:shadow-[0_14px_30px_rgba(0,0,0,0.12)]"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      whileHover={{ y: -4 }}
+      transition={{ duration: 0.35, ease: 'easeOut', delay: index * 0.06 }}
+      className="group rounded-2xl bg-surface/50 backdrop-blur-sm border border-border/40 p-5 transition-shadow duration-300 hover:shadow-[0_14px_30px_rgba(0,0,0,0.12)] cursor-pointer"
     >
       <time className="text-xs text-fg/70">{date}</time>
       <h3 className="mt-2 font-semibold text-fg/85">
@@ -31,6 +38,6 @@ export default function BlogCard({ slug, title, date, excerpt, tags, onTagClick 
           </button>
         ))}
       </div>
-    </Link>
+    </motion.a>
   )
 }
