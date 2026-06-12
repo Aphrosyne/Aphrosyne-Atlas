@@ -28,7 +28,7 @@ export default function BlogList({ posts }: { posts: PostMetadata[] }) {
           placeholder="Search posts…"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="w-full rounded-full bg-white/50 backdrop-blur-sm border border-white/20 px-4 py-2 text-sm text-black/70 placeholder:text-black/40 focus:outline-none focus:ring-1 focus:ring-accent sm:max-w-xs"
+          className="w-full rounded-full bg-surface/50 backdrop-blur-sm border border-border/20 px-4 py-2 text-sm text-fg/70 placeholder:text-fg/40 focus:outline-none focus:ring-1 focus:ring-accent sm:max-w-xs"
         />
         <div className="flex flex-wrap gap-2">
           <button
@@ -36,7 +36,7 @@ export default function BlogList({ posts }: { posts: PostMetadata[] }) {
             className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
               !activeTag
                 ? 'bg-accent text-white'
-                : 'bg-white/50 backdrop-blur-sm text-black/70 hover:bg-white/70 hover:text-accent'
+                : 'bg-surface/50 backdrop-blur-sm text-fg/70 hover:bg-surface/70 hover:text-accent'
             }`}
           >
             All
@@ -48,7 +48,7 @@ export default function BlogList({ posts }: { posts: PostMetadata[] }) {
               className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
                 activeTag === tag
                   ? 'bg-accent text-white'
-                  : 'bg-white/50 backdrop-blur-sm text-black/70 hover:bg-white/70 hover:text-accent'
+                  : 'bg-surface/50 backdrop-blur-sm text-fg/70 hover:bg-surface/70 hover:text-accent'
               }`}
             >
               {tag}
@@ -59,7 +59,7 @@ export default function BlogList({ posts }: { posts: PostMetadata[] }) {
 
       {/* Grid */}
       {filtered.length === 0 ? (
-        <p className="py-12 text-center text-white/30">No posts found.</p>
+        <p className="py-12 text-center text-fg/30">No posts found.</p>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((post) => (
