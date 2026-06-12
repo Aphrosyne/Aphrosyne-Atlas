@@ -168,7 +168,7 @@ export default function Dashboard({ siteName, recentPosts, projects, tags }: Das
             </div>
             <div className="flex gap-3 mt-2">
               {Object.entries(SOCIAL_LINKS).map(([key, href]) => (
-                <a key={key} href={href} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-lg bg-surface/50 border border-border/30 flex items-center justify-center text-white/40 hover:text-white hover:border-white/30 transition-all" title={key}>
+                <a key={key} href={href} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-lg bg-surface/50 border border-border/20 flex items-center justify-center text-fg/40 hover:text-fg hover:border-border/70 transition-all" title={key}>
                   <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">{socialIcons[key]}</svg>
                 </a>
               ))}

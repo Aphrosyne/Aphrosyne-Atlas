@@ -106,7 +106,7 @@ function NavDropdown({
               transition={{ duration: 0.2, ease: 'easeOut' }}
               onMouseEnter={onEnterMenu}
               onMouseLeave={onLeaveMenu}
-              className="absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 min-w-37.5 rounded-2xl bg-bg/50 backdrop-blur-md border border-border shadow-[0_15px_35px_rgba(0,0,0,0.3)] overflow-hidden"
+              className="absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 min-w-37.5 rounded-2xl bg-bg/50 backdrop-blur-md border border-border/10 shadow-[0_15px_35px_rgba(0,0,0,0.3)] overflow-hidden"
             >
               {children.map((child) => (
                 <Link
@@ -159,7 +159,7 @@ export default function Navbar() {
         </Link>
 
         {/* Pill navigation */}
-        <div className="flex items-center gap-0.5 bg-surface/50 backdrop-blur-xl border border-bg/30 rounded-full px-1 py-1 shadow-sm">
+        <div className="flex items-center gap-0.5 bg-surface/50 backdrop-blur-xl border border-border/10 rounded-full px-1 py-1 shadow-sm">
           {NAV_ITEMS.map((item) => {
             if ('children' in item && item.children) {
               return (

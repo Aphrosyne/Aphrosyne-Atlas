@@ -27,7 +27,7 @@ export default function AboutContent() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4, ease: 'easeOut' }}
-        className="rounded-2xl backdrop-blur-xl bg-bg/30 border border-white/10 p-8 sm:p-10"
+        className="rounded-2xl backdrop-blur-xl bg-bg/30 border border-border/10 p-8 sm:p-10"
       >
         {/* Avatar — superellipse */}
         <div className="flex justify-center mb-6">
@@ -85,7 +85,7 @@ export default function AboutContent() {
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-9 h-9 rounded-lg bg-surface/50 border border-border/30 flex items-center justify-center text-white/40 hover:text-white hover:border-white/30 transition-all"
+              className="w-9 h-9 rounded-lg bg-surface/50 border border-border/30 flex items-center justify-center text-fg/40 hover:text-fg hover:border-fg/30 transition-all"
               title={key}
             >
               <svg viewBox="0 0 24 24" fill="currentColor" className="w-4.5 h-4.5">
