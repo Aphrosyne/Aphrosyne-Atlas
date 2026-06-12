@@ -4,7 +4,7 @@ export default function PostHeader({ title, date, tags, readingTime }: PostMetad
   return (
     <header className="mb-10">
       <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">{title}</h1>
-      <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-muted">
+      <div className="mt-4 flex flex-wrap items-center gap-3 text-base text-muted">
         <time>{date}</time>
         {readingTime && (
           <>
