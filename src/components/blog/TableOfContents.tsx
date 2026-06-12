@@ -26,14 +26,14 @@ export default function TableOfContents() {
   if (headings.length === 0) return null
 
   return (
-    <nav className="sticky top-24 rounded-xl bg-white/50 backdrop-blur-sm border border-white/60 p-4">
-      <h4 className="mb-3 text-xs text-black/40 uppercase tracking-wider">目录</h4>
+    <nav className="sticky top-24 rounded-xl bg-surface/50 backdrop-blur-sm border border-border/60 p-4">
+      <h4 className="mb-3 text-xs text-fg/40 uppercase tracking-wider">目录</h4>
       <ul className="space-y-1.5 text-sm">
         {headings.map((h) => (
           <li key={h.id}>
             <a
               href={`#${h.id}`}
-              className={`block text-black/60 hover:text-accent transition-colors leading-relaxed ${
+              className={`block text-fg/60 hover:text-accent transition-colors leading-relaxed ${
                 h.level === 3 ? 'pl-3' : h.level >= 4 ? 'pl-6 text-xs' : ''
               }`}
             >

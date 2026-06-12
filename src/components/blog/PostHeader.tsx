@@ -17,7 +17,7 @@ export default function PostHeader({ title, date, tags, readingTime }: PostMetad
         {tags.map((tag) => (
           <span
             key={tag}
-            className="rounded-full bg-black/5 text-xs text-black/70 px-2.5 py-0.5"
+            className="rounded-full bg-surface/50 backdrop-blur-sm text-xs text-fg/70 px-2.5 py-0.5"
           >
             {tag}
           </span>

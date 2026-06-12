@@ -33,7 +33,7 @@ export default async function BlogPostPage({ params }: Props) {
     return (
       <>
         {/* Full-screen reading mask — outside PageTransition to avoid flash */}
-        <div className="fixed inset-0 bg-white/15 backdrop-blur-xl z-[-1]" />
+        <div className="fixed inset-0 bg-surface/50 backdrop-blur-xl z-[-1]" />
         <PageTransition>
         <div className="relative">
           <div className="mx-auto max-w-5xl px-4 py-12 relative">
@@ -45,7 +45,7 @@ export default async function BlogPostPage({ params }: Props) {
             <div className="flex gap-8 justify-center">
               {/* Main content */}
               <div className="max-w-4xl flex-1 min-w-0">
-                <article className="prose prose-zinc prose-headings:font-semibold prose-a:text-accent prose-a:no-underline hover:prose-a:underline prose-code:rounded prose-code:bg-code-bg prose-code:px-1.5 prose-code:py-0.5 prose-code:text-sm prose-pre:bg-code-bg prose-pre:border prose-pre:border-border max-w-none">
+                <article className="prose dark:prose-invert prose-headings:font-semibold prose-a:text-accent prose-a:no-underline hover:prose-a:underline prose-code:rounded prose-code:bg-code-bg prose-code:px-1.5 prose-code:py-0.5 prose-code:text-sm prose-pre:bg-code-bg prose-pre:border prose-pre:border-border max-w-none">
                   <PostHeader {...meta} />
                   <Post />
                 </article>
