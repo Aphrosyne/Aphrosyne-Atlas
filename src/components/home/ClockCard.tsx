@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useBounce } from '@/lib/useBounce'
 
 function formatTime(d: Date) {
   return d.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })
@@ -16,6 +17,7 @@ function formatDate(d: Date) {
 
 export default function ClockCard() {
   const [now, setNow] = useState<Date | null>(null)
+  const { bounce, bounceStyle } = useBounce()
 
   useEffect(() => {
     setNow(new Date())
@@ -33,11 +35,15 @@ export default function ClockCard() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center gap-1">
+    <div
+      className="flex flex-col items-center justify-center gap-1 cursor-pointer select-none"
+      onClick={bounce}
+      style={bounceStyle}
+    >
       <div className="text-2xl font-mono font-light tracking-wider text-white">
         {formatTime(now)}
       </div>
-      <div className="text-[11px] text-white/40">
+      <div className="text-sm text-white/60">
         {formatDate(now)}
       </div>
     </div>

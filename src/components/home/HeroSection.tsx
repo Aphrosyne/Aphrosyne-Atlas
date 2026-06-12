@@ -32,21 +32,12 @@ export default function HeroSection() {
           background-clip: text;
           animation: flow 12s linear infinite;
         }
-        .flow-arrow {
-          font-size: 1.5rem;
-          line-height: 1;
-          color: transparent;
-          background: linear-gradient(
-            90deg,
-            rgba(255,255,255,0.15) 0%,
-            rgba(255,255,255,0.7) 30%,
-            rgba(255,255,255,0.7) 70%,
-            rgba(255,255,255,0.15) 100%
-          );
-          background-size: 200% 100%;
-          -webkit-background-clip: text;
-          background-clip: text;
-          animation: flow 12s linear infinite;
+        .scroll-arrow {
+          animation: float 2.5s ease-in-out infinite;
+        }
+        @keyframes float {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(8px); }
         }
       `}</style>
 
@@ -72,9 +63,11 @@ export default function HeroSection() {
       >
         <button
           onClick={() => document.getElementById('content')?.scrollIntoView({ behavior: 'smooth' })}
-          className="flow-arrow cursor-pointer"
+          className="scroll-arrow cursor-pointer"
         >
-          ↓
+          <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="#4ba9b2">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 9l7 7 7-7" />
+          </svg>
         </button>
       </motion.div>
     </section>

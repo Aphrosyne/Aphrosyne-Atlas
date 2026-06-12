@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
+import { useBounce } from '@/lib/useBounce'
 import { motion, type Variants } from 'framer-motion'
 import Link from 'next/link'
 import socialIcons from '@/components/shared/SocialIcons'
@@ -8,16 +9,14 @@ import TagCloud from '@/components/home/TagCloud'
 import ClockCard from '@/components/home/ClockCard'
 import MusicPlayer from '@/components/home/MusicPlayer'
 import FFTVisualizer from '@/components/home/FFTVisualizer'
-import SteamCard from '@/components/home/SteamCard'
 import { SOCIAL_LINKS } from '@/lib/constants'
 import type { PostMetadata } from '@/types/post'
-
-const TECH_TAGS = ['Rust', 'Next.js', 'Embedded', 'CLI', 'React', 'Tailwind', 'Linux', 'TypeScript']
 
 interface DashboardProps {
   siteName: string
   recentPosts: PostMetadata[]
   projects: { slug: string; title: string; description: string }[]
+  tags: string[]
 }
 
 
@@ -104,78 +103,85 @@ function ProjectSubCard({ project }: { project: DashboardProps['projects'][numbe
 
 /* ─── Dashboard ─── */
 
-export default function Dashboard({ siteName, recentPosts, projects }: DashboardProps) {
-  const analyserRef = useRef<AnalyserNode | null>(null)
+/* ─── Grid Layout — 改这里调整卡片位置 ─── */
+const GRID = {
+  bio:           'md:col-start-1   md:col-span-3 md:row-start-1 md:row-span-1',
+  posts:         'md:col-start-4   md:col-span-9 md:row-start-1 md:row-span-1',
+  projects:      'md:col-start-1   md:col-span-3 md:row-start-2 md:row-span-3',
+  tagcloud:      'md:col-start-4   md:col-span-6 md:row-start-2 md:row-span-3',
+  memes:         'md:col-start-10  md:col-span-3 md:row-start-2 md:row-span-1',
+  status:        'md:col-start-10  md:col-span-3 md:row-start-3 md:row-span-1',
+  clock:         'md:col-start-10  md:col-span-3 md:row-start-4 md:row-span-1',
+  playground:    'md:col-start-1   md:col-span-3 md:row-start-5 md:row-span-1',
+  contributions: 'md:col-start-4   md:col-span-4 md:row-start-5 md:row-span-1',
+  player:        'md:col-start-8   md:col-span-5 md:row-start-5 md:row-span-2',
+  hitokoto:      'md:col-start-1   md:col-span-7 md:row-start-6 md:row-span-1',
+} as const
+
+/* ─── 飞入方向 — 底部卡片不能用 bottom，否则卡滚动 ─── */
+const DIR: Record<keyof typeof GRID, Direction> = {
+  bio:           'left',
+  posts:         'top',
+  projects:      'left',
+  tagcloud:      'bottom',
+  memes:         'right',
+  status:        'right',
+  clock:         'right',
+  playground:    'left',
+  contributions: 'bottom',
+  player:        'right',
+  hitokoto:      'left',
+}
+
+export default function Dashboard({ siteName, recentPosts, projects, tags }: DashboardProps) {
   const [analyser, setAnalyser] = useState<AnalyserNode | null>(null)
   return (
-    <section id="content" className="px-4 pb-20 max-w-5xl mx-auto">
+    <section id="content" className="px-4 pb-12 max-w-5xl mx-auto">
       <motion.div
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: '-50px' }}
-        className="grid grid-cols-1 md:grid-cols-[1fr_2fr_1fr] gap-4 lg:gap-5"
+        className="grid grid-cols-1 md:grid-cols-12 grid-rows-[repeat(6,minmax(120px,auto))] gap-4 lg:gap-5"
       >
-        {/* ─── Row 1: Bio | TagCloud(跨2行) | Clock ─── */}
-
-        {/* Bio + Social */}
-        <Card direction="left" className="flex flex-col items-center justify-center text-center gap-3 py-6">
-          <div className="text-[10px] text-white/40 tracking-widest uppercase">Profile</div>
-          <svg width="0" height="0" aria-hidden="true">
-            <defs>
-              <clipPath id="bio-avatar-clip" clipPathUnits="objectBoundingBox">
-                <path d={AVATAR_CLIP_PATH} />
-              </clipPath>
-            </defs>
-          </svg>
-          <div className="relative w-16 h-16 group">
-            <div
-              className="absolute -inset-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-spin"
-              style={{
-                clipPath: 'url(#bio-avatar-clip)',
-                background: '#f7a1c4',
-                animationDuration: '4s',
-              }}
-            />
-            <img
-              src="/images/avatar/avatar.jpg"
-              alt="Avatar"
-              className="relative w-16 h-16 object-cover"
-              style={{ clipPath: 'url(#bio-avatar-clip)' }}
-            />
-          </div>
-          <div>
-            <div className="text-sm font-semibold text-white">{siteName}</div>
-            <div className="text-[11px] text-white/50">设计 · 创造</div>
-          </div>
-          <div className="grid grid-cols-2 gap-4 mt-2">
-            {Object.entries(SOCIAL_LINKS).map(([key, href]) => (
-              <a
-                key={key}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-8 h-8 rounded-lg bg-surface/50 border border-border/30 flex items-center justify-center text-white/40 hover:text-white hover:border-white/30 transition-all"
-                title={key}
-              >
-                <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">
-                  {socialIcons[key]}
-                </svg>
-              </a>
-            ))}
+        {/* Bio */}
+        <Card direction={DIR.bio} className={`${GRID.bio} flex flex-col gap-3 py-6`}>
+          <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Profile</div>
+          <div className="flex flex-col items-center gap-3 flex-1 justify-center">
+            <svg width="0" height="0" aria-hidden="true">
+              <defs>
+                <clipPath id="bio-avatar-clip" clipPathUnits="objectBoundingBox">
+                  <path d={AVATAR_CLIP_PATH} />
+                </clipPath>
+              </defs>
+            </svg>
+            <div className="relative w-16 h-16 group">
+              <div
+                className="absolute -inset-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-spin"
+                style={{ clipPath: 'url(#bio-avatar-clip)', background: '#f7a1c4', animationDuration: '4s' }}
+              />
+              <img src="/images/avatar/avatar.jpg" alt="Avatar" className="relative w-16 h-16 object-cover" style={{ clipPath: 'url(#bio-avatar-clip)' }} />
+            </div>
+            <div>
+              <div className="text-sm font-semibold text-white">{siteName}</div>
+              <div className="text-[11px] text-white/50">设计 · 创造</div>
+            </div>
+            <div className="flex gap-3 mt-2">
+              {Object.entries(SOCIAL_LINKS).map(([key, href]) => (
+                <a key={key} href={href} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-lg bg-surface/50 border border-border/30 flex items-center justify-center text-white/40 hover:text-white hover:border-white/30 transition-all" title={key}>
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">{socialIcons[key]}</svg>
+                </a>
+              ))}
+            </div>
           </div>
         </Card>
 
-        {/* Recent posts */}
-        <Card direction="left">
+        {/* Posts */}
+        <Card direction={DIR.posts} className={GRID.posts}>
           <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Recent Posts</div>
-          {recentPosts.slice(0, 3).map((p) => (
-            <Link key={p.slug} href={`/blog/${p.slug}`}
-              className="flex items-center gap-3 py-2 px-1.5 rounded-lg -mx-1.5 transition-colors hover:bg-surface/40 group"
-            >
-              <div className="w-10 h-10 rounded-lg bg-accent/6 flex items-center justify-center shrink-0 text-sm group-hover:bg-accent/10 transition-colors">
-                📄
-              </div>
+          {recentPosts.map((p) => (
+            <Link key={p.slug} href={`/blog/${p.slug}`} className="flex items-center gap-3 py-2 px-1.5 rounded-lg -mx-1.5 transition-colors hover:bg-surface/40 group">
+              <div className="w-10 h-10 rounded-lg bg-accent/6 flex items-center justify-center shrink-0 text-sm group-hover:bg-accent/10 transition-colors">📄</div>
               <div className="min-w-0">
                 <div className="text-sm font-medium text-white/80 truncate group-hover:text-accent transition-colors">{p.title}</div>
                 <div className="text-[11px] text-white/40">{p.date}</div>
@@ -184,60 +190,54 @@ export default function Dashboard({ siteName, recentPosts, projects }: Dashboard
           ))}
         </Card>
 
-        {/* GitHub */}
-        <GitHubRepos />
-
-        {/* ─── Row 2: Hitokoto | (TagCloud) | Music ─── */}
-
-        {/* Projects showcase */}
-        <Card direction="bottom" className="">
-          <div className="text-[10px] text-white/40 tracking-widest uppercase mb-4">Projects</div>
+        {/* Projects */}
+        <Card direction={DIR.projects} className={GRID.projects}>
+          <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Projects</div>
           <div className="grid grid-cols-2 gap-3">
             {projects.slice(0, 4).map((p) => (
-              <Link key={p.slug} href={`/projects/${p.slug}`}>
-                <ProjectSubCard project={p} />
-              </Link>
+              <Link key={p.slug} href={`/projects/${p.slug}`}><ProjectSubCard project={p} /></Link>
             ))}
           </div>
         </Card>
 
-        {/* TagCloud — center, spans 2 rows */}
-        <div className="md:col-start-2 flex items-center justify-center">
-          <TagCloud tags={TECH_TAGS} />
-        </div>
+        {/* TagCloud */}
+        <Card direction={DIR.tagcloud} className={`${GRID.tagcloud} flex items-center justify-center`}>
+          <TagCloud tags={tags} />
+        </Card>
+
+        {/* Memes */}
+        <Card direction={DIR.memes} className={`${GRID.memes} flex flex-col`}>
+          <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Memes</div>
+          <div className="flex-1 flex items-center justify-center"><MemCard /></div>
+        </Card>
+
+        {/* Status */}
+        <Card direction={DIR.status} className={GRID.status}><StatusCard /></Card>
 
         {/* Clock */}
-        <Card direction="right" className="flex flex-col items-center justify-center gap-2">
-          <div className="text-[10px] text-white/40 tracking-widest uppercase">Clock</div>
-          <ClockCard />
+        <Card direction={DIR.clock} className={`${GRID.clock} flex flex-col`}>
+          <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Clock</div>
+          <div className="flex-1 flex items-center justify-center"><ClockCard /></div>
         </Card>
 
-        {/* ─── Row 3: Posts | Projects | FFT ─── */}
+        {/* Playground */}
+        <Card direction={DIR.playground} className={`${GRID.playground} flex flex-col`}>
+          <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Playground</div>
+          <Link href="/playground" className="flex-1 flex items-center justify-center group"><PlaygroundThumb /></Link>
+        </Card>
+
+        {/* Contributions */}
+        <Card direction={DIR.contributions} className={`${GRID.contributions} overflow-x-auto`}><ContributionsGraph /></Card>
+
+        {/* Player — FFT + Music */}
+        <Card direction={DIR.player} className={`${GRID.player} flex flex-col`}>
+          <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Music</div>
+          <div className="h-24 mb-3"><FFTVisualizer analyser={analyser} /></div>
+          <MusicPlayer onAnalyser={a => setAnalyser(a)} />
+        </Card>
 
         {/* Hitokoto */}
-        <HitokotoCard />
-
-        {/* Music + FFT — stacked in one cell */}
-        <div className="grid grid-rows-2 gap-4 lg:gap-5">
-          <Card direction="right" className="flex flex-col justify-center">
-            <div className="text-[10px] text-white/40 tracking-widest uppercase mb-2">Music</div>
-            <MusicPlayer onAnalyser={a => { analyserRef.current = a; setAnalyser(a) }} />
-          </Card>
-          <Card direction="bottom" className="p-3">
-            <div className="text-[10px] text-white/40 tracking-widest uppercase mb-2">Audio</div>
-            <div className="h-20">
-              <FFTVisualizer analyser={analyser} />
-            </div>
-          </Card>
-        </div>
-
-        {/* ─── Row 4: Steam | GitHub ─── */}
-
-        {/* Steam */}
-        <Card direction="left" className="min-h-100">
-          <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Steam</div>
-          <SteamCard />
-        </Card>
+        <Card direction={DIR.hitokoto} className={GRID.hitokoto}><HitokotoCard /></Card>
 
       </motion.div>
 
@@ -255,33 +255,146 @@ function HitokotoCard() {
       .catch(() => setQuote('薄暝柳隙人独立，数点雨痕待江凝。'))
   }, [])
   return (
-    <Card direction="left" className="text-center py-4">
-      <div className="text-[10px] text-white/40 tracking-widest uppercase mb-2">Hitokoto</div>
-      <p className="text-xs text-white/50 italic leading-relaxed">{quote ? `「${quote}」` : `加载中...`}</p>
-    </Card>
+    <>
+      <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Hitokoto</div>
+      <p className="text-xs text-white/50 italic leading-relaxed text-center">{quote ? `「${quote}」` : `加载中...`}</p>
+    </>
   )
 }
 
-interface GitHubRepo { name: string; language: string }
+interface ContributionDay {
+  contributionCount: number
+  date: string
+  color: string
+}
 
-function GitHubRepos() {
-  const [repos, setRepos] = useState<GitHubRepo[]>([])
+interface ContributionWeek {
+  contributionDays: ContributionDay[]
+}
+
+const LEVEL_COLORS = ['bg-white/5', 'bg-accent/20', 'bg-accent/40', 'bg-accent/60', 'bg-accent/80']
+
+function ContributionsGraph() {
+  const [weeks, setWeeks] = useState<ContributionWeek[]>([])
   useEffect(() => {
-    fetch('https://api.github.com/users/aphrosyne/repos?sort=updated&per_page=3')
-      .then(r => r.json()).then(d => { if (Array.isArray(d)) setRepos(d) })
+    fetch('/api/github-contributions')
+      .then(r => r.json())
+      .then(d => setWeeks(d.weeks ?? []))
+      .catch(() => {})
+  }, [])
+
+  const days = weeks.flatMap(w => w.contributionDays)
+  const max = Math.max(...days.map(d => d.contributionCount), 1)
+
+  return (
+    <>
+      <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Contributions</div>
+      {weeks.length === 0 && <p className="text-[11px] text-white/30">加载中...</p>}
+      <div className="flex gap-0.75 overflow-hidden pb-1">
+        {weeks.map((_w, i) => {
+          const week = weeks[weeks.length - 1 - i]
+          return (
+          <div key={i} className="flex flex-col gap-0.75">
+            {week.contributionDays.map((day) => {
+              const level = day.contributionCount === 0 ? 0 : Math.min(4, Math.ceil((day.contributionCount / max) * 4))
+              return (
+                <div
+                  key={day.date}
+                  title={`${day.date}: ${day.contributionCount} contributions`}
+                  className={`w-2.75 h-2.75 rounded-xs ${LEVEL_COLORS[level]} transition-colors`}
+                />
+              )
+            })}
+          </div>
+        )})}
+      </div>
+    </>
+  )
+}
+
+const THUMB_PARTICLE_DOTS = Array.from({ length: 20 }, (_, i) => {
+  const s = Math.sin(i * 127.1 + 311.7) * 43758.5453
+  const t = Math.sin(i * 269.5 + 183.3) * 43758.5453
+  const u = Math.sin(i * 419.2 + 371.1) * 43758.5453
+  return {
+    x: 15 + (s - Math.floor(s)) * 70,
+    y: 10 + (t - Math.floor(t)) * 80,
+    r: 1.5 + (u - Math.floor(u)) * 2.5,
+    o: 0.3 + ((s - Math.floor(s)) * 0.5),
+  }
+})
+
+function PlaygroundThumb() {
+  const [variant, setVariant] = useState(0)
+  useEffect(() => { setVariant(Math.random()) }, [])
+  if (variant < 0.5) {
+    // CSS Cube thumbnail — isometric static view
+    return (
+      <div className="relative w-14 h-14 group-hover:scale-110 transition-transform duration-300" style={{ perspective: '200px' }}>
+        <div
+          className="relative w-full h-full"
+          style={{ transformStyle: 'preserve-3d', transform: 'rotateX(-20deg) rotateY(30deg)' }}
+        >
+          {[
+            { transform: 'translateZ(28px)' },
+            { transform: 'rotateY(180deg) translateZ(28px)' },
+            { transform: 'rotateY(90deg) translateZ(28px)' },
+            { transform: 'rotateY(-90deg) translateZ(28px)' },
+            { transform: 'rotateX(90deg) translateZ(28px)' },
+            { transform: 'rotateX(-90deg) translateZ(28px)' },
+          ].map((s, i) => (
+            <div
+              key={i}
+              className="absolute w-14 h-14 border border-accent/30 bg-accent/5"
+              style={s}
+            />
+          ))}
+        </div>
+      </div>
+    )
+  }
+  const dots = THUMB_PARTICLE_DOTS
+  return (
+    <svg viewBox="0 0 100 100" className="w-14 h-14 group-hover:scale-110 transition-transform duration-300">
+      {dots.map((d, i) => (
+        <circle key={i} cx={d.x} cy={d.y} r={d.r} fill={`rgba(75,169,178,${d.o})`} />
+      ))}
+    </svg>
+  )
+}
+
+function StatusCard() {
+  const [status, setStatus] = useState<{ status: string; emoji?: string } | null>(null)
+  const { bounce, bounceStyle } = useBounce()
+  useEffect(() => {
+    fetch(`https://gist.githubusercontent.com/Aphrosyne/534c12c92c01c3eb2901cb41b4c81c64/raw?t=${Date.now()}`, { cache: 'no-store' })
+      .then(r => r.json())
+      .then(data => setStatus(data))
       .catch(() => {})
   }, [])
   return (
-    <Card direction="right">
-      <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">GitHub</div>
-      {repos.length === 0 && <p className="text-[11px] text-white/30">加载中...</p>}
-      {repos.map(r => (
-        <a key={r.name} href={`https://github.com/aphrosyne/${r.name}`} target="_blank" rel="noopener noreferrer"
-          className="flex items-center gap-1.5 py-1 px-1 -mx-1 rounded hover:bg-surface/30 transition-colors group">
-          <span className="text-xs font-medium text-white/70 group-hover:text-white truncate">{r.name}</span>
-          {r.language && <span className="text-[10px] text-white/30 ml-auto">{r.language}</span>}
-        </a>
-      ))}
-    </Card>
+    <>
+      <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Status</div>
+      <p className="text-sm text-white/70 cursor-pointer select-none" onClick={bounce} style={bounceStyle}>
+        {status ? `${status.emoji || ''} ${status.status}` : '加载中...'}
+      </p>
+    </>
+  )
+}
+
+const MEM_COUNT = 1 // 改这个数字，对应 public/images/mems/ 下的图片数量（从0开始编号）
+
+function MemCard() {
+  const [idx] = useState(() => Math.floor(Math.random() * MEM_COUNT))
+  const { bounce, bounceStyle } = useBounce()
+
+  return (
+    <img
+      src={`/images/mems/${idx}.jpg`}
+      alt="meme"
+      onClick={bounce}
+      className="max-h-28 rounded-2xl cursor-pointer select-none"
+      style={bounceStyle}
+    />
   )
 }
