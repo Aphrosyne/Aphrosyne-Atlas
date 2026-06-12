@@ -14,7 +14,7 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-      className="text-xl text-white/50 hover:text-accent transition-colors cursor-pointer"
+      className="text-xl text-fg/50 hover:text-accent transition-colors cursor-pointer"
     >
       {theme === 'dark' ? '☾' : '☀'}
     </button>

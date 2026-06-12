@@ -159,7 +159,7 @@ export default function Navbar() {
         </Link>
 
         {/* Pill navigation */}
-        <div className="flex items-center gap-0.5 bg-surface/60 backdrop-blur-xl border border-bg/30 rounded-full px-1 py-1 shadow-sm">
+        <div className="flex items-center gap-0.5 bg-surface/50 backdrop-blur-xl border border-bg/30 rounded-full px-1 py-1 shadow-sm">
           {NAV_ITEMS.map((item) => {
             if ('children' in item && item.children) {
               return (
@@ -203,7 +203,7 @@ export default function Navbar() {
             }}
           />
           <span
-            className="absolute inset-0 bg-surface/60 backdrop-blur-xl transition-colors"
+            className="absolute inset-0 bg-surface/50 backdrop-blur-xl transition-colors"
             style={{ clipPath: 'url(#avatar-clip)' }}
           />
           <svg className="relative w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
