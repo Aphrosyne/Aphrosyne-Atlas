@@ -53,10 +53,10 @@ function NavDropdown({
   const onLeaveMenu = () => setOpen(false)
 
   const triggerClass = open
-    ? 'bg-white/10 text-white'
+    ? 'bg-fg/10 text-fg'
     : active
       ? 'bg-accent text-white shadow-sm'
-      : 'text-white/60 hover:text-white'
+      : 'text-fg/60 hover:text-fg'
 
   return (
     <>
@@ -64,7 +64,7 @@ function NavDropdown({
       <Link
         href={href}
         className={`md:hidden rounded-full px-4 py-1.5 text-[13px] font-semibold transition-colors ${
-          active ? 'bg-accent text-white shadow-sm' : 'text-white/60'
+          active ? 'bg-accent text-white shadow-sm' : 'text-fg/60'
         }`}
       >
         {label}
@@ -106,13 +106,13 @@ function NavDropdown({
               transition={{ duration: 0.2, ease: 'easeOut' }}
               onMouseEnter={onEnterMenu}
               onMouseLeave={onLeaveMenu}
-              className="absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 min-w-37.5 rounded-2xl bg-black/50 backdrop-blur-md border border-white/10 shadow-[0_15px_35px_rgba(0,0,0,0.3)] overflow-hidden"
+              className="absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 min-w-37.5 rounded-2xl bg-bg/50 backdrop-blur-md border border-border shadow-[0_15px_35px_rgba(0,0,0,0.3)] overflow-hidden"
             >
               {children.map((child) => (
                 <Link
                   key={child.href}
                   href={child.href}
-                  className="block px-4 py-2.5 text-sm text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+                  className="block px-4 py-2.5 text-sm text-fg/80 hover:text-fg hover:bg-fg/10 transition-colors font-semibold"
                 >
                   {child.label}
                 </Link>
@@ -159,7 +159,7 @@ export default function Navbar() {
         </Link>
 
         {/* Pill navigation */}
-        <div className="flex items-center gap-0.5 bg-black/50 backdrop-blur-md border border-white/10 rounded-full px-1 py-1 shadow-sm">
+        <div className="flex items-center gap-0.5 bg-surface/60 backdrop-blur-xl border border-bg/30 rounded-full px-1 py-1 shadow-sm">
           {NAV_ITEMS.map((item) => {
             if ('children' in item && item.children) {
               return (
@@ -179,7 +179,7 @@ export default function Navbar() {
                 className={`rounded-full px-4 py-1.5 text-[13px] font-semibold transition-colors ${
                   isActive
                     ? 'bg-accent text-white shadow-sm'
-                    : 'text-white/60 hover:text-white'
+                    : 'text-fg/60 hover:text-fg'
                 }`}
               >
                 {item.label}
@@ -191,7 +191,7 @@ export default function Navbar() {
         {/* Search */}
         <button
           onClick={() => setSearchOpen(true)}
-          className="relative w-12 h-12 flex items-center justify-center text-white/40 hover:text-white transition-colors cursor-pointer group"
+          className="relative w-12 h-12 flex items-center justify-center text-fg/40 hover:text-fg transition-colors cursor-pointer group"
           aria-label="搜索"
         >
           <span
@@ -203,7 +203,7 @@ export default function Navbar() {
             }}
           />
           <span
-            className="absolute inset-0 bg-neutral-900/60 backdrop-blur-xl transition-colors"
+            className="absolute inset-0 bg-surface/60 backdrop-blur-xl transition-colors"
             style={{ clipPath: 'url(#avatar-clip)' }}
           />
           <svg className="relative w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
