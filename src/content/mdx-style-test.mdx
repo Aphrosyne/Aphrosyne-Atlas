@@ -1,0 +1,100 @@
+export const metadata = {
+  title: 'MDX 样式测试帖',
+  date: '2026-06-12',
+  tags: ['test', 'frontend', 'markdown'],
+  excerpt: '一篇用来测试各种 MDX 渲染样式的文章——标题、代码、表格、列表、引用等。',
+  readingTime: '2 min',
+}
+
+这篇文章用来测试博客的 MDX 渲染效果，顺便当样式参考。
+
+> 注意：页面顶部 PostHeader 已渲染了文章 h1 标题，正文中一般不应再出现 h1。此处仅为测试样式。
+
+# 正文中的一级标题
+
+## 二级标题
+
+### 三级标题
+
+#### 四级标题
+
+##### 五级标题
+
+###### 六级标题
+
+正文段落。这是一段比较长的文字，用来测试行间距、字体大小和颜色是否合适。中英文混排效果：The quick brown fox jumps over the lazy dog. 床前明月光，疑是地上霜。
+
+**加粗文字** 和 *斜体文字* 以及 ~~删除线~~。还有 `行内代码` 的效果。
+
+## 列表
+
+### 无序列表
+
+- 第一项
+- 第二项
+  - 嵌套项
+  - 另一个嵌套
+- 第三项
+
+### 有序列表
+
+1. 第一步
+2. 第二步
+3. 第三步
+
+## 代码块
+
+TypeScript:
+
+```ts
+interface PostMetadata {
+  title: string
+  date: string
+  tags: string[]
+  excerpt: string
+  readingTime?: string
+}
+
+export async function getAllPosts(): Promise<PostMetadata[]> {
+  const slugs = await getPostSlugs()
+  const posts = []
+  for (const slug of slugs) {
+    const meta = parseMetadata(`src/content/${slug}.mdx`)
+    if (meta.title) posts.push({ ...meta, slug })
+  }
+  return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+}
+```
+
+## 引用
+
+> 这是一段引用文字。多行引用会怎样呢？让我们看看效果——看起来应该还不错，比纯正文更突出。
+
+> 另一个引用块，测试相邻引用之间的间距。
+
+## 表格
+
+| 属性 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| title | string | 是 | 文章标题 |
+| date | string | 是 | 发布日期 YYYY-MM-DD |
+| tags | string[] | 否 | 标签列表 |
+| excerpt | string | 是 | 文章摘要 |
+| readingTime | string | 否 | 阅读时长，如 "5 min" |
+
+## 链接
+
+这是一个 [内部链接](/blog) 和一个 [外部链接](https://github.com/aphrosyne)。
+
+## 分隔线
+
+---
+
+上面是分隔线，下面是下一段内容。
+
+## 嵌套 HTML
+
+<div className="rounded-xl bg-accent/10 border border-accent/30 p-4 my-4">
+  <p className="text-sm text-accent font-medium">这是一段用 HTML 写的提示框</p>
+  <p className="text-xs text-accent/70 mt-1">支持 JSX 组件和 Tailwind class</p>
+</div>

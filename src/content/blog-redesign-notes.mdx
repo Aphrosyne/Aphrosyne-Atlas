@@ -1,0 +1,87 @@
+export const metadata = {
+  title: '博客详情页全屏蒙版设计笔记',
+  date: '2026-06-12',
+  tags: ['frontend', 'design', 'tailwind'],
+  excerpt: '博客详情页从平面卡片改成全屏模糊蒙版，踩了几个视觉陷阱。',
+  readingTime: '4 min',
+}
+
+博客列表页改完后，轮到详情页。一开始做成圆角卡片包裹正文——阅读性没问题，但和首页那种「无边界」的沉浸感差太远。
+
+## 从卡片到全屏蒙版
+
+第一版就是一个简单的 `rounded-2xl bg-[#0c0c0d]/85 backdrop-blur-xl` 卡片，文章放里面。看起来像是一个「博客区块」，不像一个「阅读空间」。
+
+ROADMAP 里写的方案是：全屏模糊蒙版，不透明暗色，和全局背景同色系，无卡片边界感。
+
+关键点是「无边界感」——卡片有边框、有圆角、有明显的内外分界；蒙版应该像一层雾，均匀覆盖整个视口，文章浮在上面。
+
+## 颜色选择
+
+先试了暗色蒙版（`bg-[#0c0c0d]/85`），和首页统一的暗色背景。视觉上很沉。
+
+然后试了白色半透明（`bg-white/30`），整页瞬间亮起来，正文用回 `prose-zinc` 深色字。问题是 header 和 footer 仍然是暗色玻璃风格，在白色蒙版上方和下方各形成一条黑带。
+
+透明度从 `white/30` 一路降到 `white/15`，黑带的对比感弱化了很多。
+
+## 蒙版覆盖范围
+
+第二个坑：`<div className="min-h-screen bg-white/15">` 作为蒙版，但它从页面内容区开始，不覆盖 header 和 footer。Navbar 和 Footer 在 layout 里，不在这个 `<div>` 上面。
+
+解法：把蒙版改成 `fixed inset-0`，`z-index: -1` 放在所有内容下面。这样它覆盖整个视口，包括 header 和 footer 区域。内容用一个 `relative` 容器放在蒙版上面。
+
+```tsx
+<div className="fixed inset-0 bg-white/15 backdrop-blur-xl -z-[1]" />
+<div className="relative">
+  {/* 文章内容 */}
+</div>
+```
+
+这样不管用户在哪个位置，整个屏幕都是统一的白雾效果。
+
+## 侧边目录
+
+`TableOfContents` 组件之前就写好了但一直没接入。这次挂在右侧浮动，和 BackToTop 按钮一样不占正文宽度。
+
+### 第一个坑：标题没有 id
+
+自定义的 MDX 标题组件（`mdx-components.tsx`）直接渲染 `<h2>` `<h3>` 但没有传 `id` 属性。TOC 通过 `querySelectorAll` 拿到的元素 `el.id` 全是空字符串。
+
+加了 `extractText` 递归提取 React children 的文字，再 `slugify` 生成 id。注意 `children` 不总是纯字符串——标题里有行内代码或加粗时，它是 React 元素数组，需要递归拼接。
+
+### 第二个坑：duplicate key 间歇性出现
+
+刷新页面有时报 12 个 duplicate key 错误，有时候又正常。原因是 SSR 和客户端渲染时，某些标题的 children 结构不完全一致，`extractText` 提取出的文字有细微差异，导致生成的 id 相同（比如都变成空字符串）。
+
+解法：TOC 里加了一层去重——`Set` 记录已出现的 id，重复的跳过。
+
+### 第三个坑：TOC 占据正文宽度
+
+最初 TOC 和正文是 `flex` 横向排列，TOC 占 224px 导致正文被挤到左边。最终用 `flex` + `sticky top-24` 吸附在右侧，屏幕 < `lg` 时隐藏。
+
+## PageTransition 淡入导致全屏蒙版闪烁
+
+`PageTransition` 组件用 framer-motion 做了 `opacity: 0 → 1` 的淡入动画。全屏模糊蒙版（`fixed inset-0 bg-white/15 backdrop-blur-xl`）放在 `PageTransition` 内部时，蒙版也受淡入控制——页面加载瞬间蒙版是透明的，背景图完全暴露，然后蒙版才跟着 fade in，形成一次闪烁。
+
+这是此前修复过的同类问题：**动画容器内的固定背景元素会跟着一起动画**。
+
+解法：把蒙版移到 `PageTransition` 外面，用 `<>...</>` Fragment 包裹：
+
+```tsx
+return (
+  <>
+    {/* 蒙版在动画外，立即渲染 */}
+    <div className="fixed inset-0 bg-white/15 backdrop-blur-xl -z-[1]" />
+    <PageTransition>
+      {/* 正文内容 */}
+    </PageTransition>
+  </>
+)
+```
+
+## 总结
+
+- 全屏蒙版用 `fixed inset-0` 而非 `min-h-screen`，确保覆盖 header/footer
+- 半透明白蒙版 + 深色正文的搭配比全暗色更有阅读感
+- 透明度需要反复调，太低识清晰度差，太高对比强烈
+- Navbar/Footer 的暗色风格和白色蒙版有冲突，透明度压低后勉强能接受

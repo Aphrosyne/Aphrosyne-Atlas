@@ -28,15 +28,15 @@ export default function BlogList({ posts }: { posts: PostMetadata[] }) {
           placeholder="Search posts…"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-sm text-fg placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent sm:max-w-xs"
+          className="w-full rounded-full bg-white/50 backdrop-blur-sm border border-white/20 px-4 py-2 text-sm text-black/70 placeholder:text-black/40 focus:outline-none focus:ring-1 focus:ring-accent sm:max-w-xs"
         />
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => setActiveTag(null)}
-            className={`rounded-lg px-3 py-1 text-xs font-medium transition-colors ${
+            className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
               !activeTag
                 ? 'bg-accent text-white'
-                : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400'
+                : 'bg-white/50 backdrop-blur-sm text-black/70 hover:bg-white/70 hover:text-accent'
             }`}
           >
             All
@@ -45,10 +45,10 @@ export default function BlogList({ posts }: { posts: PostMetadata[] }) {
             <button
               key={tag}
               onClick={() => setActiveTag(tag)}
-              className={`rounded-lg px-3 py-1 text-xs font-medium transition-colors ${
+              className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
                 activeTag === tag
                   ? 'bg-accent text-white'
-                  : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400'
+                  : 'bg-white/50 backdrop-blur-sm text-black/70 hover:bg-white/70 hover:text-accent'
               }`}
             >
               {tag}
@@ -59,11 +59,11 @@ export default function BlogList({ posts }: { posts: PostMetadata[] }) {
 
       {/* Grid */}
       {filtered.length === 0 ? (
-        <p className="py-12 text-center text-muted">No posts found.</p>
+        <p className="py-12 text-center text-white/30">No posts found.</p>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((post) => (
-            <BlogCard key={post.slug} {...post} />
+            <BlogCard key={post.slug} {...post} onTagClick={setActiveTag} />
           ))}
         </div>
       )}
