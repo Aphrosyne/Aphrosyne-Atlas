@@ -14,8 +14,8 @@ export default async function BlogPage() {
   return (
     <PageTransition>
       <div className="mx-auto max-w-5xl px-4 py-16">
-        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl text-white">Blog</h1>
-        <p className="mt-2 text-white/50">一些想法、笔记和探索。</p>
+        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl text-surface">Blog</h1>
+        <p className="mt-2 text-surface/70">一些想法、笔记和探索。</p>
         <div className="mt-8">
           <BlogList posts={posts} />
         </div>
