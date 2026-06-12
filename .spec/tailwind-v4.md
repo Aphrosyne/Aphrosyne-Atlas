@@ -67,6 +67,16 @@ backdrop-blur-md     /* 12px — not backdrop-blur-[12px] */
 backdrop-blur-[15px] /* no matching named utility */
 ```
 
+## Negative arbitrary values
+
+Use `-utility-[-value]` syntax, not `-[neg-value]`:
+
+```css
+/* ✅ CORRECT */
+z-[-1]           /* not -z-[1] */
+-mt-[-4]         /* not -mt-[4] */
+```
+
 ## Directional border colors
 
 Use per-direction color classes to avoid override:

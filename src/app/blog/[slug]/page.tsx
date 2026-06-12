@@ -33,7 +33,7 @@ export default async function BlogPostPage({ params }: Props) {
     return (
       <>
         {/* Full-screen reading mask — outside PageTransition to avoid flash */}
-        <div className="fixed inset-0 bg-white/15 backdrop-blur-xl -z-[1]" />
+        <div className="fixed inset-0 bg-white/15 backdrop-blur-xl z-[-1]" />
         <PageTransition>
         <div className="relative">
           <div className="mx-auto max-w-5xl px-4 py-12 relative">
