@@ -75,9 +75,9 @@ export default function SearchModal({ open, onClose }: SearchModalProps) {
             transition={{ duration: 0.2, ease: 'easeOut' }}
             className="fixed top-[15%] left-1/2 -translate-x-1/2 z-50 w-full max-w-lg px-4"
           >
-            <div className="rounded-2xl bg-neutral-900/90 backdrop-blur-xl border border-white/10 shadow-2xl overflow-hidden">
-              <div className="flex items-center gap-3 px-4 py-3 border-b border-white/5">
-                <svg className="w-4 h-4 text-white/30 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="rounded-2xl bg-surface/90 backdrop-blur-xl border border-border/10 shadow-2xl overflow-hidden">
+              <div className="flex items-center gap-3 px-4 py-3 border-b border-border/5">
+                <svg className="w-4 h-4 text-fg/30 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
                 <input
@@ -85,9 +85,9 @@ export default function SearchModal({ open, onClose }: SearchModalProps) {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="搜索文章、项目、页面..."
-                  className="flex-1 bg-transparent text-white placeholder:text-white/30 text-sm outline-none"
+                  className="flex-1 bg-transparent text-fg placeholder:text-fg/30 text-sm outline-none"
                 />
-                <kbd className="hidden sm:inline text-[10px] text-white/20 border border-white/10 rounded px-1.5 py-0.5">ESC</kbd>
+                <kbd className="hidden sm:inline text-[10px] text-fg/20 border border-border/10 rounded px-1.5 py-0.5">ESC</kbd>
               </div>
               {results.length > 0 && (
                 <div className="py-2">
@@ -96,16 +96,16 @@ export default function SearchModal({ open, onClose }: SearchModalProps) {
                       key={item.href}
                       href={item.href}
                       onClick={onClose}
-                      className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/[0.04] transition-colors group"
+                      className="flex items-center gap-3 px-4 py-2.5 hover:bg-fg/5 transition-colors group"
                     >
-                      <span className="text-sm text-white/80 group-hover:text-white truncate">{item.title}</span>
-                      <span className="text-[11px] text-white/30 truncate ml-auto hidden sm:block">{item.href}</span>
+                      <span className="text-sm text-fg/80 group-hover:text-fg truncate">{item.title}</span>
+                      <span className="text-[11px] text-fg/30 truncate ml-auto hidden sm:block">{item.href}</span>
                     </Link>
                   ))}
                 </div>
               )}
               {query && results.length === 0 && data.length > 0 && (
-                <div className="px-4 py-6 text-center text-sm text-white/30">没有找到相关结果</div>
+                <div className="px-4 py-6 text-center text-sm text-fg/30">没有找到相关结果</div>
               )}
             </div>
           </motion.div>
