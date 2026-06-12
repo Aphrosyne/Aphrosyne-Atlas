@@ -75,3 +75,32 @@ body {
   }
 }
 
+/* Code block line numbers */
+.prose pre code {
+  counter-reset: line;
+}
+.prose pre code span[data-line]::before {
+  counter-increment: line;
+  content: counter(line);
+  display: inline-block;
+  width: 2rem;
+  margin-right: 1rem;
+  text-align: right;
+  color: var(--color-muted);
+}
+
+/* Prose body follows theme */
+.prose {
+  --tw-prose-body: color-mix(in srgb, var(--color-fg) 80%, transparent);
+  --tw-prose-headings: var(--color-fg);
+  --tw-prose-bold: var(--color-fg);
+  --tw-prose-links: var(--color-accent);
+  --tw-prose-quote-borders: var(--color-border);
+  --tw-prose-captions: var(--color-muted);
+}
+
+/* List markers follow theme */
+.prose :where(ul, ol) ::marker {
+  color: var(--color-fg);
+}
+

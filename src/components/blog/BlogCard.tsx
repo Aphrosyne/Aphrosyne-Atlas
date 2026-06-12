@@ -13,7 +13,7 @@ export default function BlogCard({ slug, title, date, excerpt, tags, onTagClick 
   return (
     <Link
       href={`/blog/${slug}`}
-      className="group rounded-2xl bg-surface/50 backdrop-blur-sm border border-border/40 p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_14px_30px_rgba(0,0,0,0.12)]"
+      className="group rounded-2xl bg-surface/50 backdrop-blur-sm border border-border/40 p-5 transition-[transform,box-shadow] duration-300 transform-gpu hover:-translate-y-1 hover:shadow-[0_14px_30px_rgba(0,0,0,0.12)]"
     >
       <time className="text-xs text-fg/70">{date}</time>
       <h3 className="mt-2 font-semibold text-fg/85">

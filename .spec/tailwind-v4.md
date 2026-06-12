@@ -77,6 +77,19 @@ z-[-1]           /* not -z-[1] */
 -mt-[-4]         /* not -mt-[4] */
 ```
 
+## Transition properties
+
+Don't use multiple `transition-*` classes — they all set `transition-property` and the last one wins:
+
+```css
+/* ❌ WRONG — transition-shadow overrides transition-transform */
+transition-transform transition-shadow
+
+/* ✅ CORRECT — combine into one */
+transition-[transform,box-shadow]
+transition-[transform,box-shadow,background-color]
+```
+
 ## Directional border colors
 
 Use per-direction color classes to avoid override:

@@ -38,14 +38,14 @@ export default async function BlogPostPage({ params }: Props) {
         <div className="relative">
           <div className="mx-auto max-w-5xl px-4 py-12 relative">
             {/* Back link */}
-            <Link href="/blog" className="inline-flex items-center gap-1 text-sm text-fg/50 hover:text-accent transition-colors mb-8">
+            <Link href="/blog" className="inline-flex items-center gap-1 rounded-xl bg-surface/40 backdrop-blur-sm border border-border/10 px-4 py-2.5 text-base font-semibold text-fg/60 hover:bg-surface/60 hover:text-fg transition-colors mb-8">
               ← 返回博客
             </Link>
 
             <div className="flex gap-8 justify-center">
               {/* Main content */}
               <div className="max-w-4xl flex-1 min-w-0">
-                <article className="prose dark:prose-invert prose-headings:font-semibold prose-a:text-accent prose-a:no-underline [&_a:hover]:text-avatar-ring [&_a]:transition-colors prose-hr:border-t-2 prose-hr:border-fg [&_table]:border-2 [&_table]:border-fg [&_th]:border-2 [&_th]:border-fg [&_th]:px-3 [&_th]:py-2 [&_td]:border-2 [&_td]:border-fg [&_td]:px-3 [&_td]:py-2 [&_thead_tr]:bg-accent/50 [&_tbody_tr:nth-child(even)]:bg-surface/70 prose-code:rounded prose-code:bg-code-bg prose-code:px-1.5 prose-code:py-0.5 prose-code:text-sm prose-pre:bg-code-bg prose-pre:border prose-pre:border-border max-w-none">
+                <article className="prose dark:prose-invert prose-headings:font-semibold prose-a:text-accent prose-a:no-underline [&_a:hover]:text-avatar-ring [&_a]:transition-colors prose-hr:border-t-2 prose-hr:border-fg [&_table]:border-2 [&_table]:border-fg [&_th]:border-2 [&_th]:border-fg [&_th]:px-3 [&_th]:py-2 [&_td]:border-2 [&_td]:border-fg [&_td]:px-3 [&_td]:py-2 [&_thead_tr]:bg-accent/50 [&_tbody_tr:nth-child(even)]:bg-surface/70 prose-pre:border-0 prose-pre:bg-transparent prose-code:rounded prose-code:bg-code-bg/40 [&_pre_code]:bg-transparent prose-code:px-1.5 prose-code:py-0.5 prose-code:text-sm max-w-none">
                   <PostHeader {...meta} />
                   <Post />
                 </article>
@@ -53,15 +53,15 @@ export default async function BlogPostPage({ params }: Props) {
                 {/* Prev / Next */}
                 <nav className="mt-12 flex gap-4">
                   {prev ? (
-                    <Link href={`/blog/${prev.slug}`} className="flex-1 rounded-xl bg-surface/40 backdrop-blur-sm border border-border/10 p-4 hover:bg-surface/60 transition-colors">
-                      <span className="text-xs text-fg/40">上一篇</span>
-                      <p className="mt-1 text-sm text-fg/70 truncate">{prev.title}</p>
+                    <Link href={`/blog/${prev.slug}`} className="group flex-1 rounded-xl bg-surface/40 backdrop-blur-sm border border-border/10 p-4 hover:bg-surface/60 transition-colors">
+                      <span className="text-base font-semibold text-fg/40 group-hover:text-fg transition-colors">上一篇</span>
+                      <p className="mt-1 text-lg text-fg/70 group-hover:text-fg transition-colors truncate">{prev.title}</p>
                     </Link>
                   ) : <div className="flex-1" />}
                   {next ? (
-                    <Link href={`/blog/${next.slug}`} className="flex-1 rounded-xl bg-surface/40 backdrop-blur-sm border border-border/10 p-4 hover:bg-surface/60 transition-colors text-right">
-                      <span className="text-xs text-fg/40">下一篇</span>
-                      <p className="mt-1 text-sm text-fg/70 truncate">{next.title}</p>
+                    <Link href={`/blog/${next.slug}`} className="group flex-1 rounded-xl bg-surface/40 backdrop-blur-sm border border-border/10 p-4 hover:bg-surface/60 transition-colors text-right">
+                      <span className="text-base font-semibold text-fg/40 group-hover:text-fg transition-colors">下一篇</span>
+                      <p className="mt-1 text-lg text-fg/70 group-hover:text-fg transition-colors truncate">{next.title}</p>
                     </Link>
                   ) : <div className="flex-1" />}
                 </nav>

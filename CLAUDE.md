@@ -28,7 +28,7 @@ src/
   components/
     layout/                  # Navbar, Footer, ThemeProvider, BackToTop
     home/                    # HeroSection, Dashboard
-    blog/                    # BlogCard, BlogList, PostLayout, TableOfContents
+    blog/                    # BlogCard, BlogList, PostHeader, TableOfContents
     shared/                  # Backdrop, Button, CountUp, GradientText, MarqueeTechStack, ProjectCard, SocialIcons
     about/                   # AboutContent
   lib/
