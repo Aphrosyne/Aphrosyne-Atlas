@@ -14,7 +14,6 @@ export const NAV_ITEMS = [
     children: [
       { label: '全部文章', href: '/blog' },
       { label: '标签', href: '/blog?view=tags' },
-      { label: 'RSS 订阅', href: '/api/blog' },
     ],
   },
   {
