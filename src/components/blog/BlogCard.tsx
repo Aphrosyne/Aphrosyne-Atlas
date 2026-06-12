@@ -16,8 +16,8 @@ export default function BlogCard({ slug, title, date, excerpt, tags, index, onTa
   return (
     <motion.a
       href={`/blog/${slug}`}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -3 }}
       className="group rounded-2xl overflow-hidden bg-surface/50 backdrop-blur-md border border-border/40 p-5 transition-shadow duration-300 hover:shadow-[0_14px_30px_rgba(0,0,0,0.12)] cursor-pointer"
     >
