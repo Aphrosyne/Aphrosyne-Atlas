@@ -37,7 +37,7 @@ export default function FFTVisualizer({ analyser }: { analyser?: AnalyserNode | 
     ctx.scale(dpr, dpr)
 
     const barWidth = (rect.width - BAR_GAP * (BAR_COUNT - 1)) / BAR_COUNT
-    const accent = '#4ba9b2'
+    const accent = getComputedStyle(document.documentElement).getPropertyValue('--color-accent').trim() || '#4ba9b2'
 
     ctx.clearRect(0, 0, rect.width, rect.height)
 

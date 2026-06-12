@@ -43,7 +43,7 @@ export default function AboutContent() {
               className="absolute -inset-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-spin"
               style={{
                 clipPath: 'url(#about-avatar-clip)',
-                background: '#f7a1c4',
+                background: 'var(--color-avatar-ring)',
                 animationDuration: '4s',
               }}
             />

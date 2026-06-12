@@ -158,7 +158,7 @@ export default function Dashboard({ siteName, recentPosts, projects, tags }: Das
             <div className="relative w-16 h-16 group">
               <div
                 className="absolute -inset-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-spin"
-                style={{ clipPath: 'url(#bio-avatar-clip)', background: '#f7a1c4', animationDuration: '4s' }}
+                style={{ clipPath: 'url(#bio-avatar-clip)', background: 'var(--color-avatar-ring)', animationDuration: '4s' }}
               />
               <img src="/images/avatar/avatar.jpg" alt="Avatar" className="relative w-16 h-16 object-cover" style={{ clipPath: 'url(#bio-avatar-clip)' }} />
             </div>

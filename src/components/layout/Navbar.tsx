@@ -146,7 +146,7 @@ export default function Navbar() {
             className="absolute -inset-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-spin"
             style={{
               clipPath: 'url(#avatar-clip)',
-              background: '#f7a1c4',
+              background: 'var(--color-avatar-ring)',
               animationDuration: '4s',
             }}
           />
@@ -198,7 +198,7 @@ export default function Navbar() {
             className="absolute -inset-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-spin"
             style={{
               clipPath: 'url(#avatar-clip)',
-              background: '#4ba9b2',
+              background: 'var(--color-accent)',
               animationDuration: '4s',
             }}
           />
