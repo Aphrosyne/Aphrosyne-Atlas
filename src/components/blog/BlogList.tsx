@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import type { PostMetadata } from '@/types/post'
 import BlogCard from './BlogCard'
@@ -9,7 +9,7 @@ export default function BlogList({ posts }: { posts: PostMetadata[] }) {
   const [query, setQuery] = useState('')
   const [activeTag, setActiveTag] = useState<string | null>(null)
 
-  const allTags = [...new Set(posts.flatMap((p) => p.tags))].sort()
+  const allTags = useMemo(() => [...new Set(posts.flatMap((p) => p.tags))].sort(), [posts])
 
   const filtered = posts.filter((post) => {
     const matchesQuery =

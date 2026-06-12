@@ -27,7 +27,7 @@
   --color-code-bg: #18181b;
 }
 
-.light {
+html.light {
   --color-bg: #fafafa;
   --color-surface: #e5e5e5;
   --color-fg: #1a1a1a;

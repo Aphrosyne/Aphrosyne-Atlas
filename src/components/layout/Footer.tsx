@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import { SITE } from '@/lib/constants'
 import ThemeToggle from './ThemeToggle'
 

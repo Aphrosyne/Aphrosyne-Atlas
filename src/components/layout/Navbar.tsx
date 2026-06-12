@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useCallback, useState, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -128,6 +128,7 @@ function NavDropdown({
 export default function Navbar() {
   const pathname = usePathname()
   const [searchOpen, setSearchOpen] = useState(false)
+  const handleCloseSearch = useCallback(() => setSearchOpen(false), [])
 
   return (
     <header className="sticky top-0 z-50 w-full bg-transparent pt-3">
@@ -211,7 +212,7 @@ export default function Navbar() {
           </svg>
         </button>
       </nav>
-      <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
+      <SearchModal open={searchOpen} onClose={handleCloseSearch} />
     </header>
   )
 }
