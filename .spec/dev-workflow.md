@@ -16,3 +16,9 @@ npm run dev    # Development server with HMR (hot module replacement)
 
 - 每次代码修改后，手动检查浏览器中的效果，确认符合预期后再提交。
 - 提交前运行一次 `npm run build` 确保没有编译错误。
+
+## Spec 文件规则
+
+- **禁止主动修改 `.spec/` 目录下的文件**。只有当用户明确要求时才能修改。
+- `.spec/` 是项目的权威规范文档，Agent 擅自修改会导致规范形同虚设。
+- 这条规则本身也写在 CLAUDE.md 中。

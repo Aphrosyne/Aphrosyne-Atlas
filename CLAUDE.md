@@ -98,6 +98,12 @@ MDX metadata 解析在 `src/lib/posts.ts`。注意：文件换行符可能为 CR
 
 See `.spec/tailwind-v4.md` for Tailwind CSS v4 syntax rules.
 
+## Agent 禁区
+
+- **禁止主动修改 `.spec/` 目录下的任何文件**，只有用户明确要求时才能修改。规范文档必须由用户主导变更，否则形同虚设。
+- **禁止主动修改 `CLAUDE.md`**（本文件），同样只有用户明确要求时才能修改。
+- **禁止使用 `transform-gpu` 作为 blur 闪烁/渲染问题的修复方案**，这个类并不能解决 backdrop-filter 在 opacity 动画中的延迟渲染问题。
+
 ## Deployment
 
 ```bash

@@ -5,6 +5,9 @@ import { motion } from 'framer-motion'
 import type { PostMetadata } from '@/types/post'
 import BlogCard from './BlogCard'
 
+const fade = { initial: { opacity: 0 }, animate: { opacity: 1 } }
+const fadeT = (delay = 0) => ({ duration: 0.4, ease: 'easeOut' as const, delay })
+
 export default function BlogList({ posts }: { posts: PostMetadata[] }) {
   const [query, setQuery] = useState('')
   const [activeTag, setActiveTag] = useState<string | null>(null)
@@ -23,22 +26,21 @@ export default function BlogList({ posts }: { posts: PostMetadata[] }) {
   return (
     <div>
       {/* Search & filter */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.4, ease: 'easeOut', delay: 0.1 }}
-        className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
-      >
-        <input
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <motion.input
           type="text"
           placeholder="Search posts…"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          {...fade}
+          transition={fadeT()}
           className="w-full rounded-full bg-surface/50 backdrop-blur-sm border border-border/20 px-4 py-2 text-sm text-fg/70 placeholder:text-fg/40 focus:outline-none focus:ring-1 focus:ring-accent sm:max-w-xs"
         />
         <div className="flex flex-wrap gap-2">
-          <button
+          <motion.button
             onClick={() => setActiveTag(null)}
+            {...fade}
+            transition={fadeT()}
             className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
               !activeTag
                 ? 'bg-accent text-white'
@@ -46,11 +48,13 @@ export default function BlogList({ posts }: { posts: PostMetadata[] }) {
             }`}
           >
             All
-          </button>
+          </motion.button>
           {allTags.map((tag) => (
-            <button
+            <motion.button
               key={tag}
               onClick={() => setActiveTag(tag)}
+              {...fade}
+              transition={fadeT()}
               className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
                 activeTag === tag
                   ? 'bg-accent text-white'
@@ -58,10 +62,10 @@ export default function BlogList({ posts }: { posts: PostMetadata[] }) {
               }`}
             >
               {tag}
-            </button>
+            </motion.button>
           ))}
         </div>
-      </motion.div>
+      </div>
 
       {/* Grid */}
       {filtered.length === 0 ? (

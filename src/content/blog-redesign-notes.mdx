@@ -115,6 +115,8 @@ return (
 </PageTransition>
 ```
 
+**同一原理也影响搜索栏和标签按钮**：BlogList 里搜索框和标签筛选按钮也用了 `backdrop-blur-sm`，如果给它们加 opacity 动画（`<motion.div initial={{ opacity:0 }}>`），模糊同样延迟。解法一样——去掉动画包装，直接渲染 `<div>`。
+
 ## Footer 高度跳动：ThemeToggle hydration 缺位
 
 刷新页面后 Footer 的高度会突然跳一下——圆角矩形的 Footer 在页面加载完成后高度突然增加，带动整个页面向上位移。
