@@ -56,3 +56,13 @@ export async function getPostBySlug(
   const all = await getAllPosts()
   return all.find((p) => p.slug === slug) ?? null
 }
+
+/** Return prev/next posts for navigation. */
+export async function getAdjacentPosts(slug: string) {
+  const all = await getAllPosts()
+  const idx = all.findIndex((p) => p.slug === slug)
+  return {
+    prev: idx < all.length - 1 ? all[idx + 1] : null,
+    next: idx > 0 ? all[idx - 1] : null,
+  }
+}
