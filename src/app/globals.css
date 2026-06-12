@@ -7,6 +7,7 @@
   --color-fg: var(--color-fg);
   --color-muted: var(--color-muted);
   --color-accent: var(--color-accent);
+  --color-avatar-ring: var(--color-avatar-ring);
   --color-border: var(--color-border);
   --color-code-bg: var(--color-code-bg);
   --font-sans: var(--font-geist-sans);
@@ -18,9 +19,21 @@
   --color-surface: #1a1a1c;
   --color-fg: #f5f5f4;
   --color-muted: #a3a3a3;
-  --color-accent: #4ba9b2;
+  --color-accent: #3b9a9a;
+  --color-avatar-ring: #f7a1c4;
   --color-border: #2c2c2e;
   --color-code-bg: #18181b;
+}
+
+.light {
+  --color-bg: #fafafa;
+  --color-surface: #e5e5e5;
+  --color-fg: #1a1a1a;
+  --color-muted: #6b6b6b;
+  --color-accent: #4ba9b2;
+  --color-avatar-ring: #f7a1c4;
+  --color-border: #d4d4d4;
+  --color-code-bg: #e8e8e8;
 }
 
 body {

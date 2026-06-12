@@ -158,7 +158,7 @@ export default function Dashboard({ siteName, recentPosts, projects, tags }: Das
             <div className="relative w-16 h-16 group">
               <div
                 className="absolute -inset-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-spin"
-                style={{ clipPath: 'url(#bio-avatar-clip)', background: '#f7a1c4', animationDuration: '4s' }}
+                style={{ clipPath: 'url(#bio-avatar-clip)', background: 'var(--color-avatar-ring)', animationDuration: '4s' }}
               />
               <img src="/images/avatar/avatar.jpg" alt="Avatar" className="relative w-16 h-16 object-cover" style={{ clipPath: 'url(#bio-avatar-clip)' }} />
             </div>
@@ -168,7 +168,7 @@ export default function Dashboard({ siteName, recentPosts, projects, tags }: Das
             </div>
             <div className="flex gap-3 mt-2">
               {Object.entries(SOCIAL_LINKS).map(([key, href]) => (
-                <a key={key} href={href} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-lg bg-surface/50 border border-border/30 flex items-center justify-center text-white/40 hover:text-white hover:border-white/30 transition-all" title={key}>
+                <a key={key} href={href} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-lg bg-surface/50 border border-border/20 flex items-center justify-center text-fg/40 hover:text-fg hover:border-border/70 transition-all" title={key}>
                   <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">{socialIcons[key]}</svg>
                 </a>
               ))}

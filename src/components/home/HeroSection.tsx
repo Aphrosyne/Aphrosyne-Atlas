@@ -65,7 +65,7 @@ export default function HeroSection() {
           onClick={() => document.getElementById('content')?.scrollIntoView({ behavior: 'smooth' })}
           className="scroll-arrow cursor-pointer"
         >
-          <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="#4ba9b2">
+          <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="var(--color-accent)">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 9l7 7 7-7" />
           </svg>
         </button>
