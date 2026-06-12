@@ -60,6 +60,8 @@ Use named utilities when they match:
 
 ```css
 /* ✅ CORRECT */
+backdrop-blur        /* 8px  — not backdrop-blur-[8px] */
+backdrop-blur-sm     /* 4px  — not backdrop-blur-[4px] */
 backdrop-blur-md     /* 12px — not backdrop-blur-[12px] */
 /* Keep for non-standard values: */
 backdrop-blur-[15px] /* no matching named utility */
