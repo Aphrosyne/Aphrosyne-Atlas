@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { NAV_ITEMS } from '@/lib/constants'
+import { publicPath } from '@/lib/public-path'
 import SearchModal from '@/components/layout/SearchModal'
 
 /** Generate SVG path for superellipse |x|^n + |y|^n = 1 (objectBoundingBox coords) */
@@ -152,7 +153,7 @@ export default function Navbar() {
             }}
           />
           <img
-            src="/images/avatar/avatar.jpg"
+            src={publicPath('/images/avatar/avatar.jpg')}
             alt="Avatar"
             className="relative w-12 h-12 object-cover"
             style={{ clipPath: 'url(#avatar-clip)' }}

@@ -1,5 +1,6 @@
 import type { MDXComponents } from 'mdx/types'
 import Image, { type ImageProps } from 'next/image'
+import Link from 'next/link'
 
 function slugify(text: string): string {
   return text
@@ -31,6 +32,12 @@ const components: MDXComponents = {
   h4: (props) => <Head tag="h4" {...props} />,
   h5: (props) => <Head tag="h5" {...props} />,
   h6: (props) => <Head tag="h6" {...props} />,
+  a: ({ href, ...props }) => {
+    if (href?.startsWith('/')) {
+      return <Link href={href} {...props} />
+    }
+    return <a href={href} {...props} />
+  },
   img: (props) => (
     <Image
       sizes="100vw"

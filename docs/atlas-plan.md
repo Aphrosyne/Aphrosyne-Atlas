@@ -60,11 +60,11 @@ Aphrosyne Atlas 是一个具有个人视觉风格的内容站，而不是单一�
 
 ### 1.1 Next.js 输出模式
 
-- [ ] 按项目内 Next.js 16 文档，将 `output: 'standalone'` 改为 `output: 'export'`。
-- [ ] 移除仅为 Node.js 服务端部署使用的 `serverExternalPackages`。
-- [ ] 启用 `trailingSlash: true`，让各页面生成目录形式的 `index.html`，降低静态托管路由差异。
-- [ ] 保留所有已有静态页面和动态路由；动态路由必须继续提供 `generateStaticParams()`，并禁止未知参数在运行时生成。
-- [ ] 检查构建产物中首页、Blog、文章详情、Projects、About、Playground 和 404 页面是否存在。
+- [x] 按项目内 Next.js 16 文档，将 `output: 'standalone'` 改为 `output: 'export'`。
+- [x] 移除仅为 Node.js 服务端部署使用的 `serverExternalPackages`。
+- [x] 启用 `trailingSlash: true`，让各页面生成目录形式的 `index.html`，降低静态托管路由差异。
+- [x] 保留所有已有静态页面和动态路由；动态路由继续提供 `generateStaticParams()`，并禁止未知参数在运行时生成。
+- [x] 检查构建产物中首页、Blog、文章详情、Projects、About、Playground 和 404 页面是否存在。
 
 ### 1.2 GitHub Pages 子路径
 
@@ -74,36 +74,36 @@ Aphrosyne Atlas 是一个具有个人视觉风格的内容站，而不是单一�
 https://<用户名>.github.io/aphrosyne-atlas/
 ```
 
-- [ ] 在生产构建时根据仓库名设置 `basePath`；本地开发保持空路径。
-- [ ] 优先只使用 `basePath` 处理子路径，不默认叠加 `assetPrefix`；只有构建验证证明 `_next` 资源路径仍有问题时再增加它。
-- [ ] 审计所有根路径资源：普通 `<img src="/...">`、CSS `url(/...)`、音频地址和客户端 `fetch('/...')` 不会像 `next/link` 一样自动补上 `basePath`。
-- [ ] 建立统一的公开资源路径辅助函数或构建期常量，避免在各组件里硬编码仓库路径。
-- [ ] 保证将来绑定自定义域名时，可以通过重新构建把 `basePath` 恢复为空，而不用修改页面代码。
+- [x] 在生产构建时根据仓库名设置 `basePath`；本地开发保持空路径。
+- [x] 优先只使用 `basePath` 处理子路径，不默认叠加 `assetPrefix`；只有构建验证证明 `_next` 资源路径仍有问题时再增加它。
+- [x] 审计所有根路径资源：普通 `<img src="/...">`、CSS `url(/...)`、音频地址和客户端 `fetch('/...')` 不会像 `next/link` 一样自动补上 `basePath`。
+- [x] 建立统一的公开资源路径辅助函数或构建期常量，避免在各组件里硬编码仓库路径。
+- [x] 保证将来绑定自定义域名时，可以通过重新构建把 `basePath` 恢复为空，而不用修改页面代码。
 
 ### 1.3 图片、字体与浏览器 API
 
-- [ ] 为静态导出配置 `next/image` 的静态兼容方案；第一版优先使用 `images.unoptimized: true`，以后再做独立图片优化。
-- [ ] 检查 MDX 中的图片组件是否能正确处理 GitHub Pages 子路径。
-- [ ] 保留现有 `next/font/google` 作为第一版基线，但验证 GitHub Actions 构建时字体下载是否稳定；若不稳定，再改为本地字体或系统字体。
-- [ ] 检查 `window`、`document`、`localStorage`、Audio API 等浏览器能力只在客户端生命周期内访问。
+- [x] 为静态导出配置 `next/image` 的静态兼容方案；第一版优先使用 `images.unoptimized: true`，以后再做独立图片优化。
+- [x] 检查 MDX 中的图片组件是否能正确处理 GitHub Pages 子路径（当前 MDX 源内容暂无图片；共享组件使用静态兼容配置）。
+- [x] 使用本地思源黑体替代网络字体，GitHub Pages 构建不再依赖字体下载。
+- [x] 检查 `window`、`document`、`localStorage`、Audio API 等浏览器能力只在客户端生命周期内访问。
 
 ### 1.4 现有 API 的静态兼容处理
 
 此步骤只处理“能否导出”，不决定组件最终是否删除。
 
-- [ ] `/api/blog`：改为构建时生成的静态 JSON，或让页面直接使用构建期文章数据。
-- [ ] `/api/search`：暂时生成静态搜索清单，保持现有搜索界面可用。
-- [ ] `/api/github-contributions`：静态化阶段使用冻结数据或空数据降级，不在构建时依赖私有 Token。
-- [ ] `/api/hitokoto`：改为本地固定文案或静态文案集合，避免部署依赖第三方接口。
-- [ ] `/api/music`：不把临时音乐 URL 固化进构建产物；保留组件外观时显示静态元数据或“暂不可用”。
-- [ ] `/api/steam`：若当前没有页面使用，先停止参与导出；是否永久删除留到删减阶段决定。
-- [ ] 构建过程在没有 `.env.local`、`GITHUB_TOKEN`、`STEAM_API_KEY` 和 `STEAM_ID` 时也必须成功。
+- [x] `/api/blog`：改为构建时生成的静态 JSON，或让页面直接使用构建期文章数据。
+- [x] `/api/search`：暂时生成静态搜索清单，保持现有搜索界面可用。
+- [x] `/api/github-contributions`：静态化阶段使用冻结数据或空数据降级，不在构建时依赖私有 Token。
+- [x] `/api/hitokoto`：改为本地固定文案或静态文案集合，避免部署依赖第三方接口。
+- [x] `/api/music`：不把临时音乐 URL 固化进构建产物；保留组件外观时显示静态元数据或“暂不可用”。
+- [x] `/api/steam`：若当前没有页面使用，先停止参与导出；是否永久删除留到删减阶段决定。
+- [x] 构建过程在没有 `.env.local`、`GITHUB_TOKEN`、`STEAM_API_KEY` 和 `STEAM_ID` 时也必须成功。
 
 ### 1.5 静态产物验收
 
-- [ ] 执行 `npm run lint`。
-- [ ] 执行 `npm run build`，确认生成 `out/`。
-- [ ] 使用本地静态文件服务器预览 `out/`，不能用 `next dev` 代替这项检查。
+- [x] 执行 `npm run lint`。
+- [x] 执行 `npm run build`，确认生成 `out/`。
+- [x] 使用本地静态文件服务器预览 `out/`，不能用 `next dev` 代替这项检查。
 - [ ] 从首页逐项点击内部链接，检查刷新深层路径、前进/后退、404 和主题切换。
 - [ ] 检查控制台没有 404、资源路径错误或 hydration 错误。
 - [ ] 对照阶段 0 截图，确认首页 Hero、Blog 列表和文章阅读页没有非预期视觉变化。
@@ -116,17 +116,17 @@ https://<用户名>.github.io/aphrosyne-atlas/
 
 ### 2.1 仓库准备
 
-- [ ] 创建 GitHub 仓库 `aphrosyne-atlas`。
+- [x] 创建 GitHub 仓库 `Aphrosyne-Atlas`。
 - [ ] 公开前检查提交历史和待提交文件，确认没有密钥、真实联系方式、私人网盘链接和不应公开的图片。
 - [ ] 更新 README：项目名称、当前定位、本地开发方式和部署说明。
 - [ ] 确认 License 对代码、原创文章和第三方素材的适用范围；必要时分别说明。
 
 ### 2.2 自动部署
 
-- [ ] 添加 GitHub Actions 工作流。
-- [ ] 使用锁文件执行 `npm ci`，随后执行静态构建。
-- [ ] 上传 `out/` 作为 Pages artifact，并由 GitHub Pages 官方部署 Action 发布。
-- [ ] 为工作流配置最小必要权限，部署环境使用 `github-pages`。
+- [x] 添加 GitHub Actions 工作流。
+- [x] 使用锁文件执行 `npm ci`，随后执行静态构建。
+- [x] 上传 `out/` 作为 Pages artifact，并由 GitHub Pages 官方部署 Action 发布。
+- [x] 为工作流配置最小必要权限，部署环境使用 `github-pages`。
 - [ ] 在仓库 Pages 设置中选择 GitHub Actions 作为发布来源。
 
 ### 2.3 线上验收

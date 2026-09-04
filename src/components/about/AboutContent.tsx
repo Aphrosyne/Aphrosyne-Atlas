@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import MarqueeTechStack from '@/components/shared/MarqueeTechStack'
 import socialIcons from '@/components/shared/SocialIcons'
 import { SOCIAL_LINKS } from '@/lib/constants'
+import { publicPath } from '@/lib/public-path'
 
 function superellipsePath(n: number, points = 48): string {
   const coords: string[] = []
@@ -48,7 +49,7 @@ export default function AboutContent() {
               }}
             />
             <img
-              src="/images/avatar/avatar.jpg"
+              src={publicPath('/images/avatar/avatar.jpg')}
               alt="Avatar"
               className="relative w-20 h-20 object-cover"
               style={{ clipPath: 'url(#about-avatar-clip)' }}

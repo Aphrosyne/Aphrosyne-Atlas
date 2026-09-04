@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import { useBounce } from '@/lib/useBounce'
 import { motion, type Variants } from 'framer-motion'
 import Link from 'next/link'
@@ -11,6 +11,7 @@ import MusicPlayer from '@/components/home/MusicPlayer'
 import FFTVisualizer from '@/components/home/FFTVisualizer'
 import { SOCIAL_LINKS } from '@/lib/constants'
 import type { PostMetadata } from '@/types/post'
+import { publicPath } from '@/lib/public-path'
 
 interface DashboardProps {
   siteName: string
@@ -134,7 +135,6 @@ const DIR: Record<keyof typeof GRID, Direction> = {
 }
 
 export default function Dashboard({ siteName, recentPosts, projects, tags }: DashboardProps) {
-  const [analyser, setAnalyser] = useState<AnalyserNode | null>(null)
   return (
     <section id="content" className="px-4 pb-12 max-w-5xl mx-auto">
       <motion.div
@@ -160,7 +160,7 @@ export default function Dashboard({ siteName, recentPosts, projects, tags }: Das
                 className="absolute -inset-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-spin"
                 style={{ clipPath: 'url(#bio-avatar-clip)', background: 'var(--color-avatar-ring)', animationDuration: '4s' }}
               />
-              <img src="/images/avatar/avatar.jpg" alt="Avatar" className="relative w-16 h-16 object-cover" style={{ clipPath: 'url(#bio-avatar-clip)' }} />
+              <img src={publicPath('/images/avatar/avatar.jpg')} alt="Avatar" className="relative w-16 h-16 object-cover" style={{ clipPath: 'url(#bio-avatar-clip)' }} />
             </div>
             <div>
               <div className="text-sm font-semibold text-white">{siteName}</div>
@@ -232,8 +232,8 @@ export default function Dashboard({ siteName, recentPosts, projects, tags }: Das
         {/* Player — FFT + Music */}
         <Card direction={DIR.player} className={`${GRID.player} flex flex-col`}>
           <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Music</div>
-          <div className="h-24 mb-3"><FFTVisualizer analyser={analyser} /></div>
-          <MusicPlayer onAnalyser={a => setAnalyser(a)} />
+          <div className="h-24 mb-3"><FFTVisualizer /></div>
+          <MusicPlayer />
         </Card>
 
         {/* Hitokoto */}
@@ -248,16 +248,10 @@ export default function Dashboard({ siteName, recentPosts, projects, tags }: Das
 /* ─── Extras Components ─── */
 
 function HitokotoCard() {
-  const [quote, setQuote] = useState<string | null>(null)
-  useEffect(() => {
-    fetch('/api/hitokoto')
-      .then(r => r.json()).then(d => setQuote(d.hitokoto))
-      .catch(() => setQuote('薄暝柳隙人独立，数点雨痕待江凝。'))
-  }, [])
   return (
     <>
       <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Hitokoto</div>
-      <p className="text-xs text-white/50 italic leading-relaxed text-center">{quote ? `「${quote}」` : `加载中...`}</p>
+      <p className="text-xs text-white/50 italic leading-relaxed text-center">「薄暝柳隙人独立，数点雨痕待江凝。」</p>
     </>
   )
 }
@@ -275,13 +269,7 @@ interface ContributionWeek {
 const LEVEL_COLORS = ['bg-white/5', 'bg-accent/20', 'bg-accent/40', 'bg-accent/60', 'bg-accent/80']
 
 function ContributionsGraph() {
-  const [weeks, setWeeks] = useState<ContributionWeek[]>([])
-  useEffect(() => {
-    fetch('/api/github-contributions')
-      .then(r => r.json())
-      .then(d => setWeeks(d.weeks ?? []))
-      .catch(() => {})
-  }, [])
+  const weeks: ContributionWeek[] = []
 
   const days = weeks.flatMap(w => w.contributionDays)
   const max = Math.max(...days.map(d => d.contributionCount), 1)
@@ -289,7 +277,7 @@ function ContributionsGraph() {
   return (
     <>
       <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Contributions</div>
-      {weeks.length === 0 && <p className="text-[11px] text-white/30">加载中...</p>}
+      {weeks.length === 0 && <p className="text-[11px] text-white/30">静态站点暂无贡献数据</p>}
       <div className="flex gap-0.75 overflow-hidden pb-1">
         {weeks.map((_w, i) => {
           const week = weeks[weeks.length - 1 - i]
@@ -364,19 +352,12 @@ function PlaygroundThumb() {
 }
 
 function StatusCard() {
-  const [status, setStatus] = useState<{ status: string; emoji?: string } | null>(null)
   const { bounce, bounceStyle } = useBounce()
-  useEffect(() => {
-    fetch(`https://gist.githubusercontent.com/Aphrosyne/534c12c92c01c3eb2901cb41b4c81c64/raw?t=${Date.now()}`, { cache: 'no-store' })
-      .then(r => r.json())
-      .then(data => setStatus(data))
-      .catch(() => {})
-  }, [])
   return (
     <>
       <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Status</div>
       <p className="text-sm text-white/70 cursor-pointer select-none" onClick={bounce} style={bounceStyle}>
-        {status ? `${status.emoji || ''} ${status.status}` : '加载中...'}
+        静态站点 · 暂无实时状态
       </p>
     </>
   )
@@ -390,7 +371,7 @@ function MemCard() {
 
   return (
     <img
-      src={`/images/mems/${idx}.jpg`}
+      src={publicPath(`/images/mems/${idx}.jpg`)}
       alt="meme"
       onClick={bounce}
       className="max-h-28 rounded-2xl cursor-pointer select-none"

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
+import { publicPath } from '@/lib/public-path'
 
 interface SearchItem {
   title: string
@@ -23,7 +24,7 @@ export default function SearchModal({ open, onClose }: SearchModalProps) {
 
   useEffect(() => {
     if (open) {
-      fetch('/api/search').then(r => r.json()).then(setData)
+      fetch(publicPath('/api/search')).then(r => r.json()).then(setData)
       setQuery('')
       setResults([])
       setTimeout(() => inputRef.current?.focus(), 100)

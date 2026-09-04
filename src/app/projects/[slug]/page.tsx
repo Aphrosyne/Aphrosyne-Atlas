@@ -79,3 +79,5 @@ export default async function ProjectDetailPage({ params }: Props) {
 export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }))
 }
+
+export const dynamicParams = false

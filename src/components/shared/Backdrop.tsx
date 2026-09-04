@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { publicPath } from '@/lib/public-path'
 
 export default function Backdrop() {
   const [blurPx, setBlurPx] = useState(0)
@@ -23,7 +24,7 @@ export default function Backdrop() {
 
   return (
     <img
-      src="/images/bg/bg.jpg"
+      src={publicPath('/images/bg/bg.jpg')}
       alt=""
       className="absolute inset-0 w-full h-full object-cover"
       style={{
