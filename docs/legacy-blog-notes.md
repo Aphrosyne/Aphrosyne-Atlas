@@ -1,4 +1,6 @@
-# Aphrosyne — Personal Showcase Site & Blog
+# Aphrosyne — Personal Showcase Site & Blog（历史说明）
+
+> 本文档记录 Aphrosyne Atlas 改造前的博客结构与部署方式，仅供追溯。当前开发方向以 docs/atlas-plan.md 和根目录 AGENTS.md 为准。
 
 ## Tech Stack
 

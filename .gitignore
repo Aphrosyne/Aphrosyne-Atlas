@@ -35,7 +35,11 @@ yarn-error.log*
 
 # claude
 .claude/
-.agents/
+.agents/*
+!.agents/skills/
+.agents/skills/*
+!.agents/skills/atlas-stage/
+!.agents/skills/atlas-stage/**
 skills-lock.json
 
 # reference files
