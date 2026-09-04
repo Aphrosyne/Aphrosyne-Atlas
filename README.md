@@ -34,3 +34,9 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## 许可协议
+
+- 程序源代码及相关软件材料采用 [MIT License](./LICENSE)；
+- Aphrosyne 创作的文章、教程、知识库条目与项目文档采用 [CC BY-SA 4.0](./LICENSE-CONTENT.md)；
+- 游戏素材、Mod 资源及其他第三方内容归各自权利人所有，不包含在上述内容授权中。
