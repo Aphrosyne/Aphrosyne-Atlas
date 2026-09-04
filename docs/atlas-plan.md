@@ -44,13 +44,13 @@ Aphrosyne Atlas 是一个具有个人视觉风格的内容站，而不是单一�
 
 目标：确认当前版本就是 Aphrosyne Atlas 改造前的可回退基线。
 
-- [ ] 确认当前工作树中哪些文件需要纳入版本控制。
-- [ ] 检查 `.env.local` 只包含本地配置，并继续由 `.gitignore` 排除。
-- [ ] 将项目包名从 `aphrosyne` 调整为 `aphrosyne-atlas`。
-- [ ] 将站点默认标题和描述更新为 Aphrosyne Atlas；暂不调整页面布局。
-- [ ] 记录当前首页、Blog 列表、文章页、Projects、Playground 和 About 的桌面/移动端截图。
-- [ ] 执行一次当前模式的 `lint` 与 `build`，记录已有问题，避免把旧问题误认为静态化回归。
-- [ ] 创建 Git 标签或归档分支，例如 `blog-v1`，作为旧博客基线。
+- [x] 确认当前工作树中哪些文件需要纳入版本控制。
+- [x] 检查 `.env.local` 只包含本地配置，并继续由 `.gitignore` 排除。
+- [x] 将项目包名从 `aphrosyne` 调整为 `aphrosyne-atlas`。
+- [x] 将站点默认标题和描述更新为 Aphrosyne Atlas；暂不调整页面布局。
+- [x] 记录当前首页、Blog 列表、文章页、Projects、Playground 和 About 的桌面/移动端截图。
+- [x] 执行一次当前模式的 `lint` 与 `build`，记录已有问题，避免把旧问题误认为静态化回归。
+- [x] 创建 Git 标签或归档分支，例如 `blog-v1`，作为旧博客基线。
 
 完成标准：能够明确对比静态化前后的页面和构建结果，并能从 Git 恢复旧版。
 

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import localFont from 'next/font/local'
 import './globals.css'
 import ThemeProvider from '@/components/layout/ThemeProvider'
 import Navbar from '@/components/layout/Navbar'
@@ -7,23 +7,24 @@ import Footer from '@/components/layout/Footer'
 import BackToTop from '@/components/layout/BackToTop'
 import Backdrop from '@/components/shared/Backdrop'
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-})
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
+const sourceHanSans = localFont({
+  src: [
+    { path: './fonts/SourceHanSansSC-Regular.otf', weight: '400', style: 'normal' },
+    { path: './fonts/SourceHanSansSC-Medium.otf', weight: '500', style: 'normal' },
+    { path: './fonts/SourceHanSansSC-Bold.otf', weight: '700', style: 'normal' },
+  ],
+  variable: '--font-source-han-sans',
+  display: 'swap',
+  fallback: ['Microsoft YaHei', 'Arial', 'sans-serif'],
 })
 
 export const metadata: Metadata = {
   title: {
-    default: 'Aphrosyne',
-    template: '%s — Aphrosyne',
+    default: 'Aphrosyne Atlas',
+    template: '%s — Aphrosyne Atlas',
   },
   description:
-    'Wit, charm, and code. A personal website showcasing projects, thoughts, and explorations.',
+    'Aphrosyne Atlas is a personal space for projects, notes, and explorations.',
 }
 
 export default function RootLayout({
@@ -35,7 +36,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable}`}
+      className={sourceHanSans.variable}
     >
       <body className="min-h-screen flex flex-col text-fg transition-colors">
         {/* Fixed background — auto-detects format */}
