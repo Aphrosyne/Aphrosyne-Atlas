@@ -35,6 +35,10 @@ export const SITE = {
     paragraphs: ['一个兴趣使然的人，喜欢学有趣的东西', '还没想好写什么喵'],
     currentFocus: '学习前端，构建个人网站',
   },
+  dashboard: {
+    hitokoto: '薄暝柳隙人独立，数点雨痕待江凝。',
+    status: '静态站点 · 正在整理 Aphrosyne Atlas',
+  },
 } as const
 
 export const NAV_ITEMS = [
@@ -55,7 +59,6 @@ export const NAV_ITEMS = [
       { label: '本站', href: '/projects/aphrosyne-site' },
     ],
   },
-  { label: '演示', href: '/playground' },
   { label: '关于', href: '/about' },
 ] as const
 

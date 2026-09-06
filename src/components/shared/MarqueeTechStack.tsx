@@ -2,7 +2,7 @@
 
 const techStack = [
   '80c51', 'Altium', 'Arduino', 'C / C++', 'CMake',
-  'DaVinci Resolve', 'Docker', 'ESP32', 'FreeRTOS', 'Git',
+  'DaVinci Resolve', 'ESP32', 'FreeRTOS', 'Git',
   'GitHub', 'HTML / CSS / JS', 'Java', 'MATLAB', 'Next.js',
   'PlatformIO', 'Python', 'Qt', 'Shell', 'STM32', 'VS Code',
 ]

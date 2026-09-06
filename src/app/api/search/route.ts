@@ -6,7 +6,6 @@ export const dynamic = 'force-static'
 
 const staticPages = [
   { title: '关于', href: '/about', excerpt: '关于我和这个网站' },
-  { title: 'Playground', href: '/playground', excerpt: '前端小动画、CSS 实验、交互 Demo' },
 ]
 
 export async function GET() {

@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getPostSlugs, getAdjacentPosts } from '@/lib/posts'
-import PageTransition from '@/components/shared/PageTransition'
 import PostHeader from '@/components/blog/PostHeader'
 import TableOfContents from '@/components/blog/TableOfContents'
 import CopyAttribution from '@/components/blog/CopyAttribution'
@@ -32,12 +31,8 @@ export default async function BlogPostPage({ params }: Props) {
     const { prev, next } = await getAdjacentPosts(slug)
 
     return (
-      <>
-        {/* Full-screen reading mask — outside PageTransition to avoid flash */}
-        <div className="fixed inset-0 bg-surface/50 backdrop-blur-xl z-[-1]" />
-        <PageTransition>
-        <div className="relative">
-          <div className="mx-auto max-w-5xl px-4 py-12 relative">
+      <main className="relative mx-auto max-w-5xl px-4 py-12">
+        <div className="rounded-[2rem] border border-border/40 bg-surface/50 p-5 shadow-[0_25px_80px_rgba(0,0,0,0.32)] backdrop-blur-md sm:p-8">
             {/* Back link */}
             <Link href="/blog" className="inline-flex items-center gap-1 rounded-xl bg-surface/40 backdrop-blur-sm border border-border/10 px-4 py-2.5 text-base font-semibold text-fg/60 hover:bg-surface/60 hover:text-fg transition-colors mb-8">
               ← 返回博客
@@ -78,10 +73,8 @@ export default async function BlogPostPage({ params }: Props) {
               </aside>
             </div>
 
-          </div>
         </div>
-      </PageTransition>
-      </>
+      </main>
     )
   } catch {
     notFound()

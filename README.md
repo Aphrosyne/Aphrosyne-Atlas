@@ -28,6 +28,20 @@ npx serve out -l 4173
 
 社交链接只渲染 `SOCIAL_LINKS` 数组中已确认可公开的项目。不要在配置文件或仓库中保存 Token、密码和其他私密信息。
 
+## Dashboard 布局工作台
+
+运行 `npm run dev` 后访问 [http://localhost:3000/studio/dashboard/](http://localhost:3000/studio/dashboard/)。它用于调整桌面端 12 列 Dashboard，不会自动写入仓库。
+
+使用步骤：
+
+1. 在左侧预览中拖动卡片调整位置；点击卡片后，右侧会显示当前选中项。
+2. 使用“左移/右移/上移/下移”和“加宽/缩窄/加高/变矮”进行精确微调。工作台允许临时重叠，需自行在预览中避开重叠。
+3. 满意后点击“复制 TypeScript 配置”或“下载配置文件”。
+4. 将导出的整个 `DASHBOARD_LAYOUT` 声明替换到 [`src/config/dashboard-layout.ts`](./src/config/dashboard-layout.ts)，保存后由开发服务器热更新首页。
+5. 在桌面和移动尺寸检查布局；最终执行 `npm run build`，再提交变更。
+
+“恢复默认”会恢复当前源码中的布局。工作台不在站点导航中，且生产构建会将该路由返回为 404；它不提供线上写入或 GitHub 授权能力。
+
 ## 部署
 
 推送到 `master` 会触发 [GitHub Pages 工作流](./.github/workflows/deploy-pages.yml)：它通过 `npm ci` 安装锁定依赖，构建 `out/`，再使用 GitHub 官方 Pages Actions 发布。
