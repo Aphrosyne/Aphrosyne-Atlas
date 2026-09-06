@@ -17,7 +17,7 @@ export const projects: Project[] = [
     tags: ['Next.js', 'React', 'TypeScript', 'Tailwind', 'Docker'],
     links: [
       { label: 'Live Site', href: '/' },
-      { label: 'Source', href: 'https://github.com/aphrosyne/aphrosyne' },
+      { label: 'Source', href: 'https://github.com/Aphrosyne/Aphrosyne-Atlas' },
     ],
   },
 ]

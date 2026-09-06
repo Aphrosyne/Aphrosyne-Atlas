@@ -1,39 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Aphrosyne Atlas
 
-## Getting Started
+一个静态优先的个人内容站，使用 Next.js App Router、React、Tailwind CSS、Framer Motion 与 MDX 构建。首页保留个人视觉表达，Blog 承载文章与开发记录；知识库将在后续阶段加入。
 
-First, run the development server:
+线上地址：[Aphrosyne Atlas](https://aphrosyne.github.io/Aphrosyne-Atlas/)
+
+## 本地开发
 
 ```bash
+npm ci
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+访问 [http://localhost:3000](http://localhost:3000)。如需在同一局域网的其他设备预览，请使用 `npm run dev -- --hostname 0.0.0.0`。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 静态预览
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npx serve out -l 4173
+```
 
-## Learn More
+访问 `http://localhost:4173/`。本地构建不设置 GitHub Actions 环境变量，因此使用根路径；GitHub Pages 构建会自动从仓库名称生成子路径。
 
-To learn more about Next.js, take a look at the following resources:
+## 站点配置
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+个人资料、站点元数据、导航、头像/背景路径、About 文案和社交链接集中在 [`src/config/site.ts`](./src/config/site.ts)。Fork 或复用本项目时，只修改该文件即可更新站点身份。
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+社交链接只渲染 `SOCIAL_LINKS` 数组中已确认可公开的项目。不要在配置文件或仓库中保存 Token、密码和其他私密信息。
 
-## Deploy on Vercel
+## 部署
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+推送到 `master` 会触发 [GitHub Pages 工作流](./.github/workflows/deploy-pages.yml)：它通过 `npm ci` 安装锁定依赖，构建 `out/`，再使用 GitHub 官方 Pages Actions 发布。
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+首次使用时，在仓库的 `Settings → Pages` 中将发布来源设置为 `GitHub Actions`。
 
 ## 许可协议
 

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { publicPath } from '@/lib/public-path'
+import { SITE } from '@/config/site'
 
 export default function Backdrop() {
   const [blurPx, setBlurPx] = useState(0)
@@ -24,7 +25,7 @@ export default function Backdrop() {
 
   return (
     <img
-      src={publicPath('/images/bg/bg.jpg')}
+      src={publicPath(SITE.assets.background)}
       alt=""
       className="absolute inset-0 w-full h-full object-cover"
       style={{

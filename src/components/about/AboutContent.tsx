@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion'
 import MarqueeTechStack from '@/components/shared/MarqueeTechStack'
 import socialIcons from '@/components/shared/SocialIcons'
-import { SOCIAL_LINKS } from '@/lib/constants'
+import { SITE, SOCIAL_LINKS } from '@/config/site'
 import { publicPath } from '@/lib/public-path'
 
 function superellipsePath(n: number, points = 48): string {
@@ -49,7 +49,7 @@ export default function AboutContent() {
               }}
             />
             <img
-              src={publicPath('/images/avatar/avatar.jpg')}
+              src={publicPath(SITE.assets.avatar)}
               alt="Avatar"
               className="relative w-20 h-20 object-cover"
               style={{ clipPath: 'url(#about-avatar-clip)' }}
@@ -59,19 +59,18 @@ export default function AboutContent() {
 
         <h1 className="text-3xl font-bold tracking-tight sm:text-4xl text-center">关于</h1>
         <div className="mt-3 text-center text-sm text-fg">
-          <p>创建于 2026-06-01</p>
-          <p>最后编辑 2026-06-08</p>
+          <p>创建于 {SITE.about.createdAt}</p>
+          <p>最后编辑 {SITE.about.updatedAt}</p>
         </div>
         <hr className="mt-8 border-0 h-0.5 bg-linear-to-r from-transparent via-white/40 to-transparent" />
-        <p className="mt-8 text-fg leading-relaxed">
-          一个兴趣使然的人，喜欢学有趣的东西
-        </p>
-        <p className="mt-4 text-fg leading-relaxed">
-          还没想好写什么喵
-        </p>
+        {SITE.about.paragraphs.map((paragraph, index) => (
+          <p key={paragraph} className={`${index === 0 ? 'mt-8' : 'mt-4'} text-fg leading-relaxed`}>
+            {paragraph}
+          </p>
+        ))}
 
         <p className="mt-6 text-center text-fg/80">
-          🔨 当前正在：学习前端，构建个人网站
+          🔨 当前正在：{SITE.about.currentFocus}
         </p>
 
         <div className="mt-14">
@@ -80,17 +79,17 @@ export default function AboutContent() {
 
         {/* Social Links */}
         <div className="mt-10 flex justify-center gap-5">
-          {Object.entries(SOCIAL_LINKS).map(([key, href]) => (
+          {SOCIAL_LINKS.map((link) => (
             <a
-              key={key}
-              href={href}
+              key={link.platform}
+              href={link.href}
               target="_blank"
               rel="noopener noreferrer"
               className="w-9 h-9 rounded-lg bg-surface/50 border border-border/30 flex items-center justify-center text-fg/40 hover:text-fg hover:border-fg/30 transition-all"
-              title={key}
+              title={link.label}
             >
               <svg viewBox="0 0 24 24" fill="currentColor" className="w-4.5 h-4.5">
-                {socialIcons[key]}
+                {socialIcons[link.platform]}
               </svg>
             </a>
           ))}

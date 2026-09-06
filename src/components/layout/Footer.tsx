@@ -1,4 +1,4 @@
-import { SITE } from '@/lib/constants'
+import { SITE } from '@/config/site'
 import ThemeToggle from './ThemeToggle'
 
 export default function Footer() {

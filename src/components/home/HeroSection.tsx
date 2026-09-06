@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { SITE } from '@/config/site'
 
 const EASE_OUT = [0.25, 0.1, 0.25, 1] as const
 
@@ -45,15 +46,15 @@ export default function HeroSection() {
         {...fadeIn(0)}
         className="max-w-md text-base text-white/70 leading-relaxed mb-6"
       >
-        薄暝柳隙人独立，数点雨痕待江凝。
+        {SITE.profile.heroQuote}
       </motion.p>
 
       <motion.p
         {...fadeIn(0.15)}
         className="mb-8"
       >
-        <span className="text-md text-white/60 tracking-[0.2em] uppercase">在下，</span>
-        <span className="flow-text text-4xl sm:text-6xl font-bold tracking-tight">柳江凝</span>
+        <span className="text-md text-white/60 tracking-[0.2em] uppercase">{SITE.profile.heroPrefix}</span>
+        <span className="flow-text text-4xl sm:text-6xl font-bold tracking-tight">{SITE.profile.heroName}</span>
       </motion.p>
 
       {/* Scroll arrow */}

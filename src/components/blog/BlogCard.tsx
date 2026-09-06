@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { publicPath } from '@/lib/public-path'
 
 interface BlogCardProps {
   slug: string
@@ -15,7 +16,7 @@ interface BlogCardProps {
 export default function BlogCard({ slug, title, date, excerpt, tags, index, onTagClick }: BlogCardProps) {
   return (
     <motion.a
-      href={`/blog/${slug}`}
+      href={publicPath(`/blog/${slug}/`)}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -3 }}

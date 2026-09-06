@@ -1,6 +1,6 @@
 import { getRecentPosts, getAllPosts } from '@/lib/posts'
 import { projects } from '@/lib/projects'
-import { SITE } from '@/lib/constants'
+import { SITE } from '@/config/site'
 import HeroSection from '@/components/home/HeroSection'
 import Dashboard from '@/components/home/Dashboard'
 

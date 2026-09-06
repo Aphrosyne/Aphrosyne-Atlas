@@ -3,11 +3,10 @@
 import { useEffect, useRef } from 'react'
 
 interface CopyAttributionProps {
-  slug: string
   children: React.ReactNode
 }
 
-export default function CopyAttribution({ slug, children }: CopyAttributionProps) {
+export default function CopyAttribution({ children }: CopyAttributionProps) {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -21,7 +20,7 @@ export default function CopyAttribution({ slug, children }: CopyAttributionProps
       const selectedText = selection.toString().trim()
       if (!selectedText) return
 
-      const url = `${window.location.origin}/blog/${slug}`
+      const url = window.location.href
       const today = new Date()
       const dateStr = `${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}`
       const attribution = `\n\nref(APA): admin.柳江凝.${url}. Retrieved ${dateStr}.`
@@ -32,7 +31,7 @@ export default function CopyAttribution({ slug, children }: CopyAttributionProps
 
     el.addEventListener('copy', onCopy)
     return () => el.removeEventListener('copy', onCopy)
-  }, [slug])
+  }, [])
 
   return <div ref={ref}>{children}</div>
 }

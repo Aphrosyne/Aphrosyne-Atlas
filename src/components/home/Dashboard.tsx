@@ -9,7 +9,7 @@ import TagCloud from '@/components/home/TagCloud'
 import ClockCard from '@/components/home/ClockCard'
 import MusicPlayer from '@/components/home/MusicPlayer'
 import FFTVisualizer from '@/components/home/FFTVisualizer'
-import { SOCIAL_LINKS } from '@/lib/constants'
+import { SITE, SOCIAL_LINKS } from '@/config/site'
 import type { PostMetadata } from '@/types/post'
 import { publicPath } from '@/lib/public-path'
 
@@ -160,16 +160,16 @@ export default function Dashboard({ siteName, recentPosts, projects, tags }: Das
                 className="absolute -inset-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-spin"
                 style={{ clipPath: 'url(#bio-avatar-clip)', background: 'var(--color-avatar-ring)', animationDuration: '4s' }}
               />
-              <img src={publicPath('/images/avatar/avatar.jpg')} alt="Avatar" className="relative w-16 h-16 object-cover" style={{ clipPath: 'url(#bio-avatar-clip)' }} />
+              <img src={publicPath(SITE.assets.avatar)} alt="Avatar" className="relative w-16 h-16 object-cover" style={{ clipPath: 'url(#bio-avatar-clip)' }} />
             </div>
             <div>
               <div className="text-sm font-semibold text-white">{siteName}</div>
-              <div className="text-[11px] text-white/50">设计 · 创造</div>
+              <div className="text-[11px] text-white/50">{SITE.profile.tagline}</div>
             </div>
             <div className="flex gap-3 mt-2">
-              {Object.entries(SOCIAL_LINKS).map(([key, href]) => (
-                <a key={key} href={href} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-lg bg-surface/50 border border-border/20 flex items-center justify-center text-fg/40 hover:text-fg hover:border-border/70 transition-all" title={key}>
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">{socialIcons[key]}</svg>
+              {SOCIAL_LINKS.map((link) => (
+                <a key={link.platform} href={link.href} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-lg bg-surface/50 border border-border/20 flex items-center justify-center text-fg/40 hover:text-fg hover:border-border/70 transition-all" title={link.label}>
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">{socialIcons[link.platform]}</svg>
                 </a>
               ))}
             </div>

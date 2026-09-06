@@ -4,7 +4,7 @@ import { useCallback, useState, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { NAV_ITEMS } from '@/lib/constants'
+import { NAV_ITEMS, SITE } from '@/config/site'
 import { publicPath } from '@/lib/public-path'
 import SearchModal from '@/components/layout/SearchModal'
 
@@ -153,7 +153,7 @@ export default function Navbar() {
             }}
           />
           <img
-            src={publicPath('/images/avatar/avatar.jpg')}
+            src={publicPath(SITE.assets.avatar)}
             alt="Avatar"
             className="relative w-12 h-12 object-cover"
             style={{ clipPath: 'url(#avatar-clip)' }}

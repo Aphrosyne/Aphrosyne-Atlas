@@ -6,6 +6,7 @@ import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import BackToTop from '@/components/layout/BackToTop'
 import Backdrop from '@/components/shared/Backdrop'
+import { SITE } from '@/config/site'
 
 const sourceHanSans = localFont({
   src: [
@@ -20,11 +21,10 @@ const sourceHanSans = localFont({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Aphrosyne Atlas',
-    template: '%s — Aphrosyne Atlas',
+    default: SITE.title,
+    template: `%s — ${SITE.title}`,
   },
-  description:
-    'Aphrosyne Atlas is a personal space for projects, notes, and explorations.',
+  description: SITE.description,
 }
 
 export default function RootLayout({
