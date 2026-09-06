@@ -1,21 +1,28 @@
 import fs from 'fs'
 import path from 'path'
+import matter from 'gray-matter'
 import { globby } from 'globby'
 import type { PostMetadata } from '@/types/post'
 
-const CONTENT_DIR = path.join(process.cwd(), 'src/content')
+const CONTENT_DIR = path.join(process.cwd(), 'src/content/blog')
 
-/** Parse the `export const metadata = {…}` block from raw MDX text. */
-function parseMetadataFromFile(filePath: string): Record<string, unknown> {
+/** Parse and validate YAML frontmatter without executing source text. */
+function parseMetadataFromFile(filePath: string): PostMetadata | null {
   const content = fs.readFileSync(filePath, 'utf-8')
-  const match = content.match(/export\s+const\s+metadata\s*=\s*({[\s\S]*?})\r?\n/)
-  if (!match) return {}
-
-  try {
-    // Safe parse: wrap the object literal in parens so eval returns it
-    return new Function(`"use strict"; return (${match[1]})`)()
-  } catch {
-    return {}
+  const { data } = matter(content)
+  if (typeof data.title !== 'string' || typeof data.excerpt !== 'string') return null
+  if (!Array.isArray(data.tags) || !data.tags.every((tag) => typeof tag === 'string')) return null
+  const date = data.date instanceof Date
+    ? data.date.toISOString().slice(0, 10)
+    : typeof data.date === 'string' ? data.date : null
+  if (!date) return null
+  return {
+    slug: '',
+    title: data.title,
+    date,
+    tags: data.tags,
+    excerpt: data.excerpt,
+    readingTime: typeof data.readingTime === 'string' ? data.readingTime : undefined,
   }
 }
 
@@ -32,10 +39,8 @@ export async function getAllPosts(): Promise<PostMetadata[]> {
 
   for (const slug of slugs) {
     const filePath = path.join(CONTENT_DIR, `${slug}.mdx`)
-    const meta = parseMetadataFromFile(filePath) as unknown as PostMetadata
-    if (meta.title) {
-      posts.push({ ...meta, slug })
-    }
+    const meta = parseMetadataFromFile(filePath)
+    if (meta) posts.push({ ...meta, slug })
   }
 
   return posts.sort(

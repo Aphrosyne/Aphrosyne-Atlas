@@ -7,6 +7,7 @@
 export const DASHBOARD_CARD_IDS = [
   'bio',
   'posts',
+  'knowledge',
   'projects',
   'tagcloud',
   'memes',
@@ -27,10 +28,11 @@ export interface DashboardLayoutItem {
 export const DASHBOARD_LAYOUT: Record<DashboardCardId, DashboardLayoutItem> = {
   bio: { column: 1, row: 1, columnSpan: 3, rowSpan: 1 },
   posts: { column: 4, row: 1, columnSpan: 9, rowSpan: 1 },
+  knowledge: { column: 4, row: 5, columnSpan: 6, rowSpan: 1 },
   projects: { column: 1, row: 2, columnSpan: 3, rowSpan: 3 },
   tagcloud: { column: 4, row: 2, columnSpan: 6, rowSpan: 3 },
   memes: { column: 10, row: 2, columnSpan: 3, rowSpan: 1 },
   status: { column: 10, row: 3, columnSpan: 3, rowSpan: 1 },
   clock: { column: 10, row: 4, columnSpan: 3, rowSpan: 1 },
-  hitokoto: { column: 1, row: 5, columnSpan: 12, rowSpan: 1 },
+  hitokoto: { column: 1, row: 6, columnSpan: 12, rowSpan: 1 },
 }

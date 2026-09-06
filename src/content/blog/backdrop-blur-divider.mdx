@@ -1,10 +1,10 @@
-export const metadata = {
-  title: '两个诡异的渲染问题：backdrop-blur 分隔线 + 底部元素 bottom 飞入卡顿',
-  date: '2026-06-10',
-  tags: ['frontend', 'css', 'debugging', 'framer-motion'],
-  excerpt: 'Dashboard 卡片的两个奇怪 bug：backdrop-blur 在 grid gap 边界产生分隔线，底部卡片用 bottom 方向飞入会卡滚动。',
-  readingTime: '6 min',
-}
+---
+title: 两个诡异的渲染问题：backdrop-blur 分隔线 + 底部元素 bottom 飞入卡顿
+date: 2026-06-10
+tags: [frontend, css, debugging, framer-motion]
+excerpt: Dashboard 卡片的两个奇怪 bug：backdrop-blur 在 grid gap 边界产生分隔线，底部卡片用 bottom 方向飞入会卡滚动。
+readingTime: 6 min
+---
 
 Dashboard 用 CSS Grid 布局，卡片之间有 `gap-4` 的间距。大部分卡片看起来正常，但一言（Hitokoto）卡片的上方总有一条隐约的分隔线——像是阴影，又像是边框。
 

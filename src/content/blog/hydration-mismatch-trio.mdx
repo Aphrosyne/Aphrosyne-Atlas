@@ -1,10 +1,10 @@
-export const metadata = {
-  title: '三个 Hydration Mismatch，三种死法',
-  date: '2026-06-09',
-  tags: ['frontend', 'debugging', 'react', 'nextjs'],
-  excerpt: '给 Dashboard 加了四个小组件，连续触发三次 hydration error。每次原因都不一样，每次都觉得「这也能报错？」',
-  readingTime: '4 min',
-}
+---
+title: 三个 Hydration Mismatch，三种死法
+date: 2026-06-09
+tags: [frontend, debugging, react, nextjs]
+excerpt: 给 Dashboard 加了四个小组件，连续触发三次 hydration error。每次原因都不一样，每次都觉得「这也能报错？」
+readingTime: 4 min
+---
 
 给 Dashboard 加了时钟、音乐播放器、FFT 波形、Steam 游戏卡片四个组件，结果连续触发三次 `Hydration failed` 错误。记录一下这三个坑。
 

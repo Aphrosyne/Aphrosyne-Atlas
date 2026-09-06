@@ -1,6 +1,6 @@
 # Aphrosyne Atlas
 
-一个静态优先的个人内容站，使用 Next.js App Router、React、Tailwind CSS、Framer Motion 与 MDX 构建。首页保留个人视觉表达，Blog 承载文章与开发记录；知识库将在后续阶段加入。
+一个静态优先的个人内容站，使用 Next.js App Router、React、Tailwind CSS、Framer Motion 与 MDX 构建。首页保留个人视觉表达，Blog 承载文章与开发记录，Knowledge 承载教程、问题修复、实验记录与参考资料。
 
 线上地址：[Aphrosyne Atlas](https://aphrosyne.github.io/Aphrosyne-Atlas/)
 

@@ -10,11 +10,13 @@ import ClockCard from '@/components/home/ClockCard'
 import { SITE, SOCIAL_LINKS } from '@/config/site'
 import { DASHBOARD_LAYOUT, type DashboardCardId, type DashboardLayoutItem } from '@/config/dashboard-layout'
 import type { PostMetadata } from '@/types/post'
+import type { KnowledgeMetadata } from '@/types/knowledge'
 import { publicPath } from '@/lib/public-path'
 
 interface DashboardProps {
   siteName: string
   recentPosts: PostMetadata[]
+  recentKnowledge: KnowledgeMetadata[]
   projects: { slug: string; title: string; description: string }[]
   tags: string[]
 }
@@ -115,6 +117,7 @@ function ProjectSubCard({ project }: { project: DashboardProps['projects'][numbe
 const DIR: Record<DashboardCardId, Direction> = {
   bio:           'left',
   posts:         'top',
+  knowledge:     'top',
   projects:      'left',
   tagcloud:      'bottom',
   memes:         'right',
@@ -123,7 +126,7 @@ const DIR: Record<DashboardCardId, Direction> = {
   hitokoto:      'left',
 }
 
-export default function Dashboard({ siteName, recentPosts, projects, tags }: DashboardProps) {
+export default function Dashboard({ siteName, recentPosts, recentKnowledge, projects, tags }: DashboardProps) {
   return (
     <section id="content" className="px-4 pb-12 max-w-5xl mx-auto">
       <motion.div
@@ -131,7 +134,7 @@ export default function Dashboard({ siteName, recentPosts, projects, tags }: Das
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: '-50px' }}
-        className="grid grid-cols-1 md:grid-cols-12 md:grid-rows-[repeat(5,minmax(120px,auto))] gap-4 lg:gap-5"
+        className="grid grid-cols-1 md:grid-cols-12 md:grid-rows-[repeat(6,minmax(120px,auto))] gap-4 lg:gap-5"
       >
         {/* Bio */}
         <Card layout={DASHBOARD_LAYOUT.bio} direction={DIR.bio} className="flex flex-col gap-3 py-6">
@@ -163,6 +166,23 @@ export default function Dashboard({ siteName, recentPosts, projects, tags }: Das
               ))}
             </div>
           </div>
+        </Card>
+
+        {/* Knowledge */}
+        <Card layout={DASHBOARD_LAYOUT.knowledge} direction={DIR.knowledge}>
+          <div className="mb-3 flex items-center justify-between">
+            <div className="text-[10px] tracking-widest text-white/40 uppercase">Knowledge</div>
+            <Link href="/knowledge" className="text-xs text-accent transition-colors hover:text-avatar-ring">查看全部 →</Link>
+          </div>
+          {recentKnowledge.length === 0 ? (
+            <p className="text-sm text-white/50">知识库正在整理中。</p>
+          ) : recentKnowledge.map((entry) => (
+            <Link key={entry.slug} href={`/knowledge/${entry.slug}`} className="flex items-center gap-3 rounded-lg px-1.5 py-2 text-sm transition-colors hover:bg-surface/40">
+              <span className="text-base">📚</span>
+              <span className="min-w-0 flex-1 truncate text-white/80">{entry.title}</span>
+              <span className="shrink-0 text-[11px] text-white/40">{entry.lastVerified ?? '未验证'}</span>
+            </Link>
+          ))}
         </Card>
 
         {/* Posts */}

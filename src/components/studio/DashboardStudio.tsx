@@ -11,6 +11,7 @@ import {
 const LABELS: Record<DashboardCardId, string> = {
   bio: 'Profile',
   posts: 'Recent Posts',
+  knowledge: 'Knowledge',
   projects: 'Projects',
   tagcloud: 'Tag Cloud',
   memes: 'Meme',
@@ -29,13 +30,13 @@ function cloneLayout(): Layout {
 
 function clamp(item: DashboardLayoutItem): DashboardLayoutItem {
   const columnSpan = Math.max(1, Math.min(12, item.columnSpan))
-  const rowSpan = Math.max(1, Math.min(5, item.rowSpan))
+  const rowSpan = Math.max(1, Math.min(6, item.rowSpan))
   return {
     ...item,
     columnSpan,
     rowSpan,
     column: Math.max(1, Math.min(13 - columnSpan, item.column)),
-    row: Math.max(1, Math.min(6 - rowSpan, item.row)),
+    row: Math.max(1, Math.min(7 - rowSpan, item.row)),
   }
 }
 
@@ -65,7 +66,7 @@ export default function DashboardStudio() {
     if (!DASHBOARD_CARD_IDS.includes(id)) return
     const rect = event.currentTarget.getBoundingClientRect()
     const column = Math.floor(((event.clientX - rect.left) / rect.width) * 12) + 1
-    const row = Math.floor(((event.clientY - rect.top) / rect.height) * 5) + 1
+    const row = Math.floor(((event.clientY - rect.top) / rect.height) * 6) + 1
     setLayout((current) => ({
       ...current,
       [id]: clamp({ ...current[id], column, row }),
@@ -104,7 +105,7 @@ export default function DashboardStudio() {
         <section
           onDragOver={(event) => event.preventDefault()}
           onDrop={onDrop}
-          className="grid min-h-150 grid-cols-12 grid-rows-[repeat(5,minmax(88px,1fr))] gap-2 rounded-3xl border border-border/20 bg-surface/50 p-3 backdrop-blur-xl"
+          className="grid min-h-180 grid-cols-12 grid-rows-[repeat(6,minmax(88px,1fr))] gap-2 rounded-3xl border border-border/20 bg-surface/50 p-3 backdrop-blur-xl"
         >
           {DASHBOARD_CARD_IDS.map((id) => {
             const item = layout[id]

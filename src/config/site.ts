@@ -44,6 +44,17 @@ export const SITE = {
 export const NAV_ITEMS = [
   { label: '首页', href: '/' },
   {
+    label: '知识库',
+    href: '/knowledge',
+    children: [
+      { label: '全部条目', href: '/knowledge' },
+      { label: '教程', href: '/knowledge?type=guide' },
+      { label: '问题修复', href: '/knowledge?type=fix' },
+      { label: '实验记录', href: '/knowledge?type=experiment' },
+      { label: '参考资料', href: '/knowledge?type=reference' },
+    ],
+  },
+  {
     label: '博客',
     href: '/blog',
     children: [

@@ -1,11 +1,10 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { getPostSlugs, getAdjacentPosts } from '@/lib/posts'
+import { getPostBySlug, getPostSlugs, getAdjacentPosts } from '@/lib/posts'
 import PostHeader from '@/components/blog/PostHeader'
 import TableOfContents from '@/components/blog/TableOfContents'
 import CopyAttribution from '@/components/blog/CopyAttribution'
-import type { PostMetadata } from '@/types/post'
 
 type Props = {
   params: Promise<{ slug: string }>
@@ -13,21 +12,17 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  try {
-    const { metadata } = await import(`@/content/${slug}.mdx`)
-    const meta = metadata as PostMetadata
-    return { title: meta.title, description: meta.excerpt }
-  } catch {
-    return { title: 'Post Not Found' }
-  }
+  const meta = await getPostBySlug(slug)
+  return meta ? { title: meta.title, description: meta.excerpt } : { title: 'Post Not Found' }
 }
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params
 
   try {
-    const { default: Post, metadata } = await import(`@/content/${slug}.mdx`)
-    const meta = metadata as PostMetadata
+    const meta = await getPostBySlug(slug)
+    if (!meta) notFound()
+    const { default: Post } = await import(`@/content/blog/${slug}.mdx`)
     const { prev, next } = await getAdjacentPosts(slug)
 
     return (
