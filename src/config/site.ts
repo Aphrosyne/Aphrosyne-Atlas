@@ -18,7 +18,7 @@ export const SITE = {
   title: 'Aphrosyne Atlas',
   description: 'Aphrosyne Atlas is a personal space for projects, notes, and explorations.',
   url: 'https://aphrosyne.github.io/Aphrosyne-Atlas',
-  author: 'Aphrosyne',
+  author: 'Aphrosyne（柳江凝）',
   assets: {
     avatar: '/images/avatar/avatar.jpg',
     background: '/images/bg/bg.jpg',
@@ -38,6 +38,10 @@ export const SITE = {
   dashboard: {
     hitokoto: '薄暝柳隙人独立，数点雨痕待江凝。',
     status: '静态站点 · 正在整理 Aphrosyne Atlas',
+  },
+  licensing: {
+    contentName: 'CC BY-SA 4.0',
+    contentHref: 'https://creativecommons.org/licenses/by-sa/4.0/deed.zh-hans',
   },
 } as const
 

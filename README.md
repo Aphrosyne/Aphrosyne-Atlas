@@ -51,5 +51,5 @@ npx serve out -l 4173
 ## 许可协议
 
 - 程序源代码及相关软件材料采用 [MIT License](./LICENSE)；
-- Aphrosyne 创作的文章、教程、知识库条目与项目文档采用 [CC BY-SA 4.0](./LICENSE-CONTENT.md)；
+- Aphrosyne（柳江凝）创作的文章、教程、知识库条目与项目文档采用 [CC BY-SA 4.0](./LICENSE-CONTENT.md)；
 - 游戏素材、Mod 资源及其他第三方内容归各自权利人所有，不包含在上述内容授权中。
