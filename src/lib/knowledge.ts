@@ -75,7 +75,7 @@ async function parseKnowledgeFile(filePath: string, slug: string): Promise<Knowl
 }
 
 export async function getAllKnowledge(): Promise<KnowledgeMetadata[]> {
-  const files = await globby('**/*.mdx', { cwd: CONTENT_DIR })
+  const files = await globby(['**/*.mdx', '!archive/**'], { cwd: CONTENT_DIR })
   const entries = await Promise.all(
     files.map(async (relativePath) => {
       const slug = path.basename(relativePath, '.mdx')

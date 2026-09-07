@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import TableOfContents from '@/components/blog/TableOfContents'
+import { KNOWLEDGE_ARTICLE_LOADERS } from '@/lib/knowledge-articles'
 import { getAllKnowledge, getKnowledgeBySlug, getKnowledgeSlugs } from '@/lib/knowledge'
 
 type Props = { params: Promise<{ slug: string }> }
@@ -20,13 +21,6 @@ const TYPE_LABELS = {
   reference: '参考资料',
 } as const
 
-const TYPE_DIRECTORIES = {
-  guide: 'guides',
-  fix: 'fixes',
-  experiment: 'experiments',
-  reference: 'reference',
-} as const
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const entry = await getKnowledgeBySlug((await params).slug)
   return entry ? { title: entry.title, description: entry.excerpt } : { title: 'Knowledge Not Found' }
@@ -37,10 +31,10 @@ export default async function KnowledgeArticlePage({ params }: Props) {
   const entry = await getKnowledgeBySlug(slug)
   if (!entry) notFound()
 
-  const articleModule = await import(`@/content/knowledge/${TYPE_DIRECTORIES[entry.type]}/${slug}.mdx`).catch(() => null)
-  if (!articleModule) notFound()
+  const loadArticle = KNOWLEDGE_ARTICLE_LOADERS[slug]
+  if (!loadArticle) notFound()
 
-  const Article = articleModule.default
+  const { default: Article } = await loadArticle()
   const categories = await getAllKnowledge()
 
   return (

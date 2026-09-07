@@ -1,6 +1,6 @@
 import type { MDXComponents } from 'mdx/types'
-import Image, { type ImageProps } from 'next/image'
 import Link from 'next/link'
+import { publicPath } from '@/lib/public-path'
 
 function slugify(text: string): string {
   return text
@@ -38,13 +38,15 @@ const components: MDXComponents = {
     }
     return <a href={href} {...props} />
   },
-  img: (props) => (
-    <Image
-      sizes="100vw"
-      style={{ width: '100%', height: 'auto' }}
-      {...(props as ImageProps)}
-    />
-  ),
+  img: ({ src, alt, ...props }) => {
+    const normalizedSrc = typeof src === 'string' ? src.replaceAll('\\', '/') : src
+    const imageSrc = typeof normalizedSrc === 'string' && normalizedSrc.startsWith('/')
+      ? publicPath(normalizedSrc)
+      : normalizedSrc
+    // Content images have arbitrary dimensions, so the native element is the reliable static-export path.
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img src={imageSrc} alt={alt ?? ''} loading="lazy" className="mx-auto h-auto max-w-full rounded-2xl" {...props} />
+  },
 }
 
 export function useMDXComponents(): MDXComponents {

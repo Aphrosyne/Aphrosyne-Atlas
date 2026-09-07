@@ -1,0 +1,407 @@
+---
+title: SoulGem Oven 4 Integration Fork 1.13 教程文档（中文翻译）
+type: reference
+status: needs-review
+game_version: Skyrim SE（SGO4 Integration Fork 1.13）
+last_edited: 2026-08-11
+tags: [Skyrim, SOG4, SoulGem Oven, 中文翻译, MCM]
+excerpt: SoulGem Oven 4 Integration Fork 1.13 的中文教程翻译，涵盖启动配置、乳汁与宝石系统、腐败机制及额外配置。
+related: []
+sources:
+  - label: SoulGem Oven 4 Integration Fork 原始 Mod 页面
+    href: https://www.loverslab.com/files/file/23173-soulgem-oven-4-integration-fork/
+---
+
+**原始页面：** [SoulGem Oven 4 Integration Fork](https://www.loverslab.com/files/file/23173-soulgem-oven-4-integration-fork/)
+
+> 本文为 SoulGem Oven 4 Integration Fork 1.13 原始说明文档的中文翻译，仅作学习参考。游戏内物品名、Mod 名称、MCM 选项与配置路径保留英文原文，方便与原文档及游戏内菜单对照。原文及 Mod 权利归原作者所有，不包含在本站 CC BY-SA 4.0 内容授权范围内。
+
+![SoulGem Oven 4 Integration Fork 标志](/images/knowledge/sog4/sog4-logo.png)
+
+## 与原始版本相比的重大改动
+
+- 同一时间只能有 1 个妊娠,但每次妊娠可以产出多个"产物"。
+- 精液采集(Semen extraction)功能已完全移除。
+- 转移(Transfer)功能已完全移除。
+
+----------------------------------------------------------------------------------------------
+
+## 启动(Startup)
+
+### 启用 Mod 之前
+
+首先,请快速看一眼 "Startup"(启动)MCM 选项卡,将鼠标悬停在 "Readme"(说明)选项框上可查看这些设置的说明。根据你的配置调整本页,这是在启用 Mod **之前必须完成**的步骤,否则无法正常运作。
+
+在主线存档上启用本 Mod 之前,作者建议先创建一个"测试"存档,在其中尝试各种设置和调试模式,把 Mod 配置成你想要的样子。
+
+配置好的设置会保存在 `configs\dse-soulgem-oven\settings\Custom.Json` 中,并会延续应用到你的所有存档。
+
+### 启用 Mod
+
+后续说明假设你的选项与默认选项差别不大,即:你没有开启自动生产(auto enable production),且已安装 Administer Potions(ADMP)和 Skypatcher。
+
+配置好 Mod 后,就可以在主线存档中启用它。启用后你会获得 2 个法术:
+
+- `[[SGO4] Toggle Soulgem Scanner]`(切换灵魂石扫描器)
+- `[[SGO4] Main Menu...]`(主菜单...)
+
+`[[SGO4] Toggle Soulgem Scanner]` 功能如其名:切换一个扫描器,显示你当前的乳汁和宝石进度。不建议开启,因为它容易出问题,而且作者一直查不出原因。
+
+当你看着一个可操控角色时使用 `[[SGO4] Main Menu...]`,会打开一个显示该角色当前数据(Lactacid、乳汁、体重、宝石和精液)的菜单;没有看着任何角色时使用,则会打开玩家角色的菜单。
+
+默认情况下,这里不应启用任何东西。
+
+### 上手
+
+本 Mod 的主要上手方式与 [腐败精华(Essences of corruption)] 有关。这些是可消耗物品,能以各种方式修改角色。
+
+你可以从"邪恶"主题的 NPC(吸血鬼、术士、石像鬼、魔族/迪德拉、雪精灵)身上找到多种精华,也可能在一些"魔法"主题的商人那里买到。
+
+任何可玩种族(也就是"类人形"种族)都可以通过 ADMP 消耗这些"精华"。
+
+----------------------------------------------------------------------------------------------
+
+## 更多信息
+
+### 缩放(Scaling)
+
+本 Mod 同时支持骨骼(bone)和形变(morph)缩放(除了丁丁缩放外,推荐使用形变)。
+
+此时,你在 MCM 中输入的 Morph/Bone 滑条数值按 1 倍缩放计。某些"精华"以及乳汁/宝石/精液等级可以进一步改变这些缩放值。
+
+这些滑条是无任何修饰符时的基准最大缩放。
+
+请记住,任何乘数或加成都基于这个 100% 的基准。
+
+唯一的例外是精液形变:它的起始上限为 0%,会随精液等级和精液容量乘数提升。在 100% 容量乘数时,你会获得 100% 的精液形变效果,再乘以当前精液量。
+
+### 升级(Leveling)
+
+当你使用本 Mod 的机制时,系统会按角色追踪使用统计,并在相关领域给予经验值。经验足够后,你会在特定"技能"中获得一个"等级"。
+
+你可以获得 3 种不同的"等级":乳汁(Milk)、宝石(妊娠)和精液(Semen)等级。每个等级都会逐步"改善"与该技能相关的属性。
+
+默认等级上限为 100,完全腐败(full corruption)后可额外增加 100。
+
+### 腐败(Corruption)
+
+腐败就是给角色添加一个修饰符,通常来自 [腐败精华]。如果角色已经拥有该腐败,则会改为获得腐败经验。
+
+腐败经验作为额外的等级修正,允许你超过基础等级上限;如果你精华富余,还可以速升指定角色。
+
+普通等级与腐败等级之间没有功能差异,两者合并计算,用于最终的"等级"。
+
+腐败精华可以在"邪恶"主题的 NPC(吸血鬼、术士、石像鬼、魔族/迪德拉、雪精灵)身上找到,也可能在一些"魔法"主题的商人那里买到。
+
+### 净化(Purification)
+
+净化就是移除角色身上的修饰符,通常来自 [净化精华(Essences of purification)](可以从矮人机械敌人身上获得)。本质上与 [腐败精华] 相同,但作用相反。
+
+过量消耗 [净化精华] 会抵消基础升级的进度。
+
+净化精华可以从矮人机械(Dwemer machines)上获得。
+
+----------------------------------------------------------------------------------------------
+
+## 乳汁生产(Milk Production)
+
+要启用乳汁生产,角色必须消耗 [Essence Of Corruption: Milkmaid 腐败精华:挤奶女工]。
+
+一旦消耗,角色在满足以下任一条件时就会开始产奶:
+
+- 妊娠百分比超过可配置阈值(角色需要消耗 [Essence Of Corruption: Soulgem Oven 腐败精华:灵魂石鼎炉] 才能启用妊娠)。
+- 体重超过可配置阈值(只有通过消耗 [Essence Of Corruption: Soulgem Oven 腐败精华:灵魂石鼎炉] 启用妊娠的角色才能增加体重)。
+- 角色已消耗 Lactacid。
+- 角色装备了便携式挤奶器(并且启用了 "milkers produce"(挤奶器产奶)配置)。
+
+产出哪种乳汁取决于泌乳角色的种族,但可以被某些妊娠覆盖。
+
+### Lactacid
+
+Lactacid 用作"燃料",可以大幅提高乳汁产量。
+
+Lactacid 可以通过以下方式获得:饮用 SGO4IF 乳汁、参与口交 SexLab 动画并吞下精液,或消耗 Lesser(小型)/Normal(普通)/Greater(大型)Lactacid。
+
+Lactacid 有软上限,会随乳汁等级逐渐提高。
+
+### 乳汁效果
+
+乳汁是一种药水物品,会倍增你在相关技能上的经验获取。更高品质的乳汁提供更高的经验倍率。
+
+乳汁还会给饮用者添加少量 Lactacid,数量不足以多产出一瓶乳汁,但足以让过量饮用乳汁产生额外的副作用。
+
+### 挤奶(Milking)
+
+要挤奶,你需要给角色装备便携式挤奶器,或使用能力菜单触发挤奶动画。
+
+此外,让角色高潮也可以使其被挤奶。
+
+### 装瓶(Bottling)
+
+要把乳汁装瓶,你需要"空奶瓶",可在熔炼炉用 2 个玻璃和 1 个柴火制作。
+
+否则,乳汁只会被倒掉并流失。
+
+### 乳汁等级效果
+
+乳汁等级会给受影响角色带来一系列变化:
+
+- 生产速度更快。
+- 最大乳汁容量更高。
+- 最大 Lactacid 容量更高。
+- 基础乳房尺寸更大。
+- 乳房上的血管开始显现。
+- 角色产出更高品级的乳汁。
+
+### 乳汁相关腐败
+
+- Essence Of Corruption: Milkmaid 腐败精华:挤奶女工——启用乳汁生产。
+- Essence Of Corruption: Lactacid Lover 腐败精华:Lactacid 爱好者——倍率化乳汁等级带来的 Lactacid 容量增长。
+- Essence Of Corruption: Morphing Mammaries 腐败精华:变形乳房——倍率化乳汁等级带来的乳汁容量增长。
+- Essence Of Corruption: Ultimate Udders 腐败精华:终极乳房——倍率化乳汁等级带来的基础乳房尺寸增长。
+
+----------------------------------------------------------------------------------------------
+
+## 孵化/妊娠(Incubation/Pregnancy)
+
+要启用孵化/妊娠,角色必须消耗 [Essence Of Corruption: Soulgem Oven 腐败精华:灵魂石鼎炉]。
+
+### 受孕(Insemination)
+
+角色可以通过 SexLab 动画直接怀孕,也可能因为保持膨胀状态过久而怀孕。"男性"伴侣不需要启用精液生产也能使角色受孕。
+
+每个独特种族都可以有特定的孵化产出(参见 `configs\dse-soulgem-oven\outputs`)。
+
+你也可以通过插入未填充的灵魂石或灵魂石碎片来强制妊娠(这会把宝石升级到下一个未填充等级;该功能为硬编码,仅对原版灵魂石有效)。
+
+受孕时,"产出什么"和"产出多少"由"父亲"的种族对照一个可配置的 ID 列表来决定(参见:`configs\dse-soulgem-oven\raceids`)。
+
+该 raceid 随后匹配到一个输出映射(outputmap)。
+
+产出会缓存到角色身上,数量在输出映射规定的最小值与最大值之间随机。
+
+### 妊娠效果
+
+怀孕或膨胀期间,角色的移动速度会降低,可以用在异典(Apocrypha)中找到的一种附魔来抵消。
+
+妊娠还可以按孵化类型覆盖角色产出的乳汁种类(参见 `configs\dse-soulgem-oven\outputs`)。
+
+妊娠还可以按孵化类型施放自定义法术(参见 `configs\dse-soulgem-oven\outputs`)。
+
+不同种类的妊娠可以应用不同的形变(参见 `configs\dse-soulgem-oven\outputs`)。
+
+### 膨胀(Inflation)
+
+SexLab 场景中"男性"的高潮也会使角色膨胀,上限为可配置的软上限,该上限可以通过宝石等级进一步提高。
+
+膨胀期间,大量精液会漏出,少量会被吸收并转化为临时的"缩放"体重。
+
+每在膨胀状态下度过一小时,就会掷一次骰子判定是否可能怀孕。更高的膨胀量**不会**提高该概率,但所有其他修饰符都会影响该概率。
+
+膨胀使用与妊娠 MCM 中相同的形变,因此你当前的缩放 = 膨胀 + 妊娠。
+
+如果角色怀孕,妊娠会"取代"膨胀,并以比正常更快的速度强制泄气。
+
+### 体重(Weight)
+
+注意:这不是 RaceMenu 的 0.0–1.0 体重!它基于你在体重选项卡中输入的形变。
+
+体重用作加速孵化的"燃料",可以通过口交 SexLab 场景、吸收膨胀,或消耗"营养素(Nutrients)"获得。
+
+"营养素"可以在烹饪锅处用辉光蘑菇(Glowing Mushrooms)和查鲁斯蛋(Chaurus Eggs)制作。
+
+"燃料"体重会随时间波动并流失。
+
+体重还会提高生育力(既包括"燃料/缩放"体重,也包括来自宝石等级的"持久"体重)。
+
+### 分娩/提取(Birthing/Extraction)
+
+要分娩/提取角色正在孵化的东西,用能力菜单对准他们并选择"分娩",这要求成长进度"已完成"。
+
+角色也可能在高潮时产出物品。
+
+如果等待太久不分娩,角色的羊水可能会破裂,这会开始一次强制分娩事件的倒计时——是时候找个安全的地方了。
+
+### 宝石等级效果
+
+宝石等级会给受影响角色带来一系列变化:
+
+- 成长速度更快。
+- 产出数量的最大掷骰更高。
+- 膨胀容量提高。
+- 基础体重提高。
+- 最大缩放体重提高。
+
+### 宝石相关腐败
+
+- Essence Of Corruption: Soulgem Oven 腐败精华:灵魂石鼎炉——启用孵化、妊娠和体重增长。
+- Essence Of Corruption: Altered Ovaries 腐败精华:变异卵巢——倍率化宝石等级带来的最大产出增长。
+- Essence Of Corruption: Broodmother 腐败精华:育母——倍率化宝石等级带来的最大体重增长。
+- Essence Of Corruption: Cumdump 腐败精华:精液倾泻者——倍率化宝石等级带来的膨胀容量增长。
+- Essence Of Corruption: Fecund Fauces 腐败精华:多产咽喉——允许通过口交动画膨胀/妊娠。
+- Essence Of Corruption: Fertile Backrooms 腐败精华:肥沃后庭——允许通过肛交动画膨胀/妊娠。
+- Essence Of Corruption: Terminal Thickness 腐败精华:终极肥胖——倍率化宝石等级带来的基础体重增长。
+- Essence Of Corruption: VoraciousWomb 腐败精华:贪婪子宫——大幅提高膨胀吸收率。
+- Essence Of Corruption: Womb Tattoo 腐败精华:子宫纹身——应用子宫纹身,排卵或准备分娩时会发光。
+
+### DD 兼容性(Devious Devices)
+
+佩戴阴道 DD 塞会阻止膨胀漏液,并阻止分娩(包括选定分娩、随机分娩和高潮触发的分娩)。
+
+----------------------------------------------------------------------------------------------
+
+## 精液生产(Semen Production)
+
+要启用精液生产,角色必须消耗 [Essence Of Corruption: Stallion 腐败精华:种马]。
+
+角色 [不需要] 启用精液生产也能使其他角色受孕。
+
+但如果你想让角色获得精液等级,就需要启用精液生产。
+
+### 射精量(Load Size)
+
+更大的射精量会提高妊娠概率和膨胀量。非"种马"角色的基础射精量按种族设定(参见 `configs\dse-soulgem-oven\outputs`)。
+
+种马/精液生产者的起始射精量和容量为 10,会随精液等级逐渐提高。
+
+### 精液等级效果
+
+精液等级会给受影响角色带来一系列变化:
+
+- 更大的丁丁。
+- 更大的最大蛋蛋尺寸(随当前精液量缩放)。
+- 更大的精液容量。
+- 更大的射精量。
+- 精液恢复更快。
+
+### 精液相关腐败
+
+- Essence Of Corruption: Stallion 腐败精华:种马——启用精液生产和精液等级。
+- Essence Of Corruption: Transmuted Testicles 腐败精华:转化睾丸——倍率化精液等级带来的射精量和容量增长。
+
+----------------------------------------------------------------------------------------------
+
+## 新附魔(New Enchants)
+
+这些可以通过消耗 [知识精华(Essences of knowledge)] 获得,知识精华可以在异典(Apocrypha)中从寻觅者(Seekers)和潜伏者(Lurkers)身上获取。
+
+- Essence Of Knowledge: Baby Blocker 知识精华:婴儿阻断——大幅降低妊娠概率。
+- Essence Of Knowledge: Eased Burdens 知识精华:负担减轻——完全抵消妊娠/膨胀的减速效果。
+- Essence Of Knowledge: Enchanted Milkducts 知识精华:附魔乳腺导管——多余的乳汁产量会被缓存,超过 1.00 后自动装入奶瓶。
+
+## 新药水(New Potions)
+
+这些可以从某些"邪恶"NPC 处获得:弃誓者(Forsworn)、术士、吸血鬼、鹰身女妖(Hagravens)。
+
+- Philtre Of Corruption: Babybump Accelerator 腐败药水:妊娠加速剂——强制完成一次妊娠。
+- Philtre Of Corruption: Endless Munitions 腐败药水:无尽弹药——男性射精时恢复性奋值。
+- Philtre Of Corruption: Ovarian Overdrive 腐败药水:卵巢过载——将妊娠概率翻倍,并在高潮时恢复性奋值。
+- Philtre Of Corruption: Soul Siphon 腐败药水:灵魂虹吸——尝试填满角色子宫中的一颗空灵魂石。可能致命。
+- Philtre Of Corruption: Womb Elasticizer 腐败药水:子宫弹性剂——暂时将膨胀容量设为最大值。
+
+----------------------------------------------------------------------------------------------
+
+## 额外配置(Extra Configuration)
+
+### 起始属性(Starting Stats)
+
+这是将角色强制置入特定 SGO4IF 状态的方法。
+
+查看 `StartingStats\Example.Json`,如有需要可自行添加 NPC。
+
+同时还需要将 startingstats 法术添加到该 NPC 身上,参见 SGO4IF 中的 "Valerica"。
+
+系统会将带有 startingstats 法术的角色与 startingstats.json 中的"Name"进行比对,可能区分大小写。
+
+----------------------------------------------------------------------------------------------
+
+### SGOLactis
+
+SGO4IF 主页提供一个可选的 OLactis 修改版,专为 Sexlab p+ 使用而设计。
+
+它基本上就是一个在角色高潮和挤奶时应用的漏奶粒子效果。
+
+通常,漏奶位置的偏移是静态的。
+
+但 SGO4IF 可以自动缩放 OLactis 的偏移,让漏奶始终从乳头流出。
+
+不过这需要个人配置(见下文)。
+
+该调整不适用于普通版本的 OLactis,你必须使用 SGO4IF 下载区提供的那个版本。
+
+**与 SMP 乳房物理不兼容。** SMP 物理会包裹网格,导致漏奶效果固定不动。
+
+CBPC 物理可以正常使用:它移动的是实际骨骼,漏奶效果会跟随物理。
+
+如何配置偏移:
+
+1. 启用 OLactis MCM 的 Debug Axis(调试轴)(这会让偏移从 OLactis MCM 中的玩家偏移缩放而来)。
+2. 将玩家体重设为 0(在 RaceMenu 中)。按下 OLactis 开关热键(在 MCM 中查看其绑定)启用漏奶。手动调整到合适位置,然后在 SGO4IF MCM 的相应选项中输入该偏移值。
+3. 启用 SGO4 IF 的 OLactis Debug。等待一次,直到乳房膨胀到夸张的比例。按下 OLactis 开关热键(在 MCM 中查看其绑定)启用漏奶。手动调整到合适位置,然后在 SGO4IF MCM 的相应选项中输入该偏移值。
+4. 禁用 SGO4 IF 的 OLactis Debug,将玩家体重设为 100(在 RaceMenu 中)。等待一次,直到乳房回缩到正常比例。按下 OLactis 开关热键(在 MCM 中查看其绑定)启用漏奶。手动调整到合适位置,然后在 SGO4IF MCM 的相应选项中输入该偏移值。
+5. 禁用 OLactis 的 Debug Axis,启用 SGO4 Olactis Support(支持)。使用调试菜单膨胀乳房,测试漏奶是否已正确重新定位。
+6. 如有任何问题,请反馈。
+
+----------------------------------------------------------------------------------------------
+
+### CBPC 物理缩放(CBPC Physics Scaling)
+
+SGO4IF 可以根据你的缩放自动改变 CBPC 乳房物理和碰撞体。
+
+它还可以根据膨胀阶段改变腹部物理。0 – 100
+
+不过默认禁用,需要手动配置以匹配你的 Bodyslide 预设。
+
+默认情况下(如果启用),SGO4IF 会在你的默认 CBPC 物理和 `SGO4IF\skse\plugins` 文件夹中的配置之间进行"插值"。
+
+要配置该插值,请查看你的 CBPCBreastMult 配置。插值会根据该设置应用。
+
+当 CBPCBreastMult 为 10 时,你需要达到乳房基础缩放的 10 倍,你的配置才会完全生效。
+
+设为 5 时,你需要达到 5 倍视觉缩放,以此类推。
+
+此功能可以外推(extrapolate),但作者建议就保持 10,然后在此基础上调整。
+
+对于腹部缩放,在 100% 膨胀/妊娠时,新的腹部物理会完全应用。
+
+----------------------------------------------------------------------------------------------
+
+### Gender Bender(性别转换)
+
+通过 [Essence Of Corruption: Stallion 腐败精华:种马] 在女性角色上启用精液生产,还应该会为该角色添加丁丁(如果使用 SOS)。
+
+前提是"你"已经初始化了 Gender Bender。
+
+----------------------------------------------------------------------------------------------
+
+挤奶会导致性奋值调整,正负取决于配置。
+
+分娩会导致性奋值调整,正负取决于配置。
+
+精液采集会导致性奋值调整,正负取决于配置。
+
+----------------------------------------------------------------------------------------------
+
+### 法线贴图交换(旧版,LEGACY)
+
+不推荐,请改用 MU Dynamic Normalmap。
+
+SGO4IF 可以在膨胀/妊娠时自动交换法线贴图。
+
+需要:[https://www.nexusmods.com/skyrimspecialedition/mods/68977](https://www.nexusmods.com/skyrimspecialedition/mods/68977)
+
+使用 fomod 安装器中的 fertility mode + setup 安装。
+
+你的文件夹结构应如下所示:
+
+`textures\dw\pregnormals\20,40,60,80,100`
+
+同时支持法线贴图集,供使用不同基础法线贴图的角色使用。
+
+对于这些角色,你需要将法线贴图放在:
+
+`textures\dw\pregnormals\Whatever\0,20,40,60,80,100`
+
+注意其中包含的 0 文件夹:它需要包含你的自定义法线贴图的"未编辑"版本。作者不知道有什么方法可以立即"清除"法线贴图覆盖。
+
+要切换到另一套法线贴图,可以使用 MCM 调试菜单,或将孵化输出(Incubation Output)文件配置为自定义的 gemnormal。

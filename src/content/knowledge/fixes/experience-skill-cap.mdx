@@ -1,0 +1,111 @@
+---
+title: 技能经验不增长：Experience 技能上限排查与修复记录
+type: fix
+status: verified
+game_version: Skyrim SE AE（Crimson Sin v4.0）
+last_edited: 2026-08-12
+last_verified: 2026-08-12
+tags: [Skyrim, Crimson Sin, Experience, 技能经验, 存档]
+excerpt: 部分技能经验条完全不动，根因是 Experience 的动态技能上限在建号时固化；本文记录证据链和对旧档、新档均有效的修复方式。
+related: []
+sources: []
+---
+
+## 问题现象
+
+- 部分技能可以正常升级（本案例：开锁、格挡），部分技能的经验条**完全不动**（本案例：潜行、轻甲、扒窃、口才）。
+- 角色 8 级时，潜行 25 级经验条冻结；其他技能升到 20 级后也全部冻结。
+- 每次开档“卡住的技能”不一样，不同玩家反馈的情况也不一样。
+- 已排除“角色等级被卡”：给技能加大量经验、提升玩家等级均无效，经验条依然不动。
+
+## 根本原因
+
+整合包自带的 **Experience（经验系统）模组** 带有“**动态技能上限**”机制：
+
+> 每个技能的上限 = `fSkillCapBase + fSkillCapMult × 角色等级`（再叠加种族加成）
+> 即本包配置的：**18 + 2 × 角色等级**（1 级时上限 20，种族加成后为 20/25/30）
+
+上限值在**建号时按 1 级算好并写入 `.skse` 伴随存档**。官方说明该上限“角色升级后刷新”（Takes effect after leveling up），但本包中**该刷新从未触发**——1 级到 8 级的所有存档，18 个技能上限数值完全一致。
+
+结果：技能等级达到存档内固化的上限时，Experience 直接拦截技能经验，经验条冻结。玩家等级、潜行动作、护甲类型等都与此无关。
+
+“每次开档/每个人不一样”的解释：上限 = 1 级基础值 + 种族加成，种族不同则卡住的技能不同；再加上每个人练到上限的技能不同，现象自然各不相同。
+
+## 证据链
+
+1. **Experience.ini 配置**（`SKSE\Plugins\Experience.ini`）：
+   - `fSkillCapBase = 18`、`fSkillCapMult = 2`、`bUseRacialCaps = true`
+   - `bEnableSkillXP = false`：正常设计（技能升级不再给角色经验），与本问题无关。
+2. **DLL 实现**：Experience.dll 挂接引擎 `PlayerSkills`（技能经验入口）与 `SkillIncrease` 事件，包含 `Applying racials for {}` 逻辑，按公式对技能封顶。
+3. **存档级实锤**：解析 `.skse` 伴随存档，`EPXE` 数据块 = 18 个 float（逐技能上限）。本角色 1 级到 8 级所有存档数值完全相同：
+
+| 单手 | 双手 | 箭术 | 格挡 | 锻造 | 重甲 | 轻甲 | 扒窃 | 开锁 | 潜行 | 炼金 | 口才 | 其余魔法系 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 25 | 30 | 20 | 25 | 25 | 20 | 25 | 20 | 20 | 20 | 20 | 25 | 20 |
+
+   8 级按公式上限应为 34，潜行 25 远低于 34 却冻结，证明**上限未随升级刷新**，而非公式问题。
+4. **排除项**：
+   - Simply Balanced 预设的所有技能经验倍率非零，只会变慢不会归零。
+   - McmRecorder 中 Experience 仅录制了击杀倍率 1.3。
+   - Subclasses of Skyrim 2 提供“命运”技能点，不直接改技能经验。
+   - 包里无 Skill Uncapper / Static Skill Leveling / Train and Study 等按技能关闭经验的模组。
+
+## 验证命令
+
+```ini
+; 直接给技能加经验（经验条不动 = 被上限拦截）
+player.advskill <技能名> 100000
+
+; 给角色加经验触发升级（本包中升级不会刷新上限）
+player.advlevel 500
+
+; 直接改技能等级（不走经验系统，只能看表现，不能验证经验条）
+player.setav <技能名> 30
+
+; 切换种族，触发 Experience 重算上限（成功修复旧档的关键）
+showracemenu
+```
+
+`advskill` 技能名对照（全部 18 个）：
+
+```ini
+onehanded, twohanded, marksman, block, smithing, heavyarmor, lightarmor,
+pickpocket, lockpicking, sneak, alchemy, speechcraft,
+alteration, conjuration, destruction, illusion, restoration, enchanting
+```
+
+## 解决方案
+
+### 方案 A：放开技能上限（推荐，已实测有效）
+
+1. 编辑 Experience 模组目录中的 `SKSE\Plugins\Experience.ini`：
+
+   ```ini
+   fSkillCapBase = 100.000000
+   fSkillCapMult = 0.000000      ; 或保持 2，Base=100 后已等于没有限制
+   bUseRacialCaps = true         ; 可保留
+   ```
+
+   技能等级上限本来就是 100，Base=100 即等于放开限制。
+
+2. **旧档修复（已确认，无需换种族）**：改完 INI 后保存文件，重启游戏读取旧档即可，上限会按当前 INI 自动重算，冻结解除。
+
+   - 已实测确认：INI 改回 `fSkillCapBase = 18` 后重启读档，上限回到 20/25/30；改回 100 再重启，上限变为 100+。证明**加载存档时 Experience 按当前 INI 重算上限**，伴随存档里固化的是旧值，不参与最终生效。
+   - 种族切换（`showracemenu`）不再必要，它只是“同一会话内”触发重算的替代扳手：改完 INI 后不想重启时，切一次种族再切回也能立即生效。
+   - 最终结论：**改 INI → 重启游戏（或重载存档）即可**，旧档、新档通用，无需新开档。
+
+3. **新档**：新建角色（不要使用带旧上限的整合包初始存档），建号后可用 `player.advskill sneak 100000` 验证潜行能突破 20。
+
+### 方案 B：保留动态上限，反馈作者修复
+
+上限不随升级刷新属于整合包层面的兼容问题（已知 Experience 与替换/跳过升级菜单的 Mod 组合会导致上限永不刷新）。可向作者反馈：
+
+> Experience 技能上限固化在建号时的 1 级值（20/25/30），角色升到 8 级从未重算；1 级与 8 级存档中 18 个技能上限完全一致。
+
+## 注意事项
+
+- MCM 修改会写回模组目录内的 Experience.ini，改前建议备份。
+- 改 INI/MCM 后需要**重启游戏或重载存档**才生效；同一会话内不会自动重算（不想重启时可临时切一次种族触发）。
+- 整合包更新/重装会覆盖 INI，需要重新修改。
+- 原版失败动作（扒窃失败、说服失败等）本来就不给经验；放开上限后若个别技能仍不涨，再按“动作是否成功触发”排查。
+- 本记录涉及的存档文件位于当前 profile 的 `saves/` 目录及对应的 `.skse` 伴随存档。
