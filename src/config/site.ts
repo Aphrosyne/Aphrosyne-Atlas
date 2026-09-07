@@ -20,8 +20,8 @@ export const SITE = {
   url: 'https://aphrosyne.github.io/Aphrosyne-Atlas',
   author: 'Aphrosyne（柳江凝）',
   assets: {
-    avatar: '/images/avatar/avatar.jpg',
-    background: '/images/bg/bg.jpg',
+    avatar: '/images/avatar/avatar.webp',
+    background: '/images/bg/bg.webp',
   },
   profile: {
     tagline: '设计 · 创造',

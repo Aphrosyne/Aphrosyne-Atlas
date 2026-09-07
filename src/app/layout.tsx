@@ -10,9 +10,9 @@ import { SITE } from '@/config/site'
 
 const sourceHanSans = localFont({
   src: [
-    { path: './fonts/SourceHanSansSC-Regular.otf', weight: '400', style: 'normal' },
-    { path: './fonts/SourceHanSansSC-Medium.otf', weight: '500', style: 'normal' },
-    { path: './fonts/SourceHanSansSC-Bold.otf', weight: '700', style: 'normal' },
+    { path: './fonts/AphrosyneSansSC-Regular.woff2', weight: '400', style: 'normal' },
+    { path: './fonts/AphrosyneSansSC-Medium.woff2', weight: '500', style: 'normal' },
+    { path: './fonts/AphrosyneSansSC-Bold.woff2', weight: '700', style: 'normal' },
   ],
   variable: '--font-source-han-sans',
   display: 'swap',

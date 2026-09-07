@@ -17,6 +17,8 @@
 /.next/
 /out/
 /public/search-index.json
+/public/images/**/*.webp
+/src/app/fonts/AphrosyneSansSC-*.woff2
 
 # production
 /build

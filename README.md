@@ -28,6 +28,26 @@ npx serve out -l 4173
 
 社交链接只渲染 `SOCIAL_LINKS` 数组中已确认可公开的项目。不要在配置文件或仓库中保存 Token、密码和其他私密信息。
 
+## 静态资源优化
+
+`npm run dev` 和 `npm run build` 会先执行 `npm run optimize:assets`：
+
+- 扫描 `src/` 中的页面、组件和 MDX，只为当前站点实际使用的字符生成三个 WOFF2 字体子集；
+- 递归扫描 `assets/images-source/` 中的 JPG、JPEG 和 PNG，按原目录结构生成到 `public/images/`；
+- 背景图宽度上限为 3840 px、头像为 768 px、其他图片为 1920 px，并自动转换为 WebP；含透明通道的 PNG 使用无损 WebP。
+
+原始 OTF 和图片是重新生成优化产物的源文件，应保留在仓库中。生成的 WOFF2/WebP 文件已加入 `.gitignore`，不要手动编辑；新增文章、界面文字或图片后，下次开发或构建会自动更新。字体缺少运行时动态字符时会回退到系统中文字体。
+
+新增图片时，将原图放到 `assets/images-source/` 下合适的分类目录。例如：
+
+```text
+assets/images-source/knowledge/example/screenshot.png
+  → public/images/knowledge/example/screenshot.webp
+  → Markdown 中引用 /images/knowledge/example/screenshot.webp
+```
+
+转换器会跳过没有变化的图片；修改压缩规则后可运行 `npm run optimize:assets -- --force` 强制重新生成。SVG 和动画 GIF 不经过此转换器，应按需直接放入 `public/images/`，视频动画建议另行转换为 WebM。
+
 ## Dashboard 布局工作台
 
 运行 `npm run dev` 后访问 [http://localhost:3000/studio/dashboard/](http://localhost:3000/studio/dashboard/)。它用于调整桌面端 12 列 Dashboard，不会自动写入仓库。
