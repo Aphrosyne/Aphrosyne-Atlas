@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "generate:search-index": "node scripts/generate-search-index.mjs",
+    "dev": "npm run generate:search-index && next dev",
+    "build": "npm run generate:search-index && next build",
     "start": "next start",
     "lint": "eslint"
   },
