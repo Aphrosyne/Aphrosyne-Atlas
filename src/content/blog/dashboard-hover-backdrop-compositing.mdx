@@ -1,0 +1,51 @@
+---
+title: Dashboard 滚动模糊带：backdrop-filter 的图块接缝
+date: 2026-09-09
+tags: [frontend, css, debugging, backdrop-filter, dashboard]
+excerpt: 首页知识库条目悬停时，为什么相邻的 Profile 卡片会出现位置会随滚动变化的模糊带；记录 backdrop-filter 图块接缝的定位与取舍。
+readingTime: 4 min
+---
+
+Dashboard 曾出现一个反直觉的问题：鼠标悬停在 Knowledge 卡片的某一条目上，变化却出现在左侧的 Profile 卡片——它的背景出现了一段横向模糊带。
+
+一开始把它归因于 Knowledge 条目的 hover 重绘与 Dashboard 共用的 `transform-gpu`。移除该 transform 后，问题仍然存在；更关键的观察是：滚动页面后，条带的位置会改变，有时还会出现多条。
+
+这说明它不是某个固定的 hover 样式，而是 Profile 卡自身的 backdrop-filter 在重新取样时产生的图块接缝。
+
+## 现象
+
+Knowledge 的每一条目在 hover 时只添加了半透明背景色。它本身没有 `backdrop-filter`，Profile 也没有移动；理论上两张卡片互不影响。
+
+Profile 卡片使用了 `backdrop-blur`。浏览器通常不会为整张页面一次性计算这个滤镜，而是将背景切成多个渲染图块取样。页面滚动、背景变化或邻近区域重绘时，图块边界可能混入不同批次的模糊结果。
+
+Knowledge 条目 hover 只是较容易触发这次重绘的时机，并不是条带的根因。条带会随着滚动位置变化，正是 backdrop-filter 图块边界的特征。
+
+## 解决方式
+
+先移除了 Dashboard 卡片共用样式中的 `transform-gpu`，避免让静止卡片长期处于 GPU 合成层；这是一项合理的稳定性改进，但不能消除 Profile 内仍在运行的 backdrop-filter。
+
+最终对 Profile 卡片关闭 blur：
+
+```tsx
+<Card
+  layout={DASHBOARD_LAYOUT.bio}
+  direction={DIR.bio}
+  withBackdropBlur={false}
+>
+  <ProfileCard />
+</Card>
+```
+
+Profile 仍保留半透明底色、边框、阴影和轻微上浮。视觉语言没有变成实心卡片，但因为没有 backdrop-filter，也不再存在会随滚动移动的滤镜接缝。
+
+Knowledge 卡片仍然关闭 blur：它横跨首行的大段 Grid gap，属于另一类已经验证过的 gap 边界伪影。关闭 blur 不影响其半透明玻璃底色和轻微上浮交互。
+
+## 结论
+
+`transform-gpu` 不是 backdrop-filter 闪烁、延迟或条带的通用修复；而 backdrop-filter 本身也可能在滚动时出现图块接缝。前者可以减少不必要的合成边界，后者则必须针对出现伪影的卡片关闭滤镜。
+
+遇到类似问题时，优先检查：
+
+- 条带是否会随滚动位置变化，或随机变为多条；
+- 使用 backdrop-filter 的元素是否紧邻透明 Grid gap 或高对比背景；
+- 是否能只为有问题的卡片关闭滤镜，保留其余的半透明、边框和动效。

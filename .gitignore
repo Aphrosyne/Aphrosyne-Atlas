@@ -48,6 +48,9 @@ skills-lock.json
 # reference files
 .ref/
 
+# local-only material — never enters Git or the static-site build
+/.private/
+
 # vercel
 .vercel
 

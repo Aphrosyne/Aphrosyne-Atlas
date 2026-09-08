@@ -1,0 +1,48 @@
+---
+title: Framer Motion 与 Backdrop Blur：避免卡片模糊延迟出现
+date: 2026-09-08
+tags: [framer-motion, css, backdrop-blur, frontend]
+excerpt: 记录 backdrop-filter 与 opacity 入场动画组合时，为什么会出现模糊闪现，以及内容卡片和背景装饰各自合适的处理方式。
+readingTime: 3 min
+---
+
+`backdrop-blur` 元素放在 Framer Motion 的 `opacity: 0 → 1` 动画容器内时，模糊有时会在动画结束后才突然出现，视觉上像一次闪现。
+
+根源通常不是 Framer Motion，而是浏览器的渲染优化：元素或它的祖先透明度为零时，浏览器可能不会预计算 `backdrop-filter`；透明度恢复后，模糊才被计算出来。
+
+## 内容卡片：让动效和模糊在同一个元素上
+
+内容卡片既需要玻璃模糊，也需要入场动画时，最稳妥的结构是让同一个 DOM 元素同时拥有 motion 属性和 `backdrop-blur`：
+
+```tsx
+<motion.a
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  className="bg-surface/50 backdrop-blur-sm border ..."
+>
+  卡片内容
+</motion.a>
+```
+
+不要把它拆成“父层做 opacity 动画、子层负责 blur”。父层为零透明度时，子层的 `backdrop-filter` 可能被延后计算。
+
+## 背景装饰：移出动画容器
+
+全屏蒙版、背景光晕之类的纯装饰不必参与入场动画。让它们立即渲染，正文容器单独做页面过渡即可：
+
+```tsx
+<>
+  <div className="fixed inset-0 bg-white/15 backdrop-blur-xl -z-10" />
+  <PageTransition>
+    <main>正文内容…</main>
+  </PageTransition>
+</>
+```
+
+## 功能性 UI 可以不做入场动画
+
+搜索栏、工具栏和导航的首要目标是立即可用。它们不是内容阅读节奏的一部分时，直接使用普通元素往往更稳定，也能避免额外的 blur 合成问题。
+
+## 本站的取舍
+
+Blog 和项目卡片采用短距离上浮，Knowledge 列表采用短距离从右向左进入；两者都让玻璃模糊与 motion 位于同一个卡片元素。分类栏、导航等定位性 UI 保持静止。所有这些动画都会尊重系统的“减少动态效果”设置。

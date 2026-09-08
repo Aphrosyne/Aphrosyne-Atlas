@@ -6,7 +6,7 @@
 
 1. `docs/atlas-plan.md`：项目定位、阶段边界与长期路线。
 2. 当前代码和 Git 状态：真实实现、完成进度与工作树状态。
-3. `.spec/`：既有前端实现约束和踩坑记录。
+3. `docs/archive/`：已归档的前端实现约束和踩坑记录，仅作历史参考。
 4. `docs/legacy-blog-notes.md` 与 `docs/legacy-blog-roadmap.md`：旧博客阶段的历史资料，不作为当前进度依据。
 
 计划描述目标，代码描述现状。两者冲突时，不把路线图复选框、旧文档、分支名或版本描述当成已完成事实；先检查代码和可验证结果，再决定是否修订计划。
@@ -16,9 +16,9 @@
 ## 当前实现注意事项
 
 - 技术栈为 Next.js 16 App Router、React 19、Tailwind CSS v4、Framer Motion 与 MDX。
-- Dashboard 使用 12 列显式 Grid；卡片位置和入场方向集中由 `GRID`、`DIR` 控制。底部卡片使用 `bottom` 方向入场曾导致滚动卡顿，调整时先阅读 `.spec/framer-motion-blur.md`。
+- Dashboard 使用 12 列显式 Grid；卡片位置和入场方向集中由 `GRID`、`DIR` 控制。底部卡片使用 `bottom` 方向入场曾导致滚动卡顿，调整时可参考 `docs/archive/framer-motion-blur.md`。
 - 当前 Blog 从 `src/content/*.mdx` 动态导入文章。`src/lib/posts.ts` 仍通过正则和 `new Function` 读取 metadata，并依赖兼容 CRLF 的 `\r?\n`；这是待替换的旧实现，在知识库内容模型阶段前不要无测试地重写。
-- 主题颜色通过 `src/app/globals.css` 的 CSS 变量映射到 Tailwind v4；修改主题实现前先阅读 `.spec/tailwind-v4.md`。
+- 主题颜色通过 `src/app/globals.css` 的 CSS 变量映射到 Tailwind v4；修改主题实现时可参考 `docs/archive/tailwind-v4.md`。
 
 ## 项目目标
 
@@ -40,7 +40,7 @@ Aphrosyne Atlas 是一个静态优先、具有个人视觉风格的内容站：
 6. **Blog 与 Knowledge 不混为同一种内容。** Blog 按日期与标签组织；Knowledge 按分类、版本、验证状态和关联关系组织。共享渲染能力，不强行共享全部元数据与导航逻辑。
 7. **保护用户内容和现有改动。** 不擅自删除、覆盖、移动或批量改写文章与图片；处理来源不明的工作树修改前先确认归属。
 8. **中文内容是一等公民。** 新功能必须支持 UTF-8、中文标题、中文搜索和 Windows 中文路径；不能假设文件名遵循统一格式。
-9. **不主动修改规范或历史文档。** 除非用户明确要求，不修改 `.spec/`、`docs/legacy-blog-notes.md` 与 `docs/legacy-blog-roadmap.md`。
+9. **不主动修改历史文档。** 除非用户明确要求，不修改 `docs/archive/`、`docs/legacy-blog-notes.md` 与 `docs/legacy-blog-roadmap.md`。
 10. **不扩展未经确认的产品范围。** 不自行加入账号、数据库、评论后台、AI 问答、内容爬取或其他需要长期服务端维护的系统。
 
 ## Next.js 规则
@@ -68,6 +68,14 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - 不复制粘贴 GitHub Pages 仓库名到多个组件；公开资源路径应有单一来源。
 - 外部服务必须具有失败降级；静态站的核心导航、文章和知识库不能因第三方接口失败而不可用。
 
+## 本机 Python 环境
+
+- 本机已安装用户级 Python 3.14；在 Codex PowerShell 中，`python`、`python3` 与 `py` 均已实际验证可运行。不得仅根据 PATH 文本、`Get-Command` 的首项或 WindowsApps 中的零字节应用执行别名断言“没有 Python”。
+- 当前用户级解释器可通过 `py -0p` 动态查询；稳定的回退入口为 `py -3.14`、`$env:LOCALAPPDATA\Python\bin\python.exe` 或 `$env:LOCALAPPDATA\Python\pythoncore-3.14-64\python.exe`。
+- Codex 桌面端另带独立的 Python 3.12 运行时，当前入口为 `$env:USERPROFILE\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe`。涉及文档、PDF、表格、图片等 Codex bundled 工具时，先调用工作区依赖查询能力获取当次实际路径，不假定 bundled 版本永久不变。
+- 判断 Python 是否可用时，至少实际执行 `python --version`；若失败，再执行 `py -0p` 与 `py -3.14 --version`，并用 `Test-Path` 核对上述入口。只有这些检查都失败后，才能报告 Python 不可用。
+- 如果项目以后建立 `.venv`，项目脚本和测试优先使用 `.venv\Scripts\python.exe`；当前没有项目虚拟环境。不要因为 WindowsApps 排在 PATH 前面就擅自修改系统 PATH、关闭应用执行别名或重新安装 Python。
+
 ## Git 提交规范
 
 - 提交标题使用 `<type>[(范围)]: <中文说明>` 格式，沿用 `feat`、`fix`、`docs`、`refactor`、`test`、`chore` 等 Conventional Commit 前缀。
@@ -88,7 +96,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 - Blog 和 Knowledge 的源文件是长期资产，迁移时优先保持正文语义和稳定 URL。
 - 知识库 frontmatter 必须可解析、可校验，不通过执行字符串代码读取元数据。
-- 图片、引用和第三方资料进入公开站点前要确认来源与授权；不默认公开 `personal/` 内容。
+- 图片、引用和第三方资料进入公开站点前要确认来源与授权；未确认可公开的本地材料放在根目录 `.private/`，不默认公开。
 - 不同时维护 Markdown 与 PDF 两份正文；PDF 仅作为明确需要的发布物或下载附件。
 - 修复 Markdown 路径时兼容空格、中文和正斜杠 URL，不把本机绝对路径写入网页。
 

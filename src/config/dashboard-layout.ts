@@ -25,14 +25,14 @@ export interface DashboardLayoutItem {
   rowSpan: number
 }
 
-export const DASHBOARD_LAYOUT: Record<DashboardCardId, DashboardLayoutItem> = {
+export const DASHBOARD_LAYOUT = {
   bio: { column: 1, row: 1, columnSpan: 3, rowSpan: 1 },
-  posts: { column: 4, row: 1, columnSpan: 9, rowSpan: 1 },
-  knowledge: { column: 4, row: 5, columnSpan: 6, rowSpan: 1 },
-  projects: { column: 1, row: 2, columnSpan: 3, rowSpan: 3 },
-  tagcloud: { column: 4, row: 2, columnSpan: 6, rowSpan: 3 },
+  posts: { column: 1, row: 2, columnSpan: 9, rowSpan: 1 },
+  knowledge: { column: 4, row: 1, columnSpan: 9, rowSpan: 1 },
+  projects: { column: 1, row: 3, columnSpan: 3, rowSpan: 2 },
+  tagcloud: { column: 4, row: 3, columnSpan: 6, rowSpan: 2 },
   memes: { column: 10, row: 2, columnSpan: 3, rowSpan: 1 },
   status: { column: 10, row: 3, columnSpan: 3, rowSpan: 1 },
   clock: { column: 10, row: 4, columnSpan: 3, rowSpan: 1 },
-  hitokoto: { column: 1, row: 6, columnSpan: 12, rowSpan: 1 },
-}
+  hitokoto: { column: 1, row: 5, columnSpan: 12, rowSpan: 1 },
+} satisfies Record<DashboardCardId, DashboardLayoutItem>

@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import type { PublicationState } from '@/types/publication'
 
 interface BlogCardProps {
   slug: string
@@ -9,11 +10,11 @@ interface BlogCardProps {
   date: string
   excerpt: string
   tags: string[]
-  index: number
+  publication: PublicationState
   onTagClick?: (tag: string) => void
 }
 
-export default function BlogCard({ slug, title, date, excerpt, tags, index, onTagClick }: BlogCardProps) {
+export default function BlogCard({ slug, title, date, excerpt, tags, publication, onTagClick }: BlogCardProps) {
   return (
     <motion.article
       initial={{ opacity: 0, y: 20 }}
@@ -28,7 +29,10 @@ export default function BlogCard({ slug, title, date, excerpt, tags, index, onTa
         className="absolute inset-0 z-0 rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
       />
       <div className="relative z-10 pointer-events-none">
-        <time className="text-xs text-fg/70">{date}</time>
+        <div className="flex flex-wrap items-center gap-2 text-xs text-fg/70">
+          <time>{date}</time>
+          {publication === 'archived' && <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-amber-800 dark:text-amber-200">归档</span>}
+        </div>
         <h3 className="mt-2 font-semibold text-fg/85">{title}</h3>
         <p className="mt-2 text-sm text-fg/55 leading-relaxed line-clamp-3">{excerpt}</p>
       </div>

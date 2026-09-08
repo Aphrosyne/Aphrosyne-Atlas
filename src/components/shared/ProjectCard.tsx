@@ -1,30 +1,70 @@
+'use client'
+
+import { motion, useReducedMotion } from 'framer-motion'
 import Link from 'next/link'
+import type { Project } from '@/config/projects'
 
 interface ProjectCardProps {
   title: string
   description: string
   tags: string[]
+  status: Project['status']
+  language: string
   href: string
 }
 
-export default function ProjectCard({ title, description, tags, href }: ProjectCardProps) {
+const STATUS = {
+  public: {
+    label: '公开',
+    className: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300',
+  },
+  archived: {
+    label: '公开归档',
+    className: 'border-amber-500/30 bg-amber-500/10 text-amber-800 dark:text-amber-200',
+  },
+} as const
+
+export default function ProjectCard({
+  title,
+  description,
+  tags,
+  status,
+  language,
+  href,
+}: ProjectCardProps) {
+  const statusMeta = STATUS[status]
+  const shouldReduceMotion = useReducedMotion()
+
   return (
-    <Link
-      href={href}
-      className="group rounded-xl border border-border bg-surface p-5 transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
+    <motion.article
+      initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={shouldReduceMotion ? undefined : { y: -3 }}
+      className="group relative flex min-h-64 flex-col overflow-hidden rounded-2xl border border-border/40 bg-surface/50 p-5 backdrop-blur-md transition-shadow duration-300 hover:shadow-[0_14px_30px_rgba(0,0,0,0.12)]"
     >
-      <h3 className="font-semibold text-fg group-hover:text-accent transition-colors">{title}</h3>
-      <p className="mt-2 text-sm text-muted leading-relaxed">{description}</p>
-      <div className="mt-4 flex flex-wrap gap-2">
-        {tags.map((tag) => (
-          <span
-            key={tag}
-            className="rounded-md bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
-          >
-            {tag}
-          </span>
-        ))}
+      <Link
+        href={href}
+        aria-label={`查看项目：${title}`}
+        className="absolute inset-0 z-0 rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-inset"
+      />
+
+      <div className="pointer-events-none relative z-10 flex h-full flex-col">
+        <div className="flex flex-wrap items-center gap-2 text-xs">
+          <span className={`rounded-full border px-2.5 py-1 ${statusMeta.className}`}>{statusMeta.label}</span>
+          <span className="rounded-full bg-fg/5 px-2.5 py-1 text-fg/60">{language}</span>
+        </div>
+
+        <h2 className="mt-4 text-lg font-semibold text-fg/85 transition-colors group-hover:text-accent">{title}</h2>
+        <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-fg/55">{description}</p>
+
+        <div className="mt-auto flex flex-wrap gap-2 pt-5">
+          {tags.map((tag) => (
+            <span key={tag} className="rounded-full bg-fg/5 px-2 py-0.5 text-xs text-fg/65">
+              {tag}
+            </span>
+          ))}
+        </div>
       </div>
-    </Link>
+    </motion.article>
   )
 }

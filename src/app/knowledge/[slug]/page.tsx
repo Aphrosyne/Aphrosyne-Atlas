@@ -11,7 +11,12 @@ const STATUS_LABELS = {
   verified: '已验证',
   'needs-review': '待复查',
   outdated: '已过时',
-  draft: '草稿',
+} as const
+
+const STATUS_CLASSES = {
+  verified: 'border-emerald-400/30 bg-emerald-400/10 text-emerald-300',
+  'needs-review': 'border-amber-400/30 bg-amber-400/10 text-amber-200',
+  outdated: 'border-rose-400/30 bg-rose-400/10 text-rose-200',
 } as const
 
 const TYPE_LABELS = {
@@ -45,12 +50,12 @@ export default async function KnowledgeArticlePage({ params }: Props) {
           </Link>
           <div className="mt-8 grid gap-8 lg:grid-cols-[12rem_minmax(0,1fr)_12rem]">
             <aside className="order-2 lg:order-1">
-              <details className="rounded-xl border border-border/50 bg-surface/35 p-4 lg:sticky lg:top-24" open>
+              <details className="rounded-xl border border-border/50 bg-surface/35 p-4 lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:overflow-hidden" open>
                 <summary className="cursor-pointer text-xs font-medium tracking-widest text-fg/45 uppercase">知识库导航</summary>
-                <ul className="mt-3 space-y-1 text-sm">
+                <ul className="mt-3 space-y-1 text-sm lg:max-h-[calc(100vh-11rem)] lg:overflow-y-auto lg:overscroll-contain lg:pr-1">
                   {categories.map((item) => (
                     <li key={item.slug}>
-                      <Link href={`/knowledge/${item.slug}`} className={`block rounded-lg px-2 py-1.5 transition-colors ${item.slug === slug ? 'bg-accent/15 text-accent' : 'text-fg/60 hover:bg-surface hover:text-fg'}`}>
+                      <Link href={`/knowledge/${item.slug}`} title={item.title} className={`block truncate rounded-lg px-2 py-1.5 transition-colors ${item.slug === slug ? 'bg-accent/15 text-accent' : 'text-fg/60 hover:bg-surface hover:text-fg'}`}>
                         {item.title}
                       </Link>
                     </li>
@@ -59,11 +64,12 @@ export default async function KnowledgeArticlePage({ params }: Props) {
               </details>
             </aside>
 
-            <article className="order-1 prose max-w-none prose-headings:font-semibold prose-a:text-accent prose-a:no-underline [&_a:hover]:text-avatar-ring [&_a]:transition-colors prose-pre:border-0 prose-pre:bg-transparent prose-code:rounded prose-code:bg-code-bg/40 prose-code:px-1.5 prose-code:py-0.5 dark:prose-invert lg:order-2">
+            <article id="article-content" className="order-1 prose max-w-none prose-headings:font-semibold prose-a:text-accent prose-a:no-underline [&_a:hover]:text-avatar-ring [&_a]:transition-colors prose-pre:border-0 prose-pre:bg-transparent prose-code:rounded prose-code:bg-code-bg/40 prose-code:px-1.5 prose-code:py-0.5 dark:prose-invert lg:order-2">
               <header className="mb-10 not-prose">
                 <div className="flex flex-wrap items-center gap-2 text-xs">
                   <span className="rounded-full bg-accent/15 px-2.5 py-1 text-accent">{TYPE_LABELS[entry.type]}</span>
-                  <span className="rounded-full border border-sky-400/30 bg-sky-400/10 px-2.5 py-1 text-sky-200">{STATUS_LABELS[entry.status]}</span>
+                  <span className={`rounded-full border px-2.5 py-1 ${STATUS_CLASSES[entry.status]}`}>{STATUS_LABELS[entry.status]}</span>
+                  {entry.publication === 'archived' && <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-1 text-amber-800 dark:text-amber-200">归档</span>}
                   {entry.gameVersion && <span className="text-fg/50">适用版本：{entry.gameVersion}</span>}
                 </div>
                 <h1 className="mt-4 text-3xl font-bold tracking-tight text-fg sm:text-4xl">{entry.title}</h1>

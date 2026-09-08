@@ -3,6 +3,7 @@ import path from 'path'
 import matter from 'gray-matter'
 import { globby } from 'globby'
 import type { PostMetadata } from '@/types/post'
+import { asPublicationState, isRoutablePublication } from '@/types/publication'
 
 const CONTENT_DIR = path.join(process.cwd(), 'src/content/blog')
 
@@ -22,25 +23,46 @@ function parseMetadataFromFile(filePath: string): PostMetadata | null {
     date,
     tags: data.tags,
     excerpt: data.excerpt,
+    publication: asPublicationState(data.publication),
     readingTime: typeof data.readingTime === 'string' ? data.readingTime : undefined,
   }
+}
+
+interface PostQueryOptions {
+  includeArchived?: boolean
+  includeUnlisted?: boolean
+}
+
+function matchesPostQuery(post: PostMetadata, options: PostQueryOptions): boolean {
+  if (!isRoutablePublication(post.publication)) return false
+  if (post.publication === 'unlisted') return options.includeUnlisted === true
+  if (post.publication === 'archived') return options.includeArchived === true
+  return true
 }
 
 /** Return all MDX slugs sorted alphabetically. */
 export async function getPostSlugs(): Promise<string[]> {
   const files = await globby('*.mdx', { cwd: CONTENT_DIR })
-  return files.map((f) => f.replace(/\.mdx$/, '')).sort()
+  return files.flatMap((file) => {
+    const slug = file.replace(/\.mdx$/, '')
+    const metadata = parseMetadataFromFile(path.join(CONTENT_DIR, file))
+    return metadata && isRoutablePublication(metadata.publication) ? [slug] : []
+  }).sort()
 }
 
 /** Return metadata for every blog post, sorted newest-first. */
-export async function getAllPosts(): Promise<PostMetadata[]> {
-  const slugs = await getPostSlugs()
+export async function getAllPosts(options: PostQueryOptions = {}): Promise<PostMetadata[]> {
+  const files = await globby('*.mdx', { cwd: CONTENT_DIR })
   const posts: PostMetadata[] = []
 
-  for (const slug of slugs) {
-    const filePath = path.join(CONTENT_DIR, `${slug}.mdx`)
+  for (const file of files) {
+    const slug = file.replace(/\.mdx$/, '')
+    const filePath = path.join(CONTENT_DIR, file)
     const meta = parseMetadataFromFile(filePath)
-    if (meta) posts.push({ ...meta, slug })
+    if (meta) {
+      const post = { ...meta, slug }
+      if (matchesPostQuery(post, options)) posts.push(post)
+    }
   }
 
   return posts.sort(
@@ -58,13 +80,19 @@ export async function getRecentPosts(count = 3): Promise<PostMetadata[]> {
 export async function getPostBySlug(
   slug: string,
 ): Promise<PostMetadata | null> {
-  const all = await getAllPosts()
-  return all.find((p) => p.slug === slug) ?? null
+  const filePath = path.join(CONTENT_DIR, `${slug}.mdx`)
+  if (!fs.existsSync(filePath)) return null
+  const metadata = parseMetadataFromFile(filePath)
+  return metadata && isRoutablePublication(metadata.publication)
+    ? { ...metadata, slug }
+    : null
 }
 
 /** Return prev/next posts for navigation. */
 export async function getAdjacentPosts(slug: string) {
-  const all = await getAllPosts()
+  const current = await getPostBySlug(slug)
+  if (!current || current.publication === 'unlisted') return { prev: null, next: null }
+  const all = await getAllPosts({ includeArchived: true })
   const idx = all.findIndex((p) => p.slug === slug)
   return {
     prev: idx < all.length - 1 ? all[idx + 1] : null,

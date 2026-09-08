@@ -25,7 +25,7 @@ export const SITE = {
   },
   profile: {
     tagline: '设计 · 创造',
-    heroPrefix: '在下，',
+    heroPrefix: '',
     heroName: '柳江凝',
     heroQuote: '薄暝柳隙人独立，数点雨痕待江凝。',
   },
@@ -38,6 +38,8 @@ export const SITE = {
   dashboard: {
     hitokoto: '薄暝柳隙人独立，数点雨痕待江凝。',
     status: '静态站点 · 正在整理 Aphrosyne Atlas',
+    hitokotoEndpoint: 'https://v1.hitokoto.cn/?c=i&encode=json',
+    statusEndpoint: 'https://gist.githubusercontent.com/Aphrosyne/534c12c92c01c3eb2901cb41b4c81c64/raw',
   },
   licensing: {
     contentName: 'CC BY-SA 4.0',

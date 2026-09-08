@@ -37,7 +37,7 @@ export default async function BlogPostPage({ params }: Props) {
               {/* Main content */}
               <div className="max-w-4xl flex-1 min-w-0">
                 <CopyAttribution>
-                  <article className="prose dark:prose-invert prose-headings:font-semibold prose-a:text-accent prose-a:no-underline [&_a:hover]:text-avatar-ring [&_a]:transition-colors prose-hr:border-t-2 prose-hr:border-fg [&_table]:border-2 [&_table]:border-fg [&_th]:border-2 [&_th]:border-fg [&_th]:px-3 [&_th]:py-2 [&_td]:border-2 [&_td]:border-fg [&_td]:px-3 [&_td]:py-2 [&_thead_tr]:bg-accent/50 [&_tbody_tr:nth-child(even)]:bg-surface/70 prose-pre:border-0 prose-pre:bg-transparent prose-code:rounded prose-code:bg-code-bg/40 [&_pre_code]:bg-transparent prose-code:px-1.5 prose-code:py-0.5 prose-code:text-sm max-w-none">
+                  <article id="article-content" className="prose dark:prose-invert prose-headings:font-semibold prose-a:text-accent prose-a:no-underline [&_a:hover]:text-avatar-ring [&_a]:transition-colors prose-hr:border-t-2 prose-hr:border-fg [&_table]:border-2 [&_table]:border-fg [&_th]:border-2 [&_th]:border-fg [&_th]:px-3 [&_th]:py-2 [&_td]:border-2 [&_td]:border-fg [&_td]:px-3 [&_td]:py-2 [&_thead_tr]:bg-accent/50 [&_tbody_tr:nth-child(even)]:bg-surface/70 prose-pre:border-0 prose-pre:bg-transparent prose-code:rounded prose-code:bg-code-bg/40 [&_pre_code]:bg-transparent prose-code:px-1.5 prose-code:py-0.5 prose-code:text-sm max-w-none">
                     <PostHeader {...meta} />
                     <Post />
                   </article>
@@ -62,9 +62,7 @@ export default async function BlogPostPage({ params }: Props) {
 
               {/* TOC sidebar — sticky, follows while scrolling */}
               <aside className="hidden lg:block w-48 shrink-0">
-                <div className="sticky top-24">
-                  <TableOfContents />
-                </div>
+                <TableOfContents />
               </aside>
             </div>
 

@@ -1,0 +1,129 @@
+---
+title: OpenShaders 下胶衣材质反射：排查实验与修复
+type: experiment
+status: verified
+game_version: Skyrim SE（Crimson Sin · OpenShaders 分支）
+last_edited: 2026-08-11
+last_verified: 2026-08-11
+tags: [Skyrim, OpenShaders, Community Shaders, 材质, Cubemap, NifSkope]
+excerpt: 以一件深色胶衣为对象，对 Cubemap、全局反射参数与 NIF 局部参数进行对照，定位过亮褶皱的根因并给出可复现修复方案。
+related: []
+sources: []
+---
+
+> 本实验针对 Crimson Sin 的 OpenShaders 分支与 Ivyy Sinful Sister UBE 胶衣材质。结论不应直接外推到其他着色器、ENB 或材质。
+
+> **项目**：Crimson Sin（绯红原罪）整合包 · OpenShaders 分支
+> **对象**：Ivyy Sinful Sister UBE —— 胶衣（深色光滑面）材质
+> **日期**：2026-08-11
+
+---
+
+## 1. 问题现象
+
+- 胶衣（深色光滑面）在光源下，法线贴图的褶皱被过度勾勒，产生刺眼、不自然的亮斑。
+- 在 OpenShaders（Community Shaders 的分支，启用 Dynamic Cubemaps）下，衣服自带的环境 cubemap 表现不正常：默认效果为「死黑、无质感」，反射完全不参与。
+- 调整 `Env Map Scale` 对褶皱几乎无改善；调整全局 `BaseF0Multiplier` 虽有效，但会拖累所有金属 / 宝石等 envmap 材质。
+
+---
+
+## 2. 相关文件与路径
+
+| 项目 | 路径 |
+| --- | --- |
+| 服装模组 | `MO2\mods\a+[Ivyy]Sinful Sister UBE\` |
+| 模型（NIF） | `Meshes\Lily\SinfulSister\`（body / top / Boots 及其 r/w 变体） |
+| 自带 cubemap | `textures\Lily\SinfulSister\cubemaps\latexcubemap.dds`（胶衣主体） |
+| 自带 cubemap | `textures\Lily\SinfulSister\cubemaps\shine_e.dds`（靴子亮面） |
+| 自带 cubemap | `textures\Lily\SinfulSister\cubemaps\matcap_5.dds`（尾巴）、`coittower_e.dds`（链子/耳环） |
+| Addons 占位包 | `Community Shader Dynamic Cubemap - Addons\textures\cubemaps\` |
+| 自制候选 cubemap | `latex_cubemap_candidates\` |
+| OpenShaders 预设 | `MO2\mods\[OpenShaders - Astralite CS] - ZARD_v4 - 均配\SKSE\Plugins\CommunityShaders\` |
+
+---
+
+## 3. 根因分析
+
+### 3.1 为什么默认 cubemap 会「死黑」（OpenShaders 的转换机制）
+
+- 原版着色器下，黑色 cubemap 只表示「没有环境反射」，材质自身的高光（Specular / Glossiness）仍然生效，所以作者的原图在旧渲染下能看。
+- OpenShaders 开启动态 cubemap 转换后，静态 cubemap 的内容被当作**反射色调（RGB）× 粗糙度（Alpha）**来解析，实际反射图像则由动态 cubemap 实时生成：
+  - 纯黑 → 反射信号归零 → 死黑、无质感；
+  - 纯白 → 全反射 → 镜面化、亮成「黄金圣衣」；
+  - 灰色 = 反射亮度的中间刻度。
+- `Community Shader Dynamic Cubemap - Addons` 里的文件全部是 1×1 占位图，RGB 决定反射色调、Alpha 决定粗糙度（数值越低越光滑），仅在该机制开启时生效。
+
+### 3.2 褶皱亮斑的真正来源（直接光镜面高光）
+
+褶皱「扎眼」的反射并非来自环境映射（Envmap），而是来自**直接光镜面高光（Direct Specular）**：
+
+- 高光强度 = 500 过高，导致法线贴图每一条起伏都变成刺眼的镜面亮点；
+- 高光大小 = 1.5 使高光较散，更容易覆盖褶皱区域；
+- 胶衣需要的不是「强且散」的直接光高光，而是「弱且锐」或「由环境主导」的反射。
+
+---
+
+## 4. 排查过程
+
+### 4.1 Cubemap 替换实验（按顺序）
+
+| 方案 | 参数（RGB / Alpha） | 结果 |
+| --- | --- | --- |
+| 原 `latexcubemap.dds` | 全黑烘焙图（亮度 7~15/255） | 死黑、无质感（初始问题） |
+| `shinybright_e.dds` | 纯白 255 / 43 | 过亮，镜面「黄金圣衣」 |
+| `grey90_a120` / `grey130_a100` | 深灰 + 高粗糙（0.39~0.47） | 磨砂感，光泽丢失 |
+| `grey70_a15` | 27% 灰 / 粗糙度 0.06 | 接近原效果 |
+| **`grey10_a10`（采用）** | 4% 灰 / 粗糙度 0.04 | 很黑、几乎不反光，仍保留锐利光点 |
+
+**结论**：黑胶 = 深色调（压低环境反射）+ 低粗糙度（保持高光锐利），二者缺一不可。
+
+### 4.2 全局参数实验
+
+- 调低 `BaseF0Multiplier`：能压反射，但影响所有旧材质（盔甲、武器、宝石等）→ 放弃作为最终方案。
+
+### 4.3 NIF 局部调整
+
+- 在 NifSkope 下调低 `Env Map Scale`（0.3~0.5）：可压低环境反射，但对光源下的褶皱高光无直接影响 → 部分有效。
+
+### 4.4 最终定位
+
+意识到问题出在**直接光镜面高光**，而非环境反射，于是关闭直接光高光计算，让 Cubemap 与着色器接管高光表现。
+
+---
+
+## 5. 最终解决方案
+
+| 参数 | 最终值 | 说明 |
+| --- | --- | --- |
+| **高光大小（Glossiness）** | **0** | 关闭直接光镜面高光计算，彻底消除褶皱被光源勾勒的问题 |
+| 高光强度（Specular Strength） | 任意（已失效） | 高光大小为 0 时，此参数不再产生直接光高光 |
+| Env Map Scale | 低值（如 0.3~0.5） | 保留轻微环境反射，维持「光滑黑面」质感 |
+| Cubemap | 10 号深灰（`grey10_a10.dds`） | 低反射、锐高光，配合胶衣表现 |
+
+**核心思路**：直接光高光交给着色器和 Cubemap 处理，不再由 BSLightingShaderProperty 的 Specular 单独计算。
+
+---
+
+## 6. 关键参数速查（BSLightingShaderProperty）
+
+- **高光强度（Specular Strength）**：光源直接照射产生的亮斑强度。
+- **高光大小（Glossiness）**：直接光高光的聚集 / 锐利程度；**设为 0 = 关闭直接光镜面高光**。
+- **Env Map Scale**：环境 Cubemap 反射的强弱，控制「周围环境在材质上的镜像」。
+- **BaseF0Multiplier（全局）**：旧材质转 PBR 的基础 F0 乘数，影响所有 envmap 材质的反射率。
+
+---
+
+## 7. 注意事项
+
+- 1×1 占位 cubemap **仅在 OpenShaders / CS Dynamic Cubemaps 开启时有效**；换回原版着色器或 ENB 后需还原原始 cubemap。
+- 修改任何文件前先备份（尤其是原始的 `latexcubemap.dds`）。
+- 全局参数（`BaseF0Multiplier`）会波及所有旧材质，优先使用 NIF 局部参数（`Env Map Scale`、`Glossiness`）。
+- 自制候选文件位于 `latex_cubemap_candidates\`，内含不同色调/粗糙度组合及 README 说明。
+
+---
+
+## 8. 后续可做的事
+
+- 检查 body / top / Boots 各 NIF 变体（含 r/w 版本）的 `Glossiness` 与 `Env Map Scale` 是否统一。
+- 若其他材质因 `BaseF0Multiplier` 变暗，将其恢复原值，改用单件 NIF 的 `Env Map Scale` 局部调整。
+- 如需更精细控制，可使用 CS 菜单自带的 Dynamic Cubemap Creator 在游戏内生成自定义 1×1 cubemap（色调 + 粗糙度），效果与手工替换一致。

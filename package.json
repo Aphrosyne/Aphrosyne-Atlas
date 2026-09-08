@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "optimize:assets": "node scripts/optimize-static-assets.mjs",
+    "generate:content-registry": "node scripts/generate-knowledge-registry.mjs",
     "generate:search-index": "node scripts/generate-search-index.mjs",
-    "dev": "npm run optimize:assets && npm run generate:search-index && next dev",
-    "build": "npm run optimize:assets && npm run generate:search-index && next build",
+    "dev": "npm run optimize:assets && npm run generate:content-registry && npm run generate:search-index && next dev",
+    "build": "npm run optimize:assets && npm run generate:content-registry && npm run generate:search-index && next build",
     "start": "next start",
     "lint": "eslint"
   },

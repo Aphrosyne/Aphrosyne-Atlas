@@ -27,6 +27,10 @@
   --color-code-bg: #18181b;
 }
 
+html {
+  scrollbar-gutter: stable;
+}
+
 html.light {
   --color-bg: #fafafa;
   --color-surface: #e5e5e5;

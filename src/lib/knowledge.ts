@@ -10,6 +10,7 @@ import {
   type KnowledgeStatus,
   type KnowledgeType,
 } from '@/types/knowledge'
+import { asPublicationState, isRoutablePublication } from '@/types/publication'
 
 const CONTENT_DIR = path.join(process.cwd(), 'src/content/knowledge')
 
@@ -64,6 +65,7 @@ async function parseKnowledgeFile(filePath: string, slug: string): Promise<Knowl
     title: data.title,
     type: data.type,
     status: data.status,
+    publication: asPublicationState(data.publication),
     excerpt: data.excerpt,
     tags: asStringArray(data.tags),
     gameVersion: typeof data.game_version === 'string' ? data.game_version : undefined,
@@ -74,8 +76,20 @@ async function parseKnowledgeFile(filePath: string, slug: string): Promise<Knowl
   }
 }
 
-export async function getAllKnowledge(): Promise<KnowledgeMetadata[]> {
-  const files = await globby(['**/*.mdx', '!archive/**'], { cwd: CONTENT_DIR })
+interface KnowledgeQueryOptions {
+  includeArchived?: boolean
+  includeUnlisted?: boolean
+}
+
+function matchesKnowledgeQuery(entry: KnowledgeMetadata, options: KnowledgeQueryOptions): boolean {
+  if (!isRoutablePublication(entry.publication)) return false
+  if (entry.publication === 'unlisted') return options.includeUnlisted === true
+  if (entry.publication === 'archived') return options.includeArchived === true
+  return true
+}
+
+async function readKnowledgeEntries(): Promise<KnowledgeMetadata[]> {
+  const files = await globby('**/*.mdx', { cwd: CONTENT_DIR })
   const entries = await Promise.all(
     files.map(async (relativePath) => {
       const slug = path.basename(relativePath, '.mdx')
@@ -83,18 +97,25 @@ export async function getAllKnowledge(): Promise<KnowledgeMetadata[]> {
     }),
   )
 
-  return entries
-    .filter((entry): entry is KnowledgeMetadata => entry !== null)
+  return entries.filter((entry): entry is KnowledgeMetadata => entry !== null)
+}
+
+export async function getAllKnowledge(options: KnowledgeQueryOptions = {}): Promise<KnowledgeMetadata[]> {
+  return (await readKnowledgeEntries())
+    .filter((entry) => matchesKnowledgeQuery(entry, options))
     .sort((a, b) => a.title.localeCompare(b.title, 'zh-CN'))
 }
 
 export async function getKnowledgeBySlug(slug: string): Promise<KnowledgeMetadata | null> {
-  const entries = await getAllKnowledge()
-  return entries.find((entry) => entry.slug === slug) ?? null
+  const entries = await readKnowledgeEntries()
+  return entries.find((entry) => entry.slug === slug && isRoutablePublication(entry.publication)) ?? null
 }
 
 export async function getKnowledgeSlugs(): Promise<string[]> {
-  return (await getAllKnowledge()).map((entry) => entry.slug)
+  return (await readKnowledgeEntries())
+    .filter((entry) => isRoutablePublication(entry.publication))
+    .map((entry) => entry.slug)
+    .sort()
 }
 
 export async function getRecentKnowledge(count = 3): Promise<KnowledgeMetadata[]> {

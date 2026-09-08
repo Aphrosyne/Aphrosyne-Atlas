@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { SITE } from '@/config/site'
 
 interface CopyAttributionProps {
   children: React.ReactNode
@@ -23,7 +24,7 @@ export default function CopyAttribution({ children }: CopyAttributionProps) {
       const url = window.location.href
       const today = new Date()
       const dateStr = `${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}`
-      const attribution = `\n\nref(APA): admin.柳江凝.${url}. Retrieved ${dateStr}.`
+      const attribution = `\n\nref(APA): ${SITE.author}.${url}. Retrieved ${dateStr}.`
 
       e.clipboardData?.setData('text/plain', selectedText + attribution)
       e.preventDefault()

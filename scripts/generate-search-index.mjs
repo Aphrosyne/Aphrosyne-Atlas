@@ -14,6 +14,10 @@ function dateString(value) {
   return value instanceof Date ? value.toISOString().slice(0, 10) : value
 }
 
+function publicationState(value) {
+  return ['published', 'archived', 'unlisted', 'draft'].includes(value) ? value : 'published'
+}
+
 function textFromMarkdown(markdown) {
   return markdown
     .replace(/```[\s\S]*?```/g, ' ')
@@ -25,13 +29,12 @@ function textFromMarkdown(markdown) {
 }
 
 async function readEntries(directory, kind) {
-  const files = await globby(
-    kind === 'knowledge' ? ['**/*.mdx', '!archive/**'] : '**/*.mdx',
-    { cwd: directory },
-  )
-  return Promise.all(files.map(async (relativePath) => {
+  const files = await globby('**/*.mdx', { cwd: directory })
+  const entries = await Promise.all(files.map(async (relativePath) => {
     const source = await fs.readFile(path.join(directory, relativePath), 'utf8')
     const { data, content } = matter(source)
+    const publication = publicationState(data.publication)
+    if (publication === 'draft' || publication === 'unlisted') return null
     const slug = path.basename(relativePath, '.mdx')
     const tags = asStringArray(data.tags)
     const metadata = kind === 'knowledge'
@@ -42,6 +45,7 @@ async function readEntries(directory, kind) {
       title: typeof data.title === 'string' ? data.title : slug,
       href: `/${kind}/${slug}`,
       type: kind,
+      publication,
       excerpt: typeof data.excerpt === 'string' ? data.excerpt : '',
       tags,
       searchableText: textFromMarkdown([
@@ -53,6 +57,7 @@ async function readEntries(directory, kind) {
       ].filter(Boolean).join(' ')),
     }
   }))
+  return entries.filter(Boolean)
 }
 
 const [blog, knowledge] = await Promise.all([
@@ -61,8 +66,8 @@ const [blog, knowledge] = await Promise.all([
 ])
 
 const pages = [
-  { title: '关于', href: '/about', type: 'page', excerpt: '关于我和这个网站', tags: [], searchableText: '关于 我 Aphrosyne 柳江凝 网站' },
-  { title: '项目', href: '/projects', type: 'page', excerpt: '项目归档与介绍', tags: [], searchableText: '项目 Projects Aphrosyne Atlas' },
+  { title: '关于', href: '/about', type: 'page', excerpt: '关于我和这个网站', tags: [], searchableText: '关于 我 作者 网站' },
+  { title: '项目', href: '/projects', type: 'page', excerpt: '项目归档与介绍', tags: [], searchableText: '项目 Projects 作品' },
 ]
 
 const output = path.join(root, 'public/search-index.json')

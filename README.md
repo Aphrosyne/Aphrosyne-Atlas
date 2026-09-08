@@ -24,9 +24,55 @@ npx serve out -l 4173
 
 ## 站点配置
 
-个人资料、站点元数据、导航、头像/背景路径、About 文案和社交链接集中在 [`src/config/site.ts`](./src/config/site.ts)。Fork 或复用本项目时，只修改该文件即可更新站点身份。
+个人资料、站点元数据、导航、头像/背景路径、About 文案和社交链接集中在 [`src/config/site.ts`](./src/config/site.ts)。项目卡片与详情页内容集中在 [`src/config/projects.ts`](./src/config/projects.ts)。
 
 社交链接只渲染 `SOCIAL_LINKS` 数组中已确认可公开的项目。不要在配置文件或仓库中保存 Token、密码和其他私密信息。
+
+Dashboard 的 Status 与 Hitokoto 端点同样配置在 `SITE.dashboard`。它们只适合填写可公开、允许浏览器跨域读取的地址；站点会先渲染同一配置中的静态回退文案，接口不可用时首页仍可正常使用。
+
+### 更新 Dashboard Status
+
+Status 的发布脚本是本地工具，不需要打开 GitHub 网页：
+
+1. 用文本编辑器修改 Git 忽略的 `.private/status.txt`，只写一行明文，例如 `正在准备发布AA正式版🤩`。
+2. 脚本会优先使用已有 `.env.local` 中的 `GITHUB_TOKEN`；也可在 `.private/github-token.txt` 保存一个具有 Gist 写入权限的 Token。两处均被 Git 忽略，不要把 Token 写进代码、公开配置或终端命令历史。
+3. 先检查解析结果：`python scripts/publish-dashboard-status.py --dry-run`。
+4. 确认无误后执行：`python scripts/publish-dashboard-status.py`。
+
+脚本会把行末 emoji 与正文分开，写入 Gist JSON。例如上例会发布为：
+
+```json
+{ "status": "正在准备发布AA正式版", "emoji": "🤩" }
+```
+
+也可以临时直接传入内容：`python scripts/publish-dashboard-status.py "正在调 Dashboard 布局🎨"`。如果 Gist 内不止一个文件，脚本会停止并提示使用 `--file 文件名`，不会猜测或覆盖错误文件。
+
+## Fork 后客制化
+
+不需要逐个页面搜索个人信息，建议按下面的顺序替换：
+
+1. 在 [`src/config/site.ts`](./src/config/site.ts) 修改站点名称、作者、线上地址、首页文案、About、导航和公开社交链接。
+2. 将头像和背景原图分别替换到 `assets/images-source/avatar/avatar.jpg` 与 `assets/images-source/bg/bg.jpg`；保留文件名即可沿用现有配置，也可以同时修改 `SITE.assets`。
+3. 在 [`src/config/projects.ts`](./src/config/projects.ts) 替换项目数组。`slug` 决定详情页 URL，`status` 支持 `public` 和 `archived`。
+4. 删除 `src/content/blog/` 和 `src/content/knowledge/` 中不需要的示例内容，再加入自己的 `.mdx`。Blog 文件直接自动发现；Knowledge 的动态导入表会在 `npm run dev` 和 `npm run build` 时自动生成，不要手改 `src/lib/knowledge-articles.ts`。
+5. 需要调整首页卡片位置时使用 Dashboard 布局工作台；颜色和玻璃效果位于 `src/app/globals.css`。
+6. 如需换字体，替换 `assets/fonts-source/` 的字体源文件，并同步修改 `scripts/optimize-static-assets.mjs` 中的 `FONT_SOURCES` 与 `src/app/layout.tsx` 中的字体声明。
+7. 替换内容后检查 `LICENSE-CONTENT.md` 中的作者与授权范围；第三方图片、游戏素材和引用仍需遵守各自许可。
+
+Blog 与 Knowledge 都可在 frontmatter 中使用统一的发布状态：
+
+```yaml
+publication: published # published | archived | unlisted | draft
+```
+
+- `published`：默认值，显示在正常列表、首页推荐和搜索中；旧内容不写此字段时按此状态处理。
+- `archived`：保留公开详情页，移出默认列表并显示在归档入口；仍可被站内搜索找到。
+- `unlisted`：不出现在列表、首页和站内搜索中，但会生成可直接访问的公开 URL。
+- `draft`：不生成详情页，也不进入列表和搜索。
+
+`unlisted` 不是私密发布。知道 URL 的人仍能访问，静态产物和公开仓库中的源文件也能被查看。未确认可公开的正文、图片、附件和工作笔记请放到仓库根目录的 `.private/`；该目录已被 Git 忽略，且不被构建流程扫描。`.gitignore` 只能防止误提交，不能从已经公开的 Git 历史中移除内容。
+
+Knowledge 的 `status` 表示内容是否经过验证，和发布状态是两件事：可选值为 `verified`、`needs-review`、`outdated`。不再希望网站展示、但仍可公开保留的内容使用 `publication: draft`；私人内容不要放进 `src/content/`，改放 `.private/`。
 
 ## 静态资源优化
 
@@ -67,6 +113,10 @@ assets/images-source/knowledge/example/screenshot.png
 推送到 `master` 会触发 [GitHub Pages 工作流](./.github/workflows/deploy-pages.yml)：它通过 `npm ci` 安装锁定依赖，构建 `out/`，再使用 GitHub 官方 Pages Actions 发布。
 
 首次使用时，在仓库的 `Settings → Pages` 中将发布来源设置为 `GitHub Actions`。
+
+## 版本记录
+
+站点版本与面向访问者的重要变更记录在 [CHANGELOG.md](./CHANGELOG.md)。日常文章更新以条目本身的编辑和验证日期为准，不强制单独发版。
 
 ## 许可协议
 

@@ -4,12 +4,14 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { publicPath } from '@/lib/public-path'
+import type { PublicationState } from '@/types/publication'
 
 interface SearchItem {
   title: string
   href: string
   excerpt: string
   type: 'blog' | 'knowledge' | 'page'
+  publication?: PublicationState
   searchableText: string
 }
 
@@ -99,7 +101,8 @@ export default function SearchModal({ open, onClose }: SearchModalProps) {
                       onClick={onClose}
                       className="flex items-center gap-3 px-4 py-2.5 hover:bg-fg/5 transition-colors group"
                     >
-                      <span className="text-sm text-fg/80 group-hover:text-fg truncate">{item.title}</span>
+                      <span className="min-w-0 truncate text-sm text-fg/80 group-hover:text-fg">{item.title}</span>
+                      {item.publication === 'archived' && <span className="shrink-0 rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[10px] text-amber-800 dark:text-amber-200">归档</span>}
                       <span className="text-[11px] text-fg/30 truncate ml-auto hidden sm:block">{item.href}</span>
                     </Link>
                   ))}

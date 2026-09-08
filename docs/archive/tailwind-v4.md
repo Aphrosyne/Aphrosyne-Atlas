@@ -108,5 +108,5 @@ Use per-direction color classes to avoid override:
 /* ✅ CORRECT — each direction independent */
 border-t border-t-white/20 border-b border-b-white/5
 /* ❌ WRONG — border-b-white/5 overrides border-white/20 */
-border-t border-white/20 border-b border-white/5
+border-t border-white/20 border-b border-b-white/5
 ```
