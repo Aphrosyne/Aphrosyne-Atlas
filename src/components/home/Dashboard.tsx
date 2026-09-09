@@ -339,7 +339,7 @@ function StatusCard() {
   return (
     <>
       <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Status</div>
-      <p className="text-sm text-white/70 cursor-pointer select-none" onClick={bounce} style={bounceStyle}>
+      <p className="text-center text-sm text-white/70 cursor-pointer select-none" onClick={bounce} style={bounceStyle}>
         {status.emoji ? `${status.emoji} ${status.status}` : status.status}
       </p>
     </>

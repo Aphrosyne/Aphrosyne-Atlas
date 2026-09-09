@@ -1,12 +1,23 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { usePathname } from 'next/navigation'
 import { publicPath } from '@/lib/public-path'
 import { SITE } from '@/config/site'
 
 export default function Backdrop() {
+  const pathname = usePathname()
   const [blurPx, setBlurPx] = useState(0)
   const rAF = useRef(0)
+  const section = pathname.startsWith('/knowledge')
+    ? 'knowledge'
+    : pathname.startsWith('/blog')
+      ? 'blog'
+      : pathname.startsWith('/projects')
+        ? 'projects'
+        : pathname.startsWith('/about')
+          ? 'about'
+          : 'home'
 
   useEffect(() => {
     const onScroll = () => {
@@ -22,6 +33,10 @@ export default function Backdrop() {
     onScroll()
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  if (section !== 'home') {
+    return <div className={`content-backdrop content-backdrop--${section}`} aria-hidden="true" />
+  }
 
   return (
     <img

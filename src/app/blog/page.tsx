@@ -15,9 +15,8 @@ export default async function BlogPage() {
   return (
     <div className="mx-auto max-w-5xl px-4 py-16">
       <PageTransition>
-        {/* text-white kept intentionally: page header doesn't follow theme */}
-        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl text-white">Blog</h1>
-        <p className="mt-2 text-white/50">一些想法、笔记和探索。</p>
+        <h1 className="text-3xl font-bold tracking-tight text-fg sm:text-4xl">Blog</h1>
+        <p className="mt-2 text-fg/65">一些想法、笔记和探索。</p>
       </PageTransition>
       <div className="mt-8">
         <Suspense fallback={<p className="rounded-2xl border border-border/50 bg-surface/50 px-5 py-12 text-center text-fg/45">正在加载文章…</p>}>

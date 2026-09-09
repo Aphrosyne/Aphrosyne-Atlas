@@ -45,11 +45,11 @@ export default function KnowledgeList({ entries }: { entries: KnowledgeMetadata[
     <div className="grid gap-6 lg:grid-cols-[13rem_minmax(0,1fr)]">
       <aside className="rounded-2xl border border-border/50 bg-surface/50 p-4 backdrop-blur-sm lg:sticky lg:top-24 lg:h-fit">
         <p className="mb-3 text-xs font-medium tracking-widest text-fg/45 uppercase">分类</p>
-        <div className="flex gap-2 overflow-x-auto lg:flex-col">
+        <div className="grid grid-cols-2 gap-2 lg:flex lg:flex-col">
           <button
             type="button"
             onClick={() => router.replace('/knowledge', { scroll: false })}
-            className={`shrink-0 rounded-xl px-3 py-2 text-left text-sm transition-colors ${
+            className={`min-h-11 w-full rounded-xl px-3 py-2 text-left text-sm transition-colors ${
               !showingArchive && activeType === 'all' ? 'bg-accent text-white' : 'text-fg/65 hover:bg-surface hover:text-fg'
             }`}
           >
@@ -62,7 +62,7 @@ export default function KnowledgeList({ entries }: { entries: KnowledgeMetadata[
                 key={type}
                 type="button"
                 onClick={() => router.replace(`/knowledge?type=${type}`, { scroll: false })}
-                className={`shrink-0 rounded-xl px-3 py-2 text-left text-sm transition-colors ${
+                className={`min-h-11 w-full rounded-xl px-3 py-2 text-left text-sm transition-colors ${
                   !showingArchive && activeType === type ? 'bg-accent text-white' : 'text-fg/65 hover:bg-surface hover:text-fg'
                 }`}
               >
@@ -74,7 +74,7 @@ export default function KnowledgeList({ entries }: { entries: KnowledgeMetadata[
             <button
               type="button"
               onClick={() => router.replace('/knowledge?view=archive', { scroll: false })}
-              className={`min-h-11 shrink-0 cursor-pointer rounded-xl border-t border-border/30 px-3 py-2 text-left text-sm transition-colors lg:mt-2 lg:rounded-t-none ${showingArchive ? 'bg-accent text-white' : 'text-fg/65 hover:bg-surface hover:text-fg'}`}
+              className={`col-span-2 min-h-11 w-full cursor-pointer rounded-xl border-t border-border/30 px-3 py-2 text-left text-sm transition-colors lg:mt-2 lg:rounded-t-none ${showingArchive ? 'bg-accent text-white' : 'text-fg/65 hover:bg-surface hover:text-fg'}`}
             >
               归档条目 <span className="float-right opacity-60">{archivedEntries.length}</span>
             </button>

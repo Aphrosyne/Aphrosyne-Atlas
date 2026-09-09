@@ -16,11 +16,11 @@ export default async function KnowledgePage() {
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-16">
       <PageTransition>
-        <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">Knowledge</h1>
-        <p className="mt-2 text-white/55">按分类、版本与验证状态整理的长期记录。</p>
+        <h1 className="text-3xl font-bold tracking-tight text-fg sm:text-4xl">Knowledge</h1>
+        <p className="mt-2 text-fg/65">按分类、版本与验证状态整理的长期记录。</p>
         <Link
           href="/blog/knowledge-base-guide"
-          className="mt-4 inline-flex text-sm font-medium text-white/65 transition-colors hover:text-white"
+          className="mt-4 inline-flex text-sm font-medium text-fg/70 transition-colors hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
         >
           阅读知识库分类、状态与使用说明 →
         </Link>

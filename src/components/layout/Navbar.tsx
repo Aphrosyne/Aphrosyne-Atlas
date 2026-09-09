@@ -129,6 +129,7 @@ function NavDropdown({
 export default function Navbar() {
   const pathname = usePathname()
   const [searchOpen, setSearchOpen] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
   const handleCloseSearch = useCallback(() => setSearchOpen(false), [])
 
   return (
@@ -160,8 +161,8 @@ export default function Navbar() {
           />
         </Link>
 
-        {/* Pill navigation */}
-        <div className="flex items-center gap-0.5 bg-surface/50 backdrop-blur-xl border border-border/10 rounded-full px-1 py-1 shadow-sm">
+        {/* Desktop pill navigation */}
+        <div className="hidden items-center gap-0.5 rounded-full border border-border/10 bg-surface/50 px-1 py-1 shadow-sm backdrop-blur-xl md:flex">
           {NAV_ITEMS.map((item) => {
             if ('children' in item && item.children) {
               return (
@@ -169,8 +170,9 @@ export default function Navbar() {
                   key={item.href}
                   label={item.label}
                   href={item.href}
-                  children={item.children}
-                />
+                >
+                  {item.children}
+                </NavDropdown>
               )
             }
             const isActive = pathname === item.href
@@ -189,6 +191,22 @@ export default function Navbar() {
             )
           })}
         </div>
+
+        {/* Mobile navigation: keep touch targets intact instead of squeezing every label into the header. */}
+        <button
+          type="button"
+          onClick={() => setMenuOpen((open) => !open)}
+          className="grid size-11 place-items-center rounded-2xl border border-border/20 bg-surface/65 text-fg/75 shadow-sm backdrop-blur-xl transition-colors hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent md:hidden"
+          aria-label={menuOpen ? '关闭导航菜单' : '打开导航菜单'}
+          aria-expanded={menuOpen}
+          aria-controls="mobile-navigation"
+        >
+          <svg className="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+            {menuOpen
+              ? <path strokeLinecap="round" d="m6 6 12 12M18 6 6 18" />
+              : <path strokeLinecap="round" d="M4 7h16M4 12h16M4 17h16" />}
+          </svg>
+        </button>
 
         {/* Search */}
         <button
@@ -213,6 +231,49 @@ export default function Navbar() {
           </svg>
         </button>
       </nav>
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            id="mobile-navigation"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.18, ease: 'easeOut' }}
+            className="mx-4 mt-3 rounded-3xl border border-border/20 bg-surface/92 p-2 shadow-[0_18px_45px_rgba(0,0,0,0.22)] backdrop-blur-xl md:hidden"
+          >
+            {NAV_ITEMS.map((item) => {
+              const active = isParentActive(pathname, item.href)
+              return (
+                <div key={item.href} className="border-b border-border/15 last:border-b-0">
+                  <Link
+                    href={item.href}
+                    onClick={() => setMenuOpen(false)}
+                    className={`flex min-h-11 items-center rounded-2xl px-4 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
+                      active ? 'bg-accent text-white' : 'text-fg/75 hover:bg-fg/8 hover:text-fg'
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                  {'children' in item && item.children && (
+                    <div className="mb-2 grid grid-cols-2 gap-1 px-2">
+                      {item.children.map((child) => (
+                        <Link
+                          key={child.href}
+                          href={child.href}
+                          onClick={() => setMenuOpen(false)}
+                          className="flex min-h-11 items-center rounded-xl px-3 text-sm text-fg/65 transition-colors hover:bg-fg/8 hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                        >
+                          {child.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </motion.div>
+        )}
+      </AnimatePresence>
       <SearchModal open={searchOpen} onClose={handleCloseSearch} />
     </header>
   )

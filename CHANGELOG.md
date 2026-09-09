@@ -11,6 +11,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- 内容页采用分板块的低干扰背景与主题前景色，提升 Blog、Knowledge、Projects 和 About 的阅读对比度；手机导航与 Knowledge 分类筛选同步优化。
+
 ## [1.0.0] - 2026-09-09
 
 ### Added
