@@ -3,7 +3,7 @@ title: Framer Motion 与 Backdrop Blur：避免卡片模糊延迟出现
 date: 2026-09-08
 tags: [framer-motion, css, backdrop-blur, frontend]
 excerpt: 记录 backdrop-filter 与 opacity 入场动画组合时，为什么会出现模糊闪现，以及内容卡片和背景装饰各自合适的处理方式。
-readingTime: 3 min
+readingTime: 4 min
 ---
 
 `backdrop-blur` 元素放在 Framer Motion 的 `opacity: 0 → 1` 动画容器内时，模糊有时会在动画结束后才突然出现，视觉上像一次闪现。
@@ -43,6 +43,27 @@ readingTime: 3 min
 
 搜索栏、工具栏和导航的首要目标是立即可用。它们不是内容阅读节奏的一部分时，直接使用普通元素往往更稳定，也能避免额外的 blur 合成问题。
 
+## 追加：滚动驱动的背景在路由切换后要重新同步
+
+后来首页和 About 的背景加入了随滚动加深的模糊。这里使用 `useScroll()` 读取文档滚动进度，再将它映射到 `blur(0px)` 至 `blur(12px)`；整个过程不依赖滚轮事件触发 React 重渲染。
+
+但出现了一个很小的状态问题：从页面底部离开，再切回首页时，路由已经把页面带回顶部，背景却还保留着离开前的模糊值；轻滚一下才会更新。
+
+原因是浏览器的路由滚动复位不保证触发 `useScroll()` 正在监听的原始事件，因此 MotionValue 可能暂时保存旧页面的进度。处理方式是在进入带滚动模糊的页面时先清零，再等待两帧读取最终的 `scrollY`：
+
+```tsx
+scrollYProgress.set(0)
+
+requestAnimationFrame(() => {
+  requestAnimationFrame(() => {
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight
+    scrollYProgress.set(maxScroll > 0 ? window.scrollY / maxScroll : 0)
+  })
+})
+```
+
+两帧不是为了拖延视觉更新：第一帧让框架和浏览器完成路由后的滚动处理，第二帧采样最终位置。这样普通导航立即从清晰背景开始；若浏览器确实恢复了非零滚动位置，背景也会随之匹配。
+
 ## 本站的取舍
 
-Blog 和项目卡片采用短距离上浮，Knowledge 列表采用短距离从右向左进入；两者都让玻璃模糊与 motion 位于同一个卡片元素。分类栏、导航等定位性 UI 保持静止。所有这些动画都会尊重系统的“减少动态效果”设置。
+Blog 与项目卡片采用外层短距离位移，玻璃卡片本身立即静态渲染；Knowledge 列表采用短距离从右向左进入。分类栏、导航等定位性 UI 保持静止。所有这些动画都会尊重系统的“减少动态效果”设置。

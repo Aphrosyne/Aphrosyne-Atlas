@@ -10,6 +10,7 @@ const FONT_DIR = path.join(ROOT, 'src/app/fonts')
 const IMAGE_SOURCE_DIR = path.join(ROOT, 'assets/images-source')
 const IMAGE_OUTPUT_DIR = path.join(ROOT, 'public/images')
 const FORCE_IMAGE_BUILD = process.argv.includes('--force')
+const BACKGROUND_MAX_DIMENSION = 2048
 
 const FONT_SOURCES = [
   { input: 'SourceHanSansSC-Regular.otf', output: 'AphrosyneSansSC-Regular.woff2', style: 'Regular' },
@@ -142,16 +143,28 @@ async function convertImages() {
     const isBackground = normalizedRelativePath.startsWith('bg/')
     const isAvatar = normalizedRelativePath.startsWith('avatar/')
     const metadata = await sharp(sourcePath).metadata()
-    const width = isBackground ? 3840 : isAvatar ? 768 : 1920
+    const width = isAvatar ? 768 : 1920
     const quality = isBackground ? 90 : isAvatar ? 86 : 88
     const webpOptions = metadata.hasAlpha
       ? { lossless: true, effort: 6 }
       : { quality, smartSubsample: true, effort: 5 }
 
     await fs.mkdir(path.dirname(outputPath), { recursive: true })
-    await sharp(sourcePath)
-      .rotate()
-      .resize({ width, withoutEnlargement: true })
+    const image = sharp(sourcePath).rotate()
+    if (isBackground) {
+      // 2K means the longest edge is at most 2048px. `inside` preserves the
+      // source aspect ratio, so portrait and panorama backgrounds never stretch.
+      image.resize({
+        width: BACKGROUND_MAX_DIMENSION,
+        height: BACKGROUND_MAX_DIMENSION,
+        fit: 'inside',
+        withoutEnlargement: true,
+      })
+    } else {
+      image.resize({ width, withoutEnlargement: true })
+    }
+
+    await image
       .webp(webpOptions)
       .toFile(outputPath)
     const { size } = await fs.stat(outputPath)

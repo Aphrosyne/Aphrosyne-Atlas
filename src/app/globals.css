@@ -49,37 +49,6 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* 首页保留插画背景；内容页使用较静的阅读背景，避免文字与 Hero 竞争。 */
-.content-backdrop {
-  position: absolute;
-  inset: 0;
-  background-color: var(--color-bg);
-}
-
-.content-backdrop--blog {
-  background-image:
-    radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--color-accent) 18%, transparent), transparent 31rem),
-    linear-gradient(145deg, var(--color-bg), color-mix(in srgb, var(--color-surface) 72%, var(--color-bg)) 54%, var(--color-bg));
-}
-
-.content-backdrop--knowledge {
-  background-image:
-    radial-gradient(circle at 84% 8%, color-mix(in srgb, var(--color-avatar-ring) 14%, transparent), transparent 27rem),
-    linear-gradient(160deg, var(--color-bg), color-mix(in srgb, var(--color-accent) 9%, var(--color-bg)) 55%, var(--color-bg));
-}
-
-.content-backdrop--projects {
-  background-image:
-    radial-gradient(circle at 18% 92%, color-mix(in srgb, var(--color-accent) 13%, transparent), transparent 26rem),
-    linear-gradient(135deg, var(--color-bg), color-mix(in srgb, var(--color-surface) 84%, var(--color-bg)) 50%, var(--color-bg));
-}
-
-.content-backdrop--about {
-  background-image:
-    radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--color-avatar-ring) 12%, transparent), transparent 28rem),
-    linear-gradient(180deg, var(--color-bg), color-mix(in srgb, var(--color-surface) 76%, var(--color-bg)));
-}
-
 @keyframes bannerScroll {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }

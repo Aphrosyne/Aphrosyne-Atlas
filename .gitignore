@@ -17,8 +17,12 @@
 /.next/
 /out/
 /public/search-index.json
-/public/images/**/*.webp
 /src/app/fonts/AphrosyneSansSC-*.woff2
+
+# Original image assets are local authoring inputs. Public WebP files are the
+# versioned, deployable assets. Existing tracked inputs stay until the planned
+# history-cleanup migration removes them from the repository index.
+/assets/images-source/
 
 # production
 /build

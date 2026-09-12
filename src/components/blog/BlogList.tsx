@@ -93,11 +93,11 @@ export default function BlogList({ posts }: { posts: PostMetadata[] }) {
         </div>
       </div>
 
-      {/* Grid */}
+      {/* Article feed */}
       {filtered.length === 0 ? (
         <p className="py-12 text-center text-fg/40">{showingArchive ? '没有符合条件的归档文章。' : '没有符合条件的文章。'}</p>
       ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="space-y-4">
           {filtered.map((post) => (
             <BlogCard key={post.slug} {...post} onTagClick={setActiveTag} />
           ))}

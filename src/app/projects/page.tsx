@@ -12,7 +12,7 @@ export default function ProjectsPage() {
     <div className="mx-auto w-full max-w-5xl px-4 py-16">
       <h1 className="text-3xl font-bold tracking-tight text-fg sm:text-4xl">Projects</h1>
       <p className="mt-2 text-fg/65">公开项目、工具与阶段性探索。</p>
-      <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-8 grid gap-6 sm:grid-cols-2">
         {projects.map((project) => (
           <ProjectCard
             key={project.slug}
@@ -22,6 +22,7 @@ export default function ProjectsPage() {
             status={project.status}
             language={project.language}
             href={`/projects/${project.slug}`}
+            featured={project.slug === 'aphrosyne-site'}
           />
         ))}
       </div>

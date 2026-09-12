@@ -21,7 +21,13 @@ export const SITE = {
   author: 'Aphrosyne（柳江凝）',
   assets: {
     avatar: '/images/avatar/avatar.webp',
-    background: '/images/bg/bg.webp',
+    backgrounds: {
+      home: '/images/bg/bg1.webp',
+      knowledge: '/images/bg/bg2.webp',
+      blog: '/images/bg/bg3.webp',
+      projects: '/images/bg/bg4.webp',
+      about: '/images/bg/bg5.webp',
+    },
   },
   profile: {
     tagline: '设计 · 创造',

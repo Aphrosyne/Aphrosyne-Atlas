@@ -52,7 +52,7 @@ Status 的发布脚本是本地工具，不需要打开 GitHub 网页：
 不需要逐个页面搜索个人信息，建议按下面的顺序替换：
 
 1. 在 [`src/config/site.ts`](./src/config/site.ts) 修改站点名称、作者、线上地址、首页文案、About、导航和公开社交链接。
-2. 将头像和背景原图分别替换到 `assets/images-source/avatar/avatar.jpg` 与 `assets/images-source/bg/bg.jpg`；保留文件名即可沿用现有配置，也可以同时修改 `SITE.assets`。
+2. 运行 `npm run setup:local-assets` 创建本地素材目录；替换头像或背景时，将原图放入相应目录、运行 `npm run optimize:assets`，再提交生成的发布 WebP。
 3. 在 [`src/config/projects.ts`](./src/config/projects.ts) 替换项目数组。`slug` 决定详情页 URL，`status` 支持 `public` 和 `archived`。
 4. 删除 `src/content/blog/` 和 `src/content/knowledge/` 中不需要的示例内容，再加入自己的 `.mdx`。Blog 文件直接自动发现；Knowledge 的动态导入表会在 `npm run dev` 和 `npm run build` 时自动生成，不要手改 `src/lib/knowledge-articles.ts`。
 5. 需要调整首页卡片位置时使用 Dashboard 布局工作台；颜色和玻璃效果位于 `src/app/globals.css`。
@@ -80,9 +80,17 @@ Knowledge 的 `status` 表示内容是否经过验证，和发布状态是两件
 
 - 扫描 `src/` 中的页面、组件和 MDX，只为当前站点实际使用的字符生成三个 WOFF2 字体子集；
 - 递归扫描 `assets/images-source/` 中的 JPG、JPEG 和 PNG，按原目录结构生成到 `public/images/`；
-- 背景图宽度上限为 3840 px、头像为 768 px、其他图片为 1920 px，并自动转换为 WebP；含透明通道的 PNG 使用无损 WebP。
+- 背景图最长边上限为 2048 px、头像为 768 px、其他图片为 1920 px，并自动转换为 WebP；含透明通道的 PNG 使用无损 WebP。
 
-原始 OTF 和图片是重新生成优化产物的源文件，应保留在仓库中。生成的 WOFF2/WebP 文件已加入 `.gitignore`，不要手动编辑；新增文章、界面文字或图片后，下次开发或构建会自动更新。字体缺少运行时动态字符时会回退到系统中文字体。
+`assets/images-source/` 下的原图是本地编辑素材，默认不进入 Git；`public/images/` 下的 WebP 是提交并部署的发布资源。现有已追踪原图会在后续历史瘦身批次中迁移，期间不受新增忽略规则影响。生成的 WOFF2 仍受 `.gitignore` 管理；新增文章、界面文字或图片后，下次开发或构建会自动更新。字体缺少运行时动态字符时会回退到系统中文字体。
+
+Fork 后若要准备自己的本地素材目录，运行：
+
+```bash
+npm run setup:local-assets
+```
+
+该命令只创建缺失目录，不下载、覆盖或提交任何文件。
 
 新增图片时，将原图放到 `assets/images-source/` 下合适的分类目录。例如：
 
