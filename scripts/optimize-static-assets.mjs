@@ -100,8 +100,26 @@ async function buildFontSubsets(characters) {
   for (const source of FONT_SOURCES) {
     const inputPath = path.join(FONT_DIR, source.input)
     const outputPath = path.join(FONT_DIR, source.output)
-    const input = renameReservedFontNames(await fs.readFile(inputPath))
-    const output = await subsetFont(input, characters, {
+    const input = await fs.readFile(inputPath).catch((error) => {
+      if (error.code === 'ENOENT') return null
+      throw error
+    })
+
+    if (!input) {
+      const publishedSubsetExists = await fs.access(outputPath).then(() => true).catch(() => false)
+      if (publishedSubsetExists) {
+        console.log(`${source.input}: unavailable; keeping committed ${source.output}`)
+        continue
+      }
+
+      throw new Error(
+        `Missing ${source.input} and its published subset ${source.output}. `
+        + 'Restore the committed WOFF2 file, or add the local OTF source and run npm run optimize:assets.'
+      )
+    }
+
+    const renamedInput = renameReservedFontNames(input)
+    const output = await subsetFont(renamedInput, characters, {
       targetFormat: 'woff2',
       preserveNameIds: [0, 13, 14],
     })

@@ -56,7 +56,7 @@ Status 的发布脚本是本地工具，不需要打开 GitHub 网页：
 3. 在 [`src/config/projects.ts`](./src/config/projects.ts) 替换项目数组。`slug` 决定详情页 URL，`status` 支持 `public` 和 `archived`。
 4. 删除 `src/content/blog/` 和 `src/content/knowledge/` 中不需要的示例内容，再加入自己的 `.mdx`。Blog 文件直接自动发现；Knowledge 的动态导入表会在 `npm run dev` 和 `npm run build` 时自动生成，不要手改 `src/lib/knowledge-articles.ts`。
 5. 需要调整首页卡片位置时使用 Dashboard 布局工作台；颜色和玻璃效果位于 `src/app/globals.css`。
-6. 如需换字体，替换 `assets/fonts-source/` 的字体源文件，并同步修改 `scripts/optimize-static-assets.mjs` 中的 `FONT_SOURCES` 与 `src/app/layout.tsx` 中的字体声明。
+6. 如需换字体，将完整 OTF 放入本地的 `src/app/fonts/`，并同步修改 `scripts/optimize-static-assets.mjs` 中的 `FONT_SOURCES` 与 `src/app/layout.tsx` 中的字体声明；生成后提交 WOFF2，不提交 OTF。
 7. 替换内容后检查 `LICENSE-CONTENT.md` 中的作者与授权范围；第三方图片、游戏素材和引用仍需遵守各自许可。
 
 Blog 与 Knowledge 都可在 frontmatter 中使用统一的发布状态：
@@ -82,7 +82,7 @@ Knowledge 的 `status` 表示内容是否经过验证，和发布状态是两件
 - 递归扫描 `assets/images-source/` 中的 JPG、JPEG 和 PNG，按原目录结构生成到 `public/images/`；
 - 背景图最长边上限为 2048 px、头像为 768 px、其他图片为 1920 px，并自动转换为 WebP；含透明通道的 PNG 使用无损 WebP。
 
-`assets/images-source/` 下的原图是本地编辑素材，默认不进入 Git；`public/images/` 下的 WebP 是提交并部署的发布资源。现有已追踪原图会在后续历史瘦身批次中迁移，期间不受新增忽略规则影响。生成的 WOFF2 仍受 `.gitignore` 管理；新增文章、界面文字或图片后，下次开发或构建会自动更新。字体缺少运行时动态字符时会回退到系统中文字体。
+`assets/images-source/` 下的原图和 `src/app/fonts/` 下的完整 OTF 都是本地编辑素材，默认不进入 Git；`public/images/` 下的 WebP 与 `src/app/fonts/` 下生成的 WOFF2 是提交并部署的发布资源。缺少原图时，转换器会保留已有 WebP；缺少 OTF 时，会保留已有 WOFF2。因此干净 checkout 可直接构建。新增文章、界面文字或图片后，在具备本地源素材的作者环境运行优化脚本并提交更新后的发布产物。字体缺少运行时动态字符时会回退到系统中文字体。
 
 Fork 后若要准备自己的本地素材目录，运行：
 

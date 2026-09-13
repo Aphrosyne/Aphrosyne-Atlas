@@ -17,7 +17,9 @@
 /.next/
 /out/
 /public/search-index.json
-/src/app/fonts/AphrosyneSansSC-*.woff2
+# Complete font sources stay local. The generated WOFF2 subsets are versioned
+# deployable assets, so a clean checkout can build without the OTF files.
+/src/app/fonts/*.otf
 
 # Original image assets are local authoring inputs. Public WebP files are the
 # versioned, deployable assets. Existing tracked inputs stay until the planned
