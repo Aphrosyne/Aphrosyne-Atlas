@@ -69,6 +69,12 @@
   - 实现方向：提交发布 WebP 和已生成 WOFF2，调整构建脚本使缺少本地原图／OTF 的干净 checkout 仍可直接构建；需要重新压缩时由本地作者工具显式执行。
   - 验收：干净 checkout 仅凭提交的发布资源即可通过 `npm run build` 并部署；仓库当前与历史中的原图、完整字体体积均已按计划处理。
 
+- [ ] [Maintenance][P3] 在确认不再需要 Codex 本地恢复快照后，回收历史改写留下的本地 Git 对象。
+  - 背景：公开的 `master` 与发布 tag 已完成历史清理；但这个既有工作目录仍保留 Codex 自动快照 refs、reflog 和旧 pack，`.git` 因而仍约 118 MB。该状态不影响远端仓库或部署。
+  - 保留：重写前完整 bare mirror 位于 `.private/history-cleanup/aphrosyne-atlas-pre-rewrite.git`；原始背景、Meme 和 OTF 位于 `.private/history-cleanup/authoring-sources/`。
+  - 实施：先确认不再需要本地恢复快照，另行备份后删除仅本地的 `refs/codex/`，过期 reflog，并执行 Git 垃圾回收；不触碰远端 refs。
+  - 验收：`master`、`blog-v1` 和 `v1.0.0` 保持可用且不重新引入已清理资源，本地 `.git` 显著缩小；bare mirror 备份仍可独立读取。
+
 ## 1.1.0 — 内容与界面完善
 
 > 未排期。只有收集箱中已验收、适合一起发布的条目才移入本节。

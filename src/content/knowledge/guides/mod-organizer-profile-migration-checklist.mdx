@@ -1,0 +1,39 @@
+---
+title: 更换 Skyrim 整合包时的 MO2 配置迁移清单
+type: guide
+status: verified
+publication: published
+excerpt: 迁移整合包前应备份的 Mod Organizer 2、BodySlide、RaceMenu、IED、装备管理器和快捷栏配置清单。
+tags: [Skyrim, Mod Organizer 2, 迁移, BodySlide, RaceMenu, 配置备份]
+last_edited: 2026-07-24
+related: [jzy-y4-new-game-mcm-setup]
+sources: []
+---
+
+
+> 迁移前先对整个 profile、`overwrite` 和存档目录做独立备份。不同整合包的模组名称、版本和数据结构不兼容时，不要覆盖导入。
+
+## 顶层资料
+
+- 游戏本体 INI 配置。
+- MO2 `modlist` 与 `pluginlist`。
+- 捏脸、身形、SAM 配置、服装搭配、快捷魔法与高跟分发文件。
+
+## `overwrite` 重点目录
+
+- `CalienteTools\BodySlide\SliderPresets\`：身形预设 XML。
+- `configs\dse-display-model`、`configs\dse-soulgem-oven\settings\Custom.json`：部分模组配置。
+- `FISS`、`Sam`：状态栏与收藏配置。
+- `SKSE\Plugins\CharGen`：头模、贴图与 RaceMenu 预设。
+- `SKSE\Plugins\IED\Exports` 与 `Profiles`：装备展示导出及节点/槽位配置。
+- `SKSE\Plugins\PlayerEquipmentManager`：装备管理器 JSON。
+- `SKSE\Plugins\StorageUtilData`：脚本持久化数据，只有明确兼容时才迁移。
+
+## 文档目录的补充项
+
+- Papyrus 与 SKSE 日志应只用于排错，不应当作通用迁移内容。
+- Spell Hotbar 的 `bars`、`icon_edits` 与 `presets` 可在同版本模组之间迁移，但导入后必须核对按键和法术 FormID。
+
+## 导入顺序
+
+先导入不依赖加载顺序的外观预设，再逐项导入 MCM、快捷键和脚本状态；每导入一类就进游戏验证。遇到缺失模组或不同版本时，保留原备份而不是强行合并。

@@ -49,6 +49,8 @@ yarn-error.log*
 .agents/skills/*
 !.agents/skills/atlas-stage/
 !.agents/skills/atlas-stage/**
+!.agents/skills/atlas-content-import/
+!.agents/skills/atlas-content-import/**
 skills-lock.json
 
 # reference files

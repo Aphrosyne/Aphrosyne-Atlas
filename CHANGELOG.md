@@ -9,16 +9,23 @@
 
 单篇文章的增补、日常勘误和状态更新时间不强制发布站点版本；它们应在条目的“最后编辑”或“最后验证”字段中记录。涉及导航、搜索、内容模型、部署或一批内容迁移的变更，才进入站点 Changelog。
 
-## [Unreleased]
+## [1.2.0] - 2026-09-13
 
 ### Added
 
 - 新增 Crimson Sin 流派构筑总览，以及 UBE 服装运行时 morph 穿模排查两篇知识库文章。
 - 新增 `atlas-content-import` 内容导入 skill，用于安全迁移 Blog 与 Knowledge MDX 内容。
+- 从 Northern Mod Archive 迁入 6 篇已发布的 Skyrim Knowledge 文章，并将全部 18 篇原始 Markdown 归档至本地 `.private`。
 
 ### Changed
 
 - 内容导入规范明确 Knowledge 必须使用 `.mdx` 后缀，并补充 UTF-8 编码与 Windows 验证器调用要求。
+- 全部 Blog 与 Knowledge 文章均显式声明 `publication` 状态，避免依赖运行时默认值。
+- MDX 渲染支持保留普通段落中的单个换行，改善从外部 Markdown 导入中文笔记时的原有排版。
+
+### Removed
+
+- 移除不再维护的 `branch-rescue` 与 `getting-started` Blog 草稿。
 
 ## [1.1.0] - 2026-09-12
 

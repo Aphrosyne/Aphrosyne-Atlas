@@ -99,6 +99,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - 图片、引用和第三方资料进入公开站点前要确认来源与授权；未确认可公开的本地材料放在根目录 `.private/`，不默认公开。
 - 不同时维护 Markdown 与 PDF 两份正文；PDF 仅作为明确需要的发布物或下载附件。
 - 修复 Markdown 路径时兼容空格、中文和正斜杠 URL，不把本机绝对路径写入网页。
+- 新建或修改 Markdown、MDX 与 `SKILL.md` 时必须保存为 UTF-8；在 Windows 上运行 Python 技能验证器时使用 `py -3.14 -X utf8`，不得依赖系统 GBK 默认编码读取中文文件。
 
 ## 验证
 

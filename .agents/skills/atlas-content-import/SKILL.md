@@ -22,6 +22,15 @@ description: 将用户提供的外部教程、笔记或文章安全转换为 Aph
 
 ## 写入约定
 
+### 写入前硬检查
+
+在创建任何内容文件**之前**，先确定目标路径和扩展名：
+
+- Blog 只能写为 `src/content/blog/<english-kebab-slug>.mdx`。
+- Knowledge 只能写为 `src/content/knowledge/<category>/<english-kebab-slug>.mdx`，其中 `<category>` 为现有目录对应的 `guide`、`fix`、`experiment` 或 `reference`。
+- **绝不在 `src/content/` 创建 `.md` 文件。** 内容注册器只扫描 `.mdx`；`.md` 即使 frontmatter 正确，也不会生成文章加载器、静态路由或搜索索引。
+- 文件保存为 UTF-8；写入后、生成命令前用文件名再次确认扩展名是 `.mdx`。
+
 ### Blog
 
 写入 `src/content/blog/<english-kebab-slug>.mdx`。使用可解析 YAML frontmatter：
@@ -42,8 +51,6 @@ readingTime: 5 min
 ### Knowledge
 
 写入 `src/content/knowledge/<guide|fix|experiment|reference>/<english-kebab-slug>.mdx`。使用以下字段，并只填写有证据的可选字段：
-
-- **扩展名必须是 `.mdx`，不能是 `.md`。** 知识库注册器只扫描 `src/content/knowledge/**/*.mdx`；写成 `.md` 不会生成文章加载器、静态路由或搜索索引。导入后应在 `npm run generate:content-registry` 的输出中确认条目数量和 slug 均已收录。
 
 ```yaml
 ---

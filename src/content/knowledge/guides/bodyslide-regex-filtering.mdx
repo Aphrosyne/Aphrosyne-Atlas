@@ -1,0 +1,76 @@
+---
+title: BodySlide 装备列表正则表达式筛选教程
+type: guide
+status: verified
+publication: published
+excerpt: 说明如何在 BodySlide 的 Outfit Filter 中启用正则模式，并用正向前瞻、锚点与否定前瞻筛选大量装备。
+tags: [Skyrim, BodySlide, 正则表达式, 服装, 工具]
+last_edited: 2026-08-11
+related: []
+sources: []
+---
+
+
+BodySlide 的装备列表支持正则表达式（Regular Expressions），可用于快速筛选包含多个关键词的装备。
+
+## 开启正则模式
+
+1. 点击 **Outfit Filter（装备名字筛选）** 旁的放大镜，不是上方的 Group 筛选。
+2. 在下拉菜单勾选 `Regular Expressions`。
+3. 输入框将按正则规则匹配装备名称。
+
+## 常用写法
+
+### 普通关键词
+
+```text
+3BA
+```
+
+匹配名称中包含 `3BA` 的项目。
+
+### 同时包含多个关键词
+
+```text
+(?=.*sinful)(?=.*3BA)
+```
+
+不受关键词前后顺序影响，可匹配 `Sinful 3BA Armor`、`3BA Sinful Outfit` 等名称。
+
+### 匹配开头
+
+```text
+^DX
+```
+
+只匹配以 `DX` 开头的项目。
+
+### 任意字符顺序匹配
+
+```text
+sinful.*3BA
+```
+
+只匹配 `sinful` 出现在 `3BA` 前的名称；若不确定顺序，优先使用多个正向前瞻。
+
+### 忽略大小写
+
+```text
+(?i)(?=.*sinful)(?=.*3ba)
+```
+
+### 排除关键词
+
+```text
+(?i)(?=.*Armor)(?!.*Physics)
+```
+
+匹配含 `Armor` 且不含 `Physics` 的项目。
+
+## 可复用模板
+
+```text
+(?i)(?=.*关键词1)(?=.*关键词2)(?=.*关键词3)
+```
+
+例如 `(?i)(?=.*CBBE)(?=.*3BA)(?=.*Armor)` 用于同时包含 CBBE、3BA 和 Armor 的装备。正则模式尤其适合在大型整合包中批量定位需要 Build 的项目。

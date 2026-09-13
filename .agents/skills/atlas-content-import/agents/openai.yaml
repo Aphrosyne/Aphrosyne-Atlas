@@ -1,0 +1,4 @@
+interface:
+  display_name: "Atlas 内容导入"
+  short_description: "将外部教程和笔记转换为可发布的 MDX"
+  default_prompt: "使用 $atlas-content-import 将我提供的文档转换为合适的 Atlas 内容，并先检查公开性与素材。"
