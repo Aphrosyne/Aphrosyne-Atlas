@@ -1,0 +1,221 @@
+---
+title: 天际流派构筑全览（Crimson Sin 整合包视角）
+type: guide
+status: verified
+publication: published
+excerpt: 基于 Ordinator、Custom Skills 与 Crimson Sin 当前战斗模组组合整理的流派构筑笔记，涵盖机制、主观可玩性评估与后续尝试建议。
+tags: [Skyrim, Crimson Sin, Ordinator, 流派构筑, 战斗]
+game_version: Skyrim SE AE（Crimson Sin）
+last_edited: 2026-08-15
+related: []
+sources: []
+---
+
+> 依据：Ordinator 9.35.0 全 perk 文本、Custom Skills - Hand To Hand、Subclasses of Skyrim 2，以及整合包 modlist（BFCO / Valhalla / Parry for All / Precision / SCAR / SunHelm 等）。
+>
+> 评分 = 可玩性（新鲜度 + 稳定性 + 爽感），10 分制，纯主观，仅作为老玩家的个人参考；机制与兼容性均待进一步实测。
+
+## 常规流派（传统玩法总表）
+
+| 流派 | Ordinator 核心机制 | 一句话点评 |
+|---|---|---|
+| 单手剑盾 | Block 树 Timed Block / Poke the Dragon / Dragon Scales | 最稳的常规玩法。 |
+| 单手双持 | Ravage（攻速）/ Man O'War（叠伤）/ Unleash the Beast（狂暴） | 数值爽，本质是更快地砍。 |
+| 双手重武 | Execute（30%血斩杀）/ Massacre（攻速）/ Bear Hide（重击减伤） | 重型爆发。 |
+| 潜弓 | Archery 满伤/穿甲 + Sneak 潜行 | 天际指定玩法。 |
+| 潜刺 | 匕首 Sneak Attack / Backstab / Problem Solver | 蹲草丛背刺。 |
+| 毁灭法师 | 火/冰/电三线（Combustion / Merciless Cold / Ionized Path） | 元素炮台。 |
+| 召唤法师 | 魔人/元素召唤线 + Edge of Oblivion | 召两个魔人。 |
+| 幻术师 | 狂暴/平静/隐身控场 | 常规但可延伸到非常规区。 |
+| 恢复圣职 | 治疗/结界/光环 | 偏辅助，见非常规区。 |
+| 变化法师 | 护甲术/麻痹/魔抗 | 偏辅助，少人当主玩法。 |
+| 魔剑士 | Might and Magic / Spellblade（施法后增伤） | 施法+砍人交替。 |
+| 弩手 | 弩系 Perfect Aim 斩杀 / Thread the Needle 穿甲 | 慢节奏重狙，见非常规区。 |
+| 徒手拳师 | 轻甲 Iron Fist 线 + Hand To Hand 自定义树 | 强度很高。 |
+| 变身（狼人/吸血鬼/魅魔） | Growl / Scion / PSQ + BFCO 爪击 | UBE 种族有 bug 风险。 |
+| 药王 | 炼金毒药线 + Apothecary | 后勤流，见非常规区。 |
+| 工匠战神 | 锻造+附魔（Miracle 三附魔 / Sandstone Sheath） | 装备碾压，战斗本身还是近战。 |
+| 龙吼 | 口才吼线 + Stormcrown 自定义树 | 见非常规区。 |
+
+## 非常规流派
+
+### 骨头法师（召唤系骨头线）
+
+- **机制**：捡 11 种骨头 → 骨祭坛造永久骷髅军团；骷髅不占召唤上限、打不死。
+- **关键 perk**：Bone Collector → Barrow Lord（群指令）→ Skeleton Mages → Fire Ritual（烧骨强化）→ Puppet Master（你行动=全队 buff）→ King of Bones（附身骷髅无敌）。
+- **可玩性**：5/10。
+- **硬伤**：出伤慢、骷髅 AI 笨还会卡位置；只适合“养军团”的耐心型玩家。
+
+### 吟游诗人（口才 Perform 线）
+
+- **机制**：Perform 表演收钱 → 战斗打鼓 AOE / 跳舞控场 / 给队友 +100% 攻伤。
+- **关键 perk**：Performer → Encore → Irresistible Dance → Earthquake Drum → Witching Rhythm（削魔抗）→ War Drummer（队友 100% 加攻）。
+- **可玩性**：4/10。
+- **硬伤**：出伤慢、要靠队友输出、战斗前还要“演奏”摆拍。
+
+### 龙吼行者
+
+- **机制**：龙吼当主武器，Stormcrown 独立技能树 + 单独冷却连招（推倒→冲刺→吐息）。
+- **关键 perk**：口才 And the Universe Listens / Windborne / Force Redoubled + Stormcrown。
+- **可玩性**：6.5/10（未实测）。
+- **硬伤**：前中期吼的伤害/冷却吃紧，需要口才等级支撑。
+
+### 变身流（狼人/吸血鬼/魅魔双形态）
+
+- **机制**：人形社交/潜行 + 兽形爪击碾压，Growl/Scion 各自成长线。
+- **可玩性**：3/10（个人主观）。
+- **硬伤**：UBE 种族 + 变身 mod 有骨骼/贴图 bug 风险。
+
+### 机动跑酷流（勾爪+跑酷+滑翔伞）
+
+- **可玩性**：2/10（个人主观）。
+- **硬伤**：骨骼 bug 闪退风险、快速旅行隐患、勾爪只能拉自己。
+
+### 长矛方阵兵
+
+- **机制**：Spear of Skyrim 长判定 + Precision 贴合 + Stalker 减速风筝。
+- **可玩性**：3/10。
+- **硬伤**：动作带向前位移、敌人会闪避突进，近战距离控制在本整合包内不成立。
+
+### 圣光审判官（恢复系当输出）
+
+- **机制**：False Light 治疗砸敌人 = 伤害；Warrior's Flame 光环自动祝福/诅咒；Crusader's Fire 烧灼后攻击 +25%。
+- **关键 perk**：False Light → Lightwielder → In Thy Name + Edgewalker + Battle Cleric + Plague Doctor/Necromanticon 疾病线。
+- **可玩性**：6.5/10。
+- **硬伤**：战斗体感接近“换皮毁灭”。
+
+### 油火纵火犯（炼金环境流）
+
+- **机制**：Elemental Oil 造油池 + 火系引爆 + Walking Disaster 自动漏油 + Scorched Earth 烧尸成火堆。
+- **可玩性**：4/10。
+- **硬伤**：铺油→点火→等爆炸节奏拖，爽点少。
+
+### 重弩执行者
+
+- **机制**：Perfect Aim 对 ≤20% 血目标 3 倍伤害 + 穿甲 + 装填免硬直 + Assassin 子职业每 10 秒 +100%。
+- **可玩性**：6.5/10。
+- **硬伤**：斩杀线以外装填偏慢；和潜弓同属远程。
+
+### 格挡反击流
+
+- **机制**：Timed Block / Poke the Dragon / Dragon Tail + Parry for All + Valhalla 限时格挡。
+- **可玩性**：4/10。
+- **硬伤**：格挡 mod 叠得过多时，判定可能互相冲突；被动等招的节奏也较累。
+
+### 影舞者（翻滚背刺）
+
+- **机制**：Silent Roll + Dynamic Entry + Dodge Roll 无敌帧 + Smokescreen + Backstab。
+- **可玩性**：2/10。
+- **硬伤**：敌人转身/索敌机制撑不起“战斗中翻滚背刺”。
+
+### 双持狂暴
+
+- **机制**：Ravage 攻速 + Man O'War 叠攻 + Unleash the Beast 狂暴。
+- **可玩性**：5/10。
+- **硬伤**：本质是更快地挥砍，容易腻；适合爽档过渡。
+
+### 矮人工程师（自动炮台）
+
+- **机制**：Dwarven Autocannon 放炮台 + Firing Line 双炮 + Spin Up 越射越快。
+- **可玩性**：3/10。
+- **硬伤**：每场战斗摆炮台很烦，射程 12 英尺还得贴身。
+
+### 法杖战法师
+
+- **机制**：BFCO Dragon Age Staff 法杖近战动作 + Staff Enchanting Plus 强化法杖 + 法杖施法。
+- **可玩性**：5.5/10。
+- **硬伤**：法杖握持需要和动作集适配；不依赖格挡。
+
+### Spellscribe 魔剑士
+
+- **机制**：Spellscribe 把法术存进武器，重击免费释放 + Power Echoes 双发。
+- **可玩性**：4/10。
+- **硬伤**：轻击也能触发的 bug 会导致强度失衡。
+
+### 隐身自爆（Partystarter）
+
+- **机制**：获得隐身时脚下生成酒桶，隐身结束原地爆炸（2 倍潜行等级火伤+硬直），15 秒 CD。
+- **可玩性**：4/10。
+- **硬伤**：炸点是自身站的位置；隐身药水要炼金后勤养；能否伤及自身待确认。
+
+### 法术槽法师（Vancian Magic）
+
+- **机制**：每天固定 20 发法术，免费 +50% 威力，打完睡觉回；Dungeon Master 可换强化方向。
+- **可玩性**：6/10。
+- **硬伤**：本质还是法师；但“弹匣式”资源循环是新东西，配合 SunHelm 睡觉节奏正好。
+
+### 幻术控场补刀
+
+- **机制**：隐身 + 狂暴让敌人自相残杀，事后背刺残血。
+- **可玩性**：5.5/10。
+- **硬伤**：清场慢（等敌人互殴）；对野兽/机械/部分 Boss 免疫。
+
+### 药罐子战士（炼金+近战）
+
+- **机制**：Stimulants / Lab Skeever / Maenad / Witchmaster 叠药效 + 涂毒。
+- **可玩性**：5/10。
+- **硬伤**：药水后勤和库存管理麻烦；砍人部分还是近战。
+
+### 反魔法破坏者
+
+- **机制**：Nullifier 禁回蓝 + The Monarch 吸蓝 + Antimagic Field 禁施法 + Nightblade 对无蓝敌人增伤。
+- **可玩性**：4/10。
+- **硬伤**：专治法师，遇到剑盾敌人整套失效。
+
+### 徒手武僧
+
+- **机制**：Hand To Hand 树（75% 穿甲/16 倍背刺/25% 攻速）+ Ordinator 轻甲拳线（Hissing Dragon 元素冲击波）+ Subclasses 全叠拳头。
+- **可玩性**：5/10（强度 10 分）。
+- **硬伤**：强度过高容易无趣，H2H 树只服务徒手。
+
+## 新发现
+
+### 双持法术剑（左手法杖 + 右手武器）
+
+- **机制**：附魔树有一整套“杖+剑同时出手”的体系，不用 Spellscribe：
+  - **Secretkeeper（40）**：左手持杖时攻击 +25%；右手持杖时法术/卷轴 +25%。
+  - **Flame of Magnus（50）**：左手杖施法/蓄力时，右手攻击 +50%。
+  - **Might and Magic（60）**：左手法术 +10%、右手武器 +10%（互相喂）。
+  - **You Shall Not Pass（90）**：1 秒内杖+剑同时出手 → 闪光硬直 + 半附魔等级伤害。
+  - **Staff Recharge（60）**：法杖自动回充；**Heart of the Sun（80）**：杖当电池强化武器附魔。
+- **整合包支撑**：Spell Sword Moveset、Goetia Enchanted Staves、BFCO、Staff Enchanting Plus、各类法术包。
+- **玩法循环**：左手杖右手剑同时按，一边法术一边刀；Secretkeeper + Flame of Magnus 让两边互相加伤，1 秒双触发闪光硬直。
+- **可玩性**：7/10。
+- **硬伤**：法杖充能要管理；“同时出手”的窗口手感需要实测，BFCO 连招下可能有节奏冲突；法杖握持动画仍需适配。
+
+### 焦土近战（火地剑舞）
+
+- **机制**：毁灭树里有一套给**近战**用的联动：
+  - **Pyromancer Ascension（60）**：双持火法术 6 发后 20 秒火伤 +50%、消耗减半、走过留火径（30 点/秒）。
+  - **War of the Elements（70）**：对“正被燃烧地面灼烧”的目标，近战攻击 +40%。
+  - **World in Flames（80）**：燃烧地面伤害 +25%、对灼烧目标火系 +25%。
+  - **Cataclysm（100）**：火系打中灼烧目标爆炸 20% 当前生命（45 秒 CD）。
+  - 配 **Conflagration（40）** 点燃脚下地面。
+- **玩法循环**：开场双持火球砸 6 发点火 → Pyromancer Ascension 激活 → 掏出武器在火径上砍人，近战 +40% 还能触发 Cataclysm 爆炸。
+- **可玩性**：6/10。
+- **硬伤**：施法→近战→施法的交替节奏，本质还是战法混合。
+
+### 毒蛇连招匕首（组合技刺客）
+
+- **机制**：单手树 **Coiling Python（80）**：30 秒内对同一目标依次打出前/侧/后三种重击 → 麻痹 20 秒 → 对麻痹目标攻击必暴击 ×9。
+- **配套**：Bite Marks（出血叠层）、Savage（快速三连）、Twin Fang、Death Adder（站立重击无视护甲）、Swaying Cobra（吸蓝）。
+- **可玩性**：5/10。
+- **硬伤**：三段重击连招在敌人会闪避/转身的整合包里很难打全，练成之前体验很差。
+
+### 处决战斧（双手执行流）
+
+- **机制**：**Execute（50）**：战斧前重击对 30% 血以下目标 ×20 暴击；**Enter the Arena（90）**：开战第一刀必触发 Massacre（+100% 攻速 5 秒）；**Bear Hide（90）**：重击期间减伤一半。
+- **可玩性**：5/10。
+- **硬伤**：本质还是双手近战，只是把“砍人”换成“找斩杀线”。
+
+### 决斗者（单手 + 空手反击）
+
+- **机制**：**Rogue's Parry（50）**：单手武器 + 空手时，在敌人起手/拉弓瞬间出手 +40% 且必暴击。
+- **可玩性**：4/10。
+- **硬伤**：时机判定在战斗 mod 叠满的整合包里不可靠；不拿盾的代价也较大。
+
+## 最终建议
+
+- **真要开新档**：优先双持法术剑；其次焦土近战或法术槽法师。
+- **剧情档**：挑一个能接受的战斗玩法，把精力留给 SIRENROOT、被遗忘的城市、安斯拉德。
+- **现状**：这套战斗系统的新鲜感可能已经接近耗尽；新档的价值更偏向剧情，战斗图个乐即可。

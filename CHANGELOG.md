@@ -9,6 +9,17 @@
 
 单篇文章的增补、日常勘误和状态更新时间不强制发布站点版本；它们应在条目的“最后编辑”或“最后验证”字段中记录。涉及导航、搜索、内容模型、部署或一批内容迁移的变更，才进入站点 Changelog。
 
+## [Unreleased]
+
+### Added
+
+- 新增 Crimson Sin 流派构筑总览，以及 UBE 服装运行时 morph 穿模排查两篇知识库文章。
+- 新增 `atlas-content-import` 内容导入 skill，用于安全迁移 Blog 与 Knowledge MDX 内容。
+
+### Changed
+
+- 内容导入规范明确 Knowledge 必须使用 `.mdx` 后缀，并补充 UTF-8 编码与 Windows 验证器调用要求。
+
 ## [1.1.0] - 2026-09-12
 
 ### Changed

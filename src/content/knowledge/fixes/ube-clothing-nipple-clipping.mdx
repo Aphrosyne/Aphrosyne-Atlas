@@ -1,0 +1,124 @@
+---
+title: UBE 衣服乳头穿模：OBody 运行时 morph 不生效排查记录
+type: fix
+status: verified
+publication: published
+excerpt: Stoneheart Archmage UBE 上衣在 OBody 切换身形时出现乳头穿模的根因与修复记录：可见网格的 TRI 缺少 morph，且部分位移数据倍率异常。
+tags: [Skyrim, Crimson Sin, UBE, OBody, RaceMenu, BodySlide, Outfit Studio, TRI]
+game_version: Skyrim SE AE（Crimson Sin）
+last_edited: 2026-08-16
+related: []
+sources: []
+---
+
+> **对象**：Stoneheart Archmage UBE 上衣（`top`）＋ UBE 身体 ＋ OBody ＋ SKEE/RaceMenu。
+>
+> **结论**：衣服可见层 `top` 网格的 TRI 中缺少乳头 morph，导致 OBody 切身形时身体乳尖鼓出、衣服不跟随，进而顶穿或悬空。
+
+## 问题现象
+
+- 用 OBody 切到 `SSkwaii00 Body UBE - BodySlide Preset` 时，BodySlide 预览正常，但游戏内**只有乳头位置穿模**：身体乳尖正常鼓出，衣服乳头区域是平的、缺鼓出。
+- 排除物理：站着不动也穿模；装备上带 SMP 标记的部件解除后依旧。
+- 反向实验：衣服刷目标身形（几何烘焙）+ OBody 归零 → 不穿模，证明衣服几何/BodySlide 输出本身没坏。
+- 换 `YAOSINI` preset（`NipplesShowUp=0`、`NippleLength=100`）→ 不穿模，但**衣服乳头比实际乳头突出很多，有大空隙**。
+
+这两个现象是同一根因的两个症状，不是互相矛盾。
+
+## 相关文件
+
+| 项目 | 相对 MO2 路径或文件 |
+| --- | --- |
+| 游戏内身形预设 | `overwrite\CalienteTools\BodySlide\SliderPresets\SSkwaii00 Body UBE - BodySlide Preset.xml`、`YAOSINI.xml` |
+| 衣服 mod（OS 工程） | `mods\a+[UBE服装] - Stoneheart Archmage UBE\CalienteTools\BodySlide\SliderSets\UBE Stoneheart Archmage Top.osp`（+ `ShapeData\UBE Stoneheart Archmage Top\*.osd`） |
+| BodySlide 输出（TRI 实际加载源） | `mods\my_BS_Output\meshes\!UBE\stoneheart\Archmage\top.tri`、`top_0.nif` |
+| PG/PBR 输出 | `mods\ZARD_PG_Output2\meshes\!ube\stoneheart\archmage\top_0.nif`（只覆盖 NIF，**不带 TRI**；NIF 的 `BODYTRI` 指向 `!UBE\stoneheart\Archmage\top.tri`，游戏实际解析的是 `my_BS_Output` 那份 TRI） |
+| SKEE 源码 | `SKSE64Plugins-master\skee64\BodyMorphInterface.cpp` |
+| OBody 源码 | `OBody-NG-main\src\Body\Body.cpp`、`include\SKEE.h` |
+| 分析脚本 | `nif_analyze.py`、`parse_tri_skee.py`、`tri_morph_stats.py` |
+
+## 根因分析
+
+### 运行时 morph 机制（SKEE + OBody 源码）
+
+- **OBody 只“设值”**：`ApplySlider` → `morphInterface->SetMorph(actor, 滑块名, "OBody", 值)`，再调 `ApplyBodyMorphs`；它不碰任何几何。
+- **SKEE 按 TRI 逐 shape 应用**：`MorphCache::ApplyMorphs` 在装备 NIF 上找 `BODYTRI` extra data → 解析对应 `.tri` → 对 TRI 里**每一个 shape 块**，找到 NIF 中**名字完全匹配**的 BSGeometry（`bodyGeometry->m_name == tri shape 名`），只把**该块里存在的 morph**应用上去。位移 = TRI delta × 该 morph 名的全局数值（`GetBodyMorphs`，按名查，与 shape 无关）。
+- **推论**：某个 morph 没写进某个网格的 TRI 块 → 该网格对这个 morph 完全不动。数值是全身共用的，但“哪些网格吃这个值”由 TRI 决定。
+
+### 本件衣服：乳头 morph 放错了 shape 块
+
+- TRI 共 5 个 shape：`top`（4701 顶点，可见衣服层）、`BaseShape`（29298 顶点，隐藏身体层）、`Arms`、`strap`、`thigh`。
+- 修复前 **top 块**有 111 个 morph，乳头相关只有 3 个：`NippleHeight n|p`、`NippleDispertionSides n|p`、`NippleLength`。
+- `NipplesShowUp`、`NippleDiameter n|p`、`NipplesPerkiness`、`NippleFlatten`、`NippleCircularCrease`、`NippleCreaseCentral/Horizontal/Vertical`、`Nipples_Fantasy`、`Nippleinverted`、`NippleInverted_PuffyAreola`、`NippleHorizontal n|p`、`Areola*` 等 15+ 个全部在 `BaseShape` 块。
+- OSP 工程里这些乳头滑块的 Data 只 `target="BaseShape"`，是 UBE 转换时漏转。
+- BodySlide 预览“看着正常”的原因：预览把所有 shape 叠起来显示，看到的是 `BaseShape` 身体的乳头轮廓；游戏里只有一层平布，凸起就变成了穿模。
+
+### 数值证据（旧 TRI）
+
+| morph | top 块 | top maxΔ | BaseShape maxΔ | SSkwaii00 值 | YAOSINI 值 |
+| --- | --- | --- | --- | --- | --- |
+| NipplesShowUp | 无 | — | 0.467 | 104/180 | 0 |
+| NippleLength | 有 | **1.212** | **0.397** | 20 | 100 |
+| NippleHeight n\|p | 有 | 0.585 | 0.588 | −45/−50 | 0 |
+| NippleDispertionSides n\|p | 有 | 1.576 | 1.580 | 50/114 | 49 |
+| NippleDiameter n\|p | 无 | — | 0.126 | 50/100 | 100 |
+
+- SSkwaii00：身体乳尖靠 ShowUp（104~180）顶出约 0.5~0.85 单位，衣服只吃到 NippleLength `20 × 1.212 ≈ 0.24`，身体顶穿平衣服。
+- YAOSINI：身体不顶（ShowUp=0），但衣服被 NippleLength 100 推出 1.212，身体乳尖只伸 0.397，衣服乳尖悬空约 0.8 单位。
+- 第二个病灶：top 的 NippleLength delta 是身体的 **3 倍**（1.212 vs 0.397），而 NippleHeight、NippleDispertionSides 是匹配的。
+
+## 修复过程
+
+### 分析工具与 TRI 格式
+
+- `nif_analyze.py`：纯 Python 解析 SSE NIF 20.2.0.7。注意：SSE 的 `NiObjectNET.Name` 是 u32 字符串表索引；BSTriShape 无 Properties；顶点在 NiSkinPartition 共享缓冲。
+- `parse_tri_skee.py`：按 SKEE 源码 `MorphCache::CacheFile` 的精确格式解析 TRI。
+  - **TRIP（打包）格式**：`u32 'TRIP'` + `u16 shape 数`；每 shape：`u8 名长 + 名 + u16 morph 数`；每 morph：`u8 名长 + 名 + f32 multiplier + u16 顶点数 + (u16 索引 + 3×s16 位移)×n`。文件头字节 `PIRT` 是 `TRIP` 的小端写法。
+  - 修复前后文件均 100% 解析、零残差（8,908,660 / 8,923,224 字节）。
+- `tri_morph_stats.py`：量化每个 morph、每个 shape 的 max|Δ|，用于对比 top 与 BaseShape 是否同步。
+
+### Outfit Studio 修复步骤
+
+1. 打开 Outfit Studio，依次选择 File → Load Project，加载 `UBE Stoneheart Archmage Top.osp`。
+2. 选中 `top` 网格。
+3. 在 Slider 面板勾选**所有乳头/乳晕相关滑块（非 `_UV_fix`）**：
+   - 关键：`NipplesShowUp`、`NippleDiameter n|p`。
+   - 已有但需要**重算**：`NippleLength`、`NippleHeight n|p`、`NippleDispertionSides n|p`（重算后 NippleLength 的 3 倍差消除）。
+   - 其余：`NipplesPerkiness`、`NippleFlatten`、`NippleCircularCrease`、`NippleCreaseCentral/Horizontal/Vertical`、`Nipples_Fantasy`、`Nippleinverted`、`NippleInverted_PuffyAreola`、`NippleHorizontal n|p`、`AreolaErection`、`AreolaeSizeBig/Small`、`AreolaHorizontal/Vertical`。
+4. 菜单 Sliders → **Conform Selected**（Ctrl+C），参数用 Default。
+5. Ctrl+S 保存工程。
+6. 回 BodySlide 重刷（zero 身形，沿用日常构建方式），输出到 `my_BS_Output`。
+7. 验证 TRI：体积应从 8,908,660 增大（新数据写入）；NIF 无需重跑 PG（PG 只覆盖 NIF 不带 TRI，新 TRI 会直接生效）。
+
+### 踩过的坑：为什么第一次“conform 了却没用”
+
+- **铅笔图标**：Slider 面板每行左侧铅笔图标，**绿色 = 该滑块对当前选中网格已有 conform 数据（.osd 里有对应条目）**；灰色 = 只有身体端数据。
+- 第一次只勾了 2 个滑块（`NipplesShowUp`、`NippleDiameter`），保存工程、拷贝 TRI 后文件一字未变，游戏无变化。
+- 教训：
+  - **保存工程 ≠ 重新生成 TRI**，TRI 只在 BodySlide Build 时生成。
+  - Conform Selected 只对**已勾选且有数据来源**的滑块生成网格端数据，漏勾即漏写。
+  - 判断“这个滑块有没有写进衣服”，直接看铅笔图标颜色。
+
+## 修复后验证（数据）
+
+新 `top.tri`（8,923,224 字节）：
+
+| morph | top maxΔ | BaseShape maxΔ | 状态 |
+| --- | --- | --- | --- |
+| NipplesShowUp | 0.458 | 0.467 | 已写入，1:1 |
+| NippleDiameter n\|p | 0.112 | 0.126 | 已写入 |
+| NippleLength | **0.397** | **0.397** | 3 倍差消除 |
+| NipplesPerkiness | 0.266 | 0.267 | 已写入 |
+| NippleFlatten / NippleCircularCrease / NippleCrease* / Nipples_Fantasy / Nippleinverted / NippleInverted_PuffyAreola / NippleHorizontal n\|p | 同量级 | 同量级 | 已写入 |
+| AreolaErection / AreolaeSizeBig / AreolaeSizeSmall / AreolaHorizontal / AreolaVertical | 缺失 | 有 | 可选补 |
+
+预期：SSkwaii00 不再顶穿；YAOSINI 的空隙消失。
+
+## 相关知识总结
+
+1. **运行时 morph 机制（SKEE）**：TRI 按 **shape 名**匹配网格；morph **数值按名字全局**；每个网格只动自己 TRI 块里存在的 morph。
+2. **OBody 只是设值器**，不修改几何；它把 preset 滑块名和值通过 SKEE 接口写入角色。
+3. **TRI 文件格式**：TRIP 打包格式见上；用 SKEE 源码解析最可靠。
+4. **OSP / OSD / 输出 TRI 的关系**：OSP 是工程清单，OSD 是每个滑块×每网格的 delta 数据，Build 时由它们生成 NIF + TRI。铅笔绿色表示该网格有数据。
+5. **BodySlide 预览 ≠ 游戏内效果**：预览把所有 shape 叠起来显示，容易把身体层的变形误当成衣服的。
+6. **UBE 与 3BA 的 morph 命名体系不同**：UBE 用 `NipplesShowUp`、`NippleDiameter n|p` 等，3BA 用 `NippleSize`、`NipBGone`、`NippleTip` 等；精确同名往往只有 `NippleLength` 等少数。跨体系穿衣服要么用同体系预设，要么用 OBody 的 clothe preset。
+7. **3BA 版对照**：`a+[3BA服装] - Stoneheart Archmage 3BA` 工程里所有乳头滑块都 conform 到了 top（.osd 有 `topNippleLength`、`topNippleSize` 等），工程本身没有这个硬伤；但它在 UBE 预设环境下仍受命名体系限制。

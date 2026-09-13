@@ -13,6 +13,8 @@ export const KNOWLEDGE_ARTICLE_LOADERS: Record<
   "openshaders-latex-reflection": () => import("@/content/knowledge/experiments/openshaders-latex-reflection.mdx"),
   "college-spellbook-levels": () => import("@/content/knowledge/fixes/college-spellbook-levels.mdx"),
   "experience-skill-cap": () => import("@/content/knowledge/fixes/experience-skill-cap.mdx"),
+  "ube-clothing-nipple-clipping": () => import("@/content/knowledge/fixes/ube-clothing-nipple-clipping.mdx"),
   "colorful-magic-light-bosses-loot": () => import("@/content/knowledge/guides/colorful-magic-light-bosses-loot.mdx"),
+  "crimson-sin-build-overview": () => import("@/content/knowledge/guides/crimson-sin-build-overview.mdx"),
   "sog4-integration-fork-guide-zh": () => import("@/content/knowledge/reference/sog4-integration-fork-guide-zh.mdx"),
 }
