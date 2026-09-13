@@ -63,7 +63,7 @@
 
 - [ ] [Architecture][P3] 为 Blog 元数据解析替换 `new Function`，并补充覆盖中文、CRLF 和异常 frontmatter 的测试。
 
-- [ ] [Architecture][P2] 将已追踪的原始图片与完整字体迁移为发布产物，并单独瘦身 Git 历史。
+- [x] [Architecture][P2] 将已追踪的原始图片与完整字体迁移为发布产物，并单独瘦身 Git 历史。
   - 范围：头像与 Knowledge 的现有图片源文件、`public/images/` 下遗留的直接原图、已从工作树删除但仍在历史中的 `assets/images-source/bg/bg.jpg`、`src/app/fonts/` 下的三份完整 OTF；背景图已先行采用“本地原图、提交 WebP”的模式。
   - 约束：图片原图和字体源均保留本地备份；先备份仓库并在独立分支验证，再使用专用历史改写工具。改写后需要协调 force-push 与所有克隆仓库重新同步。
   - 实现方向：提交发布 WebP 和已生成 WOFF2，调整构建脚本使缺少本地原图／OTF 的干净 checkout 仍可直接构建；需要重新压缩时由本地作者工具显式执行。
