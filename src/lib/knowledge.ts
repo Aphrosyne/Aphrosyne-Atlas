@@ -70,7 +70,6 @@ async function parseKnowledgeFile(filePath: string, slug: string): Promise<Knowl
     tags: asStringArray(data.tags),
     gameVersion: typeof data.game_version === 'string' ? data.game_version : undefined,
     lastEdited: asDate(data.last_edited),
-    lastVerified: asDate(data.last_verified),
     related: asStringArray(data.related),
     sources: asSources(data.sources),
   }
@@ -120,6 +119,6 @@ export async function getKnowledgeSlugs(): Promise<string[]> {
 
 export async function getRecentKnowledge(count = 3): Promise<KnowledgeMetadata[]> {
   return (await getAllKnowledge())
-    .sort((a, b) => (b.lastVerified ?? '').localeCompare(a.lastVerified ?? ''))
+    .sort((a, b) => (b.lastEdited ?? '').localeCompare(a.lastEdited ?? ''))
     .slice(0, count)
 }

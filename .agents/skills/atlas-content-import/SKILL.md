@@ -62,7 +62,6 @@ excerpt: 可独立理解的简短摘要。
 tags: [Skyrim, 示例]
 game_version: Skyrim SE 1.6.x
 last_edited: YYYY-MM-DD
-last_verified: YYYY-MM-DD
 related: []
 sources:
   - label: 公开来源名称
@@ -70,7 +69,7 @@ sources:
 ---
 ```
 
-- `verified` 与 `last_verified` 只能基于用户明确的实测或可靠来源；不确定时使用 `needs-review`，并省略 `last_verified`。
+- `verified` 只能基于用户明确的实测或可靠来源；不确定时使用 `needs-review`。重新验证或发现结论过期时，同步更新 `status` 与 `last_edited`。
 - `sources` 记录正文实际参考的公开链接。没有可靠公开来源时留空数组，不捏造 URL。
 - `publication: archived` 适合仍可公开查阅的历史内容；`draft` 不生成公开路由；私人材料应留在 `.private/`，不进入 `src/content/`。
 

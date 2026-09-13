@@ -183,7 +183,7 @@ export default function Dashboard({ siteName, recentPosts, knowledgeEntries, pro
                 <Link key={entry.slug} href={`/knowledge/${entry.slug}`} className="flex items-center gap-3 rounded-lg px-1.5 py-2 text-sm transition-colors hover:bg-surface/40">
                   <span className="text-base">📚</span>
                   <span className="min-w-0 flex-1 truncate text-white/80">{entry.title}</span>
-                  <span className="shrink-0 text-[11px] text-white/40">{entry.lastVerified ?? '未验证'}</span>
+                  <span className="shrink-0 text-[11px] text-white/40">{entry.lastEdited ?? '未更新'}</span>
                 </Link>
               ))}
             </div>

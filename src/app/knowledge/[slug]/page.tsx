@@ -75,8 +75,7 @@ export default async function KnowledgeArticlePage({ params }: Props) {
                 <h1 className="mt-4 text-3xl font-bold tracking-tight text-fg sm:text-4xl">{entry.title}</h1>
                 <p className="mt-3 leading-7 text-fg/60">{entry.excerpt}</p>
                 <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm text-fg/45">
-                  {entry.lastEdited && <p>最后编辑：{entry.lastEdited}</p>}
-                  {entry.lastVerified && <p>最后验证：{entry.lastVerified}</p>}
+                  {entry.lastEdited && <p>最后更新：{entry.lastEdited}</p>}
                 </div>
                 <div className="mt-4 flex flex-wrap gap-2">{entry.tags.map((tag) => <span key={tag} className="rounded-full bg-surface px-2.5 py-1 text-xs text-fg/55">{tag}</span>)}</div>
               </header>

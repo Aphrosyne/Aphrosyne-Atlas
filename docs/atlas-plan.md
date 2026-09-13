@@ -198,7 +198,7 @@ type: guide
 status: verified
 game_version: Skyrim SE 1.6.x
 pack: null
-last_verified: 2026-09-04
+last_edited: 2026-09-04
 tags:
   - Engine Fixes
   - 配置
@@ -206,7 +206,7 @@ tags:
 ```
 
 - [x] 明确 `type`、`status` 和版本字段的允许值。
-- [x] 区分“最后编辑时间”和“最后验证时间”。
+- [x] 使用单一“最后编辑时间”字段，并以 `status` 表达验证结论。
 - [x] 支持关联工具、相关文档和来源链接。
 - [x] 对 `needs-review`、`outdated` 等状态提供明显但不过度干扰阅读的提示。
 - [x] 内容解析不使用 `new Function` 执行元数据，改为明确、可校验的 frontmatter 方案。

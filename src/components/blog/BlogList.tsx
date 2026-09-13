@@ -4,16 +4,24 @@ import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import { useRouter, useSearchParams } from 'next/navigation'
 import type { PostMetadata } from '@/types/post'
+import SortControls, { type SortDirection } from '@/components/shared/SortControls'
 import BlogCard from './BlogCard'
 
 const fade = { initial: { opacity: 0 }, animate: { opacity: 1 } }
 const fadeT = (delay = 0) => ({ duration: 0.4, ease: 'easeOut' as const, delay })
+const BLOG_SORT_OPTIONS = [
+  { value: 'date', label: '发布日期' },
+  { value: 'title', label: '标题' },
+] as const
+type BlogSort = (typeof BLOG_SORT_OPTIONS)[number]['value']
 
 export default function BlogList({ posts }: { posts: PostMetadata[] }) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [query, setQuery] = useState('')
   const [activeTag, setActiveTag] = useState<string | null>(null)
+  const [sortBy, setSortBy] = useState<BlogSort>('date')
+  const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
   const showingArchive = searchParams.get('view') === 'archive'
   const archivedCount = posts.filter((post) => post.publication === 'archived').length
   const visiblePosts = posts.filter((post) => showingArchive
@@ -29,6 +37,12 @@ export default function BlogList({ posts }: { posts: PostMetadata[] }) {
       post.excerpt.toLowerCase().includes(query.toLowerCase())
     const matchesTag = !activeTag || post.tags.includes(activeTag)
     return matchesQuery && matchesTag
+  })
+  const sortedPosts = [...filtered].sort((left, right) => {
+    const comparison = sortBy === 'date'
+      ? left.date.localeCompare(right.date)
+      : left.title.localeCompare(right.title, 'zh-CN')
+    return sortDirection === 'asc' ? comparison : -comparison
   })
 
   return (
@@ -52,16 +66,26 @@ export default function BlogList({ posts }: { posts: PostMetadata[] }) {
         </div>
       )}
       {/* Search & filter */}
-      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <motion.input
-          type="text"
-          placeholder={showingArchive ? '搜索归档文章…' : '搜索文章…'}
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          {...fade}
-          transition={fadeT()}
-          className="w-full rounded-full bg-surface/50 backdrop-blur-sm border border-border/20 px-4 py-2 text-sm text-fg/70 placeholder:text-fg/40 focus:outline-none focus:ring-1 focus:ring-accent sm:max-w-xs"
-        />
+      <div className="mb-8 space-y-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <motion.input
+            type="text"
+            placeholder={showingArchive ? '搜索归档文章…' : '搜索文章…'}
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            {...fade}
+            transition={fadeT()}
+            className="min-h-11 w-full rounded-full border border-border/20 bg-surface/50 px-4 py-2 text-sm text-fg/70 placeholder:text-fg/40 backdrop-blur-sm focus:outline-none focus:ring-1 focus:ring-accent sm:max-w-xs"
+          />
+          <SortControls
+            options={BLOG_SORT_OPTIONS}
+            value={sortBy}
+            direction={sortDirection}
+            onValueChange={setSortBy}
+            onDirectionChange={setSortDirection}
+            label="文章排序方式"
+          />
+        </div>
         <div className="flex flex-wrap gap-2">
           <motion.button
             onClick={() => setActiveTag(null)}
@@ -98,7 +122,7 @@ export default function BlogList({ posts }: { posts: PostMetadata[] }) {
         <p className="py-12 text-center text-fg/40">{showingArchive ? '没有符合条件的归档文章。' : '没有符合条件的文章。'}</p>
       ) : (
         <div className="space-y-4">
-          {filtered.map((post) => (
+          {sortedPosts.map((post) => (
             <BlogCard key={post.slug} {...post} onTagClick={setActiveTag} />
           ))}
         </div>

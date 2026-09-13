@@ -22,7 +22,6 @@ export interface KnowledgeMetadata {
   tags: string[]
   gameVersion?: string
   lastEdited?: string
-  lastVerified?: string
   related: string[]
   sources: KnowledgeSource[]
 }

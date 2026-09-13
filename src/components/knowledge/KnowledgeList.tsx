@@ -1,9 +1,11 @@
 'use client'
 
 import Link from 'next/link'
+import { useMemo, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { motion, useReducedMotion } from 'framer-motion'
 import type { KnowledgeMetadata, KnowledgeStatus, KnowledgeType } from '@/types/knowledge'
+import SortControls, { type SortDirection } from '@/components/shared/SortControls'
 
 const TYPE_LABELS: Record<KnowledgeType, string> = {
   guide: '教程',
@@ -25,12 +27,19 @@ const STATUS_CLASSES: Record<KnowledgeStatus, string> = {
 }
 
 const MotionLink = motion.create(Link)
+const KNOWLEDGE_SORT_OPTIONS = [
+  { value: 'title', label: '标题' },
+  { value: 'lastEdited', label: '最后更新' },
+] as const
+type KnowledgeSort = (typeof KNOWLEDGE_SORT_OPTIONS)[number]['value']
 
 export default function KnowledgeList({ entries }: { entries: KnowledgeMetadata[] }) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const shouldReduceMotion = useReducedMotion()
   const selectedType = searchParams.get('type')
+  const [sortBy, setSortBy] = useState<KnowledgeSort>('title')
+  const [sortDirection, setSortDirection] = useState<SortDirection>('asc')
   const showingArchive = searchParams.get('view') === 'archive'
   const activeType = (Object.keys(TYPE_LABELS) as string[]).includes(selectedType ?? '')
     ? selectedType as KnowledgeType
@@ -40,6 +49,20 @@ export default function KnowledgeList({ entries }: { entries: KnowledgeMetadata[
   const archivedEntries = entries.filter((entry) => entry.publication === 'archived')
   const visibleEntries = showingArchive ? archivedEntries : publishedEntries
   const filtered = activeType === 'all' ? visibleEntries : visibleEntries.filter((entry) => entry.type === activeType)
+  const sortedEntries = useMemo(() => [...filtered].sort((left, right) => {
+    if (sortBy === 'title') {
+      const comparison = left.title.localeCompare(right.title, 'zh-CN')
+      return sortDirection === 'asc' ? comparison : -comparison
+    }
+
+    const leftValue = left[sortBy]
+    const rightValue = right[sortBy]
+    if (!leftValue && !rightValue) return left.title.localeCompare(right.title, 'zh-CN')
+    if (!leftValue) return 1
+    if (!rightValue) return -1
+    const comparison = leftValue.localeCompare(rightValue)
+    return sortDirection === 'asc' ? comparison : -comparison
+  }), [filtered, sortBy, sortDirection])
 
   return (
     <div className="grid gap-6 lg:grid-cols-[13rem_minmax(0,1fr)]">
@@ -83,10 +106,20 @@ export default function KnowledgeList({ entries }: { entries: KnowledgeMetadata[
       </aside>
 
       <div className="space-y-4">
-        {filtered.length === 0 ? (
+        <div className="flex justify-end">
+          <SortControls
+            options={KNOWLEDGE_SORT_OPTIONS}
+            value={sortBy}
+            direction={sortDirection}
+            onValueChange={setSortBy}
+            onDirectionChange={setSortDirection}
+            label="知识库排序方式"
+          />
+        </div>
+        {sortedEntries.length === 0 ? (
           <p className="rounded-2xl border border-dashed border-border/60 px-5 py-12 text-center text-fg/45">{showingArchive ? '还没有归档条目。' : '这个分类还没有条目。'}</p>
         ) : (
-          filtered.map((entry, index) => (
+          sortedEntries.map((entry, index) => (
             <MotionLink
               key={entry.slug}
               href={`/knowledge/${entry.slug}`}

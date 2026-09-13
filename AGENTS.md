@@ -90,6 +90,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - 知识库可以使用更高对比度、更高密度的阅读布局，但应与全站保持同一品牌系统。
 - 尊重 `prefers-reduced-motion`，交互不能只靠 hover 表达，移动端必须有可用路径。
 - 不使用 `transform-gpu` 作为 backdrop blur 闪烁或延迟渲染的通用修复；先定位层叠、动画属性和合成边界。
+- 文案长度不同的状态、筛选或排序切换必须预留稳定空间或采用固定对齐；切换不得推动相邻控件、改变容器宽度或造成可见布局跳变。
 - 视觉修改至少检查一个桌面尺寸和一个移动尺寸；重要页面需要与既有基线对照。
 
 ## 内容与资产约束

@@ -124,7 +124,7 @@ assets/images-source/knowledge/example/screenshot.png
 
 ## 版本记录
 
-站点版本与面向访问者的重要变更记录在 [CHANGELOG.md](./CHANGELOG.md)。日常文章更新以条目本身的编辑和验证日期为准，不强制单独发版。
+站点版本与面向访问者的重要变更记录在 [CHANGELOG.md](./CHANGELOG.md)。日常文章更新以条目本身的最后编辑日期和验证状态为准，不强制单独发版。
 
 ## 许可协议
 

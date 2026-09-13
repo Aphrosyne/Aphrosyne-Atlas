@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState, type SyntheticEvent } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, type SyntheticEvent } from 'react'
 import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from 'framer-motion'
 import { usePathname } from 'next/navigation'
 import { publicPath } from '@/lib/public-path'
@@ -65,31 +65,30 @@ export default function Backdrop() {
   const [backgroundTransition, setBackgroundTransition] = useState<BackgroundTransition | null>(null)
   const activePanelRef = useRef(activePanel)
   const transitionIdRef = useRef(0)
-  const visiblePanel = backgroundTransition?.to ?? activePanel
-  const shouldApplyScrollBlur = !shouldReduceMotion && SCROLL_BLUR_PANELS.includes(visiblePanel)
+  // Overlay and blur belong to the route being displayed, not an outgoing
+  // animation. This keeps their theme in sync even during rapid navigation.
+  const shouldApplyScrollBlur = !shouldReduceMotion && SCROLL_BLUR_PANELS.includes(requestedPanel)
 
-  useEffect(() => {
-    if (requestedPanel === activePanelRef.current) return
+  useLayoutEffect(() => {
+    // Invalidate an unfinished animation before starting or cancelling the
+    // next one. Without this, a stale completion callback can restore a panel
+    // that no longer matches the current route.
+    transitionIdRef.current += 1
+
+    if (shouldReduceMotion || requestedPanel === activePanelRef.current) {
+      setBackgroundTransition(null)
+      setActivePanel(requestedPanel)
+      activePanelRef.current = requestedPanel
+      return
+    }
 
     const previousPanel = activePanelRef.current
-    const frame = requestAnimationFrame(() => {
-      if (shouldReduceMotion) {
-        transitionIdRef.current += 1
-        setBackgroundTransition(null)
-        setActivePanel(requestedPanel)
-        activePanelRef.current = requestedPanel
-        return
-      }
-
-      transitionIdRef.current += 1
-      setBackgroundTransition({
-        id: transitionIdRef.current,
-        from: previousPanel,
-        to: requestedPanel,
-        direction: PANEL_ORDER.indexOf(requestedPanel) > PANEL_ORDER.indexOf(previousPanel) ? 1 : -1,
-      })
+    setBackgroundTransition({
+      id: transitionIdRef.current,
+      from: previousPanel,
+      to: requestedPanel,
+      direction: PANEL_ORDER.indexOf(requestedPanel) > PANEL_ORDER.indexOf(previousPanel) ? 1 : -1,
     })
-    return () => cancelAnimationFrame(frame)
   }, [requestedPanel, shouldReduceMotion])
 
   useEffect(() => {
@@ -147,7 +146,7 @@ export default function Backdrop() {
           />
         </>
       ) : <PanelImage panel={activePanel} blur={shouldApplyScrollBlur ? scrollBlur : undefined} />}
-      {!OVERLAY_EXCLUDED_PANELS.includes(visiblePanel) && <div className="absolute inset-0 bg-white/30 dark:bg-black/30" />}
+      {!OVERLAY_EXCLUDED_PANELS.includes(requestedPanel) && <div className="absolute inset-0 bg-white/30 dark:bg-black/30" />}
     </div>
   )
 }

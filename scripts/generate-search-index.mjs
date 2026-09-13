@@ -38,7 +38,7 @@ async function readEntries(directory, kind) {
     const slug = path.basename(relativePath, '.mdx')
     const tags = asStringArray(data.tags)
     const metadata = kind === 'knowledge'
-      ? [data.type, data.status, data.game_version, dateString(data.last_edited), dateString(data.last_verified)].filter(Boolean)
+      ? [data.type, data.status, data.game_version, dateString(data.last_edited)].filter(Boolean)
       : [data.date, data.readingTime].filter(Boolean)
 
     return {
