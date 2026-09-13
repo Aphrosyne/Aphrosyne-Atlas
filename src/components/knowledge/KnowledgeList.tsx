@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { motion, useReducedMotion } from 'framer-motion'
 import type { KnowledgeMetadata, KnowledgeStatus, KnowledgeType } from '@/types/knowledge'
 import ContentToolbar from '@/components/shared/ContentToolbar'
+import { CONTENT_CARD_FOCUS, CONTENT_CARD_PADDING, CONTENT_CARD_SURFACE } from '@/components/shared/content-card'
 import SortControls, { type SortDirection } from '@/components/shared/SortControls'
 
 const TYPE_LABELS: Record<KnowledgeType, string> = {
@@ -128,7 +129,7 @@ export default function KnowledgeList({ entries }: { entries: KnowledgeMetadata[
               initial={shouldReduceMotion ? false : { opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.3, ease: 'easeOut', delay: Math.min(index * 0.04, 0.16) }}
-              className="group block rounded-2xl border border-border/50 bg-surface/50 p-5 backdrop-blur-sm transition-colors hover:bg-surface/75"
+              className={`${CONTENT_CARD_SURFACE} block ${CONTENT_CARD_PADDING} ${CONTENT_CARD_FOCUS}`}
             >
               <div className="flex flex-wrap items-center gap-2 text-xs">
                 <span className="rounded-full bg-accent/15 px-2.5 py-1 text-accent">{TYPE_LABELS[entry.type]}</span>
@@ -136,9 +137,9 @@ export default function KnowledgeList({ entries }: { entries: KnowledgeMetadata[
                 {entry.publication === 'archived' && <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-1 text-amber-800 dark:text-amber-200">归档</span>}
                 {entry.gameVersion && <span className="text-fg/45">{entry.gameVersion}</span>}
               </div>
-              <h2 className="mt-3 text-xl font-semibold text-fg/90 transition-colors group-hover:text-accent">{entry.title}</h2>
-              <p className="mt-2 leading-7 text-fg/60">{entry.excerpt}</p>
-              <div className="mt-4 flex flex-wrap gap-2">
+              <h2 className="mt-3 text-lg font-semibold leading-snug text-fg/90 transition-colors group-hover:text-accent sm:text-xl">{entry.title}</h2>
+              <p className="mt-2 max-w-3xl line-clamp-2 text-sm leading-6 text-fg/60">{entry.excerpt}</p>
+              <div className="mt-4 flex min-h-5 flex-wrap gap-2">
                 {entry.tags.map((tag) => <span key={tag} className="text-xs text-fg/45">#{tag}</span>)}
               </div>
             </MotionLink>

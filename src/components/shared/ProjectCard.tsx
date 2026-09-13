@@ -3,6 +3,7 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import Link from 'next/link'
 import type { Project } from '@/config/projects'
+import { CONTENT_CARD_FOCUS, CONTENT_CARD_PADDING, CONTENT_CARD_SURFACE } from './content-card'
 
 interface ProjectCardProps {
   title: string
@@ -44,11 +45,11 @@ export default function ProjectCard({
       whileHover={shouldReduceMotion ? undefined : { y: -3 }}
       className={featured ? 'sm:col-span-2' : undefined}
     >
-      <article className="group relative flex min-h-0 flex-col overflow-hidden rounded-2xl border border-border/40 bg-surface/50 p-5 backdrop-blur-md transition-[background-color,box-shadow] duration-300 hover:bg-surface/65 hover:shadow-[0_14px_30px_rgba(0,0,0,0.12)] sm:min-h-64 sm:p-6">
+      <article className={`${CONTENT_CARD_SURFACE} flex min-h-0 flex-col sm:min-h-64 ${CONTENT_CARD_PADDING}`}>
         <Link
           href={href}
           aria-label={`查看项目：${title}`}
-          className="absolute inset-0 z-0 rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-inset"
+          className={`absolute inset-0 z-0 rounded-2xl ${CONTENT_CARD_FOCUS}`}
         />
 
         <div className="pointer-events-none relative z-10 flex h-full flex-col">
@@ -57,11 +58,11 @@ export default function ProjectCard({
             <span className="rounded-full bg-fg/5 px-2.5 py-1 text-fg/60">{language}</span>
           </div>
 
-          <h2 className={`mt-4 font-semibold text-fg/85 transition-colors group-hover:text-accent ${featured ? 'text-xl sm:text-2xl' : 'text-lg'}`}>{title}</h2>
-          <p className="mt-2 max-w-3xl line-clamp-3 text-sm leading-relaxed text-fg/55">{description}</p>
+          <h2 className={`mt-4 font-semibold leading-snug text-fg/85 transition-colors group-hover:text-accent ${featured ? 'text-xl sm:text-2xl' : 'text-lg sm:text-xl'}`}>{title}</h2>
+          <p className="mt-2 max-w-3xl line-clamp-3 text-sm leading-6 text-fg/55">{description}</p>
 
           <div className="mt-auto flex items-end justify-between gap-4 pt-5">
-            <div className="flex flex-wrap gap-2">
+            <div className="flex min-h-5 flex-wrap gap-2">
               {tags.map((tag) => (
                 <span key={tag} className="rounded-full bg-fg/5 px-2 py-0.5 text-xs text-fg/65">
                   {tag}

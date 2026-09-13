@@ -3,6 +3,7 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import Link from 'next/link'
 import type { PublicationState } from '@/types/publication'
+import { CONTENT_CARD_FOCUS, CONTENT_CARD_PADDING, CONTENT_CARD_SURFACE } from '@/components/shared/content-card'
 
 interface BlogCardProps {
   slug: string
@@ -24,14 +25,14 @@ export default function BlogCard({ slug, title, date, excerpt, tags, publication
       whileHover={shouldReduceMotion ? undefined : { y: -3 }}
       transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
     >
-      <article className="group relative overflow-hidden rounded-2xl border border-border/40 bg-surface/50 backdrop-blur-md transition-[background-color,box-shadow] duration-300 hover:bg-surface/65 hover:shadow-[0_14px_30px_rgba(0,0,0,0.12)]">
+      <article className={CONTENT_CARD_SURFACE}>
         <Link
           href={`/blog/${slug}`}
           prefetch
           aria-label={`阅读文章：${title}`}
-          className="absolute inset-0 z-0 rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+          className={`absolute inset-0 z-0 rounded-2xl ${CONTENT_CARD_FOCUS}`}
         />
-        <div className="grid gap-4 p-5 sm:grid-cols-[7.5rem_minmax(0,1fr)] sm:gap-6 sm:p-6">
+        <div className={`grid gap-4 sm:grid-cols-[7.5rem_minmax(0,1fr)] sm:gap-6 ${CONTENT_CARD_PADDING}`}>
           <div className="relative z-10 flex items-start gap-2 text-xs text-fg/60 pointer-events-none sm:flex-col sm:gap-1 sm:border-r sm:border-border/30 sm:pr-6">
             <time className="font-medium tabular-nums text-fg/75">{date}</time>
             <span className="hidden text-[0.65rem] tracking-[0.18em] text-fg/35 uppercase sm:block">Article</span>
@@ -40,12 +41,12 @@ export default function BlogCard({ slug, title, date, excerpt, tags, publication
           <div className="min-w-0">
             <h3 className="text-lg font-semibold leading-snug text-fg/90 transition-colors group-hover:text-accent sm:text-xl">{title}</h3>
             <p className="mt-2 max-w-3xl text-sm leading-6 text-fg/60 line-clamp-2">{excerpt}</p>
-            <div className="relative z-10 mt-4 flex flex-wrap gap-2">
+            <div className="relative z-10 mt-4 flex min-h-5 flex-wrap gap-2">
               {tags.map((tag) => (
                 <button
                   key={tag}
                   onClick={() => onTagClick?.(tag)}
-                  className="cursor-pointer rounded-full bg-fg/5 px-2 py-0.5 text-xs text-fg/70 transition-colors hover:bg-surface/70 hover:text-accent"
+                  className="cursor-pointer rounded-full bg-fg/5 px-2 py-0.5 text-xs text-fg/70 transition-colors hover:bg-surface/70 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                 >
                   {tag}
                 </button>
