@@ -354,7 +354,7 @@ function MemCard() {
 
   return (
     <img
-      src={publicPath(`/images/mems/${idx}.jpg`)}
+      src={publicPath(`/images/mems/${idx}.webp`)}
       alt="meme"
       onClick={bounce}
       className="max-h-28 rounded-2xl cursor-pointer select-none"
