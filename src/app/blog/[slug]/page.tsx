@@ -29,7 +29,7 @@ export default async function BlogPostPage({ params }: Props) {
       <main className="relative mx-auto max-w-5xl px-4 py-12">
         <div className="rounded-[2rem] border border-border/40 bg-surface/50 p-5 shadow-[0_25px_80px_rgba(0,0,0,0.32)] backdrop-blur-md sm:p-8">
             {/* Back link */}
-            <Link href="/blog" className="inline-flex items-center gap-1 rounded-xl bg-surface/40 backdrop-blur-sm border border-border/10 px-4 py-2.5 text-base font-semibold text-fg/60 hover:bg-surface/60 hover:text-fg transition-colors mb-8">
+            <Link href="/blog" className="mb-8 inline-flex min-h-11 items-center gap-1 rounded-xl border border-border/10 bg-surface/40 px-4 py-2.5 text-base font-semibold text-fg/60 backdrop-blur-sm transition-colors hover:bg-surface/60 hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
               ← 返回博客
             </Link>
 
@@ -46,13 +46,13 @@ export default async function BlogPostPage({ params }: Props) {
                 {/* Prev / Next */}
                 <nav className="mt-12 flex gap-4">
                   {prev ? (
-                    <Link href={`/blog/${prev.slug}`} className="group flex-1 rounded-xl bg-surface/40 backdrop-blur-sm border border-border/10 p-4 hover:bg-surface/60 transition-colors">
+                    <Link href={`/blog/${prev.slug}`} className="group flex-1 rounded-xl border border-border/10 bg-surface/40 p-4 backdrop-blur-sm transition-colors hover:bg-surface/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
                       <span className="text-base font-semibold text-fg/40 group-hover:text-fg transition-colors">上一篇</span>
                       <p className="mt-1 text-lg text-fg/70 group-hover:text-fg transition-colors truncate">{prev.title}</p>
                     </Link>
                   ) : <div className="flex-1" />}
                   {next ? (
-                    <Link href={`/blog/${next.slug}`} className="group flex-1 rounded-xl bg-surface/40 backdrop-blur-sm border border-border/10 p-4 hover:bg-surface/60 transition-colors text-right">
+                    <Link href={`/blog/${next.slug}`} className="group flex-1 rounded-xl border border-border/10 bg-surface/40 p-4 text-right backdrop-blur-sm transition-colors hover:bg-surface/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
                       <span className="text-base font-semibold text-fg/40 group-hover:text-fg transition-colors">下一篇</span>
                       <p className="mt-1 text-lg text-fg/70 group-hover:text-fg transition-colors truncate">{next.title}</p>
                     </Link>

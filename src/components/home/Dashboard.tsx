@@ -72,7 +72,7 @@ const GLASS =
   'border-t border-t-white/20 border-b border-b-white/5 ' +
   'shadow-[0_15px_35px_rgba(0,0,0,0.12)] ' +
   'hover:shadow-[0_18px_40px_rgba(75,169,178,0.1)] ' +
-  'transition-shadow duration-500'
+  'transition-shadow duration-300'
 
 function Card({ children, className = '', direction = 'bottom', layout, liftOnHover = true, withBackdropBlur = true }: {
   children: React.ReactNode
@@ -103,7 +103,7 @@ function ProjectSubCard({ project }: { project: DashboardProps['projects'][numbe
   return (
     <motion.div
       whileHover={{ y: -2, scale: 1.02 }}
-      className="rounded-2xl overflow-hidden bg-white/2 backdrop-blur-md border-t border-t-white/15 border-b border-b-white/5 p-3 shadow-[0_10px_25px_rgba(0,0,0,0.1)] hover:shadow-[0_14px_30px_rgba(75,169,178,0.08)] transition-shadow duration-500 group cursor-pointer"
+      className="rounded-2xl overflow-hidden bg-white/2 backdrop-blur-md border-t border-t-white/15 border-b border-b-white/5 p-3 shadow-[0_10px_25px_rgba(0,0,0,0.1)] hover:shadow-[0_14px_30px_rgba(75,169,178,0.08)] transition-shadow duration-300 group cursor-pointer"
     >
       <div className="text-sm font-medium text-white/80 group-hover:text-accent transition-colors truncate">{project.title}</div>
       <div className="text-[11px] text-white/50 leading-snug mt-1 line-clamp-2">{project.description}</div>
@@ -161,7 +161,7 @@ export default function Dashboard({ siteName, recentPosts, knowledgeEntries, pro
             </div>
             <div className="flex gap-3 mt-2">
               {SOCIAL_LINKS.map((link) => (
-                <a key={link.platform} href={link.href} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-lg bg-surface/50 border border-border/20 flex items-center justify-center text-fg/40 hover:text-fg hover:border-border/70 transition-all" title={link.label}>
+                <a key={link.platform} href={link.href} target="_blank" rel="noopener noreferrer" className="flex size-11 items-center justify-center rounded-xl border border-border/20 bg-surface/50 text-fg/40 transition-colors duration-300 hover:border-border/70 hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent" title={link.label}>
                   <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">{socialIcons[link.platform]}</svg>
                 </a>
               ))}
@@ -173,14 +173,14 @@ export default function Dashboard({ siteName, recentPosts, knowledgeEntries, pro
         <Card layout={DASHBOARD_LAYOUT.knowledge} direction={DIR.knowledge} withBackdropBlur={false}>
           <div className="mb-3 flex items-center justify-between">
             <div className="text-[10px] tracking-widest text-white/40 uppercase">Knowledge</div>
-            <Link href="/knowledge" className="text-xs text-accent transition-colors hover:text-avatar-ring">查看全部 →</Link>
+            <Link href="/knowledge" className="rounded-lg text-xs text-accent transition-colors hover:text-avatar-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">查看全部 →</Link>
           </div>
           {knowledgeEntries.length === 0 ? (
             <p className="text-sm text-white/50">知识库正在整理中。</p>
           ) : (
             <div className="max-h-52 space-y-0.5 overflow-y-auto pr-1">
               {knowledgeEntries.map((entry) => (
-                <Link key={entry.slug} href={`/knowledge/${entry.slug}`} className="flex items-center gap-3 rounded-lg px-1.5 py-2 text-sm transition-colors hover:bg-surface/40">
+                <Link key={entry.slug} href={`/knowledge/${entry.slug}`} className="flex min-h-11 items-center gap-3 rounded-lg px-1.5 py-2 text-sm transition-colors hover:bg-surface/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
                   <span className="text-base">📚</span>
                   <span className="min-w-0 flex-1 truncate text-white/80">{entry.title}</span>
                   <span className="shrink-0 text-[11px] text-white/40">{entry.lastEdited ?? '未更新'}</span>
@@ -194,10 +194,10 @@ export default function Dashboard({ siteName, recentPosts, knowledgeEntries, pro
         <Card layout={DASHBOARD_LAYOUT.posts} direction={DIR.posts}>
           <div className="mb-3 flex items-center justify-between">
             <div className="text-[10px] tracking-widest text-white/40 uppercase">Blog</div>
-            <Link href="/blog" className="text-xs text-accent transition-colors hover:text-avatar-ring">查看全部 →</Link>
+            <Link href="/blog" className="rounded-lg text-xs text-accent transition-colors hover:text-avatar-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">查看全部 →</Link>
           </div>
           {recentPosts.map((p) => (
-            <Link key={p.slug} href={`/blog/${p.slug}`} className="flex items-center gap-3 py-2 px-1.5 rounded-lg -mx-1.5 transition-colors hover:bg-surface/40 group">
+            <Link key={p.slug} href={`/blog/${p.slug}`} className="group -mx-1.5 flex min-h-11 items-center gap-3 rounded-lg px-1.5 py-2 transition-colors hover:bg-surface/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
               <div className="w-10 h-10 rounded-lg bg-accent/6 flex items-center justify-center shrink-0 text-sm group-hover:bg-accent/10 transition-colors">📄</div>
               <div className="min-w-0">
                 <div className="text-sm font-medium text-white/80 truncate group-hover:text-accent transition-colors">{p.title}</div>
@@ -211,11 +211,11 @@ export default function Dashboard({ siteName, recentPosts, knowledgeEntries, pro
         <Card layout={DASHBOARD_LAYOUT.projects} direction={DIR.projects}>
           <div className="mb-3 flex items-center justify-between">
             <div className="text-[10px] tracking-widest text-white/40 uppercase">Projects</div>
-            <Link href="/projects" className="text-xs text-accent transition-colors hover:text-avatar-ring">查看全部 →</Link>
+            <Link href="/projects" className="rounded-lg text-xs text-accent transition-colors hover:text-avatar-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">查看全部 →</Link>
           </div>
           <div className="grid grid-cols-2 gap-3">
             {projects.slice(0, 4).map((p) => (
-              <Link key={p.slug} href={`/projects/${p.slug}`}><ProjectSubCard project={p} /></Link>
+              <Link key={p.slug} href={`/projects/${p.slug}`} className="block rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"><ProjectSubCard project={p} /></Link>
             ))}
           </div>
         </Card>
@@ -339,9 +339,9 @@ function StatusCard() {
   return (
     <>
       <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Status</div>
-      <p className="text-center text-sm text-white/70 cursor-pointer select-none" onClick={bounce} style={bounceStyle}>
+      <button type="button" className="mx-auto flex min-h-11 items-center text-center text-sm text-white/70 cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent" onClick={bounce} style={bounceStyle}>
         {status.emoji ? `${status.emoji} ${status.status}` : status.status}
-      </p>
+      </button>
     </>
   )
 }
@@ -353,12 +353,12 @@ function MemCard() {
   const { bounce, bounceStyle } = useBounce()
 
   return (
-    <img
-      src={publicPath(`/images/mems/${idx}.webp`)}
-      alt="meme"
-      onClick={bounce}
-      className="max-h-28 rounded-2xl cursor-pointer select-none"
-      style={bounceStyle}
-    />
+    <button type="button" onClick={bounce} className="rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent" style={bounceStyle} aria-label="播放 Meme 弹跳动画">
+      <img
+        src={publicPath(`/images/mems/${idx}.webp`)}
+        alt="meme"
+        className="max-h-28 rounded-2xl cursor-pointer select-none"
+      />
+    </button>
   )
 }

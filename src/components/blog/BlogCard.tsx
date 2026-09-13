@@ -12,18 +12,19 @@ interface BlogCardProps {
   excerpt: string
   tags: string[]
   publication: PublicationState
+  index: number
   onTagClick?: (tag: string) => void
 }
 
-export default function BlogCard({ slug, title, date, excerpt, tags, publication, onTagClick }: BlogCardProps) {
+export default function BlogCard({ slug, title, date, excerpt, tags, publication, index, onTagClick }: BlogCardProps) {
   const shouldReduceMotion = useReducedMotion()
 
   return (
     <motion.div
-      initial={shouldReduceMotion ? false : { y: 12 }}
-      animate={{ y: 0 }}
+      initial={shouldReduceMotion ? false : { x: 20 }}
+      animate={{ x: 0 }}
       whileHover={shouldReduceMotion ? undefined : { y: -3 }}
-      transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+      transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.3, ease: 'easeOut', delay: Math.min(index * 0.04, 0.16) }}
     >
       <article className={CONTENT_CARD_SURFACE}>
         <Link

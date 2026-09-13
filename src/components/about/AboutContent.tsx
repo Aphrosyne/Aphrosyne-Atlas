@@ -85,7 +85,7 @@ export default function AboutContent() {
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-9 h-9 rounded-lg bg-surface/50 border border-border/30 flex items-center justify-center text-fg/40 hover:text-fg hover:border-fg/30 transition-all"
+              className="flex size-11 items-center justify-center rounded-xl border border-border/30 bg-surface/50 text-fg/40 transition-colors duration-300 hover:border-fg/30 hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
               title={link.label}
             >
               <svg viewBox="0 0 24 24" fill="currentColor" className="w-4.5 h-4.5">

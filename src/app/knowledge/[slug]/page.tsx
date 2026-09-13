@@ -45,17 +45,17 @@ export default async function KnowledgeArticlePage({ params }: Props) {
   return (
     <main className="mx-auto max-w-7xl px-4 py-12">
         <div className="rounded-[2rem] border border-border/40 bg-surface/50 p-5 shadow-[0_25px_80px_rgba(0,0,0,0.32)] backdrop-blur-md sm:p-8">
-          <Link href="/knowledge" className="inline-flex rounded-xl border border-border/20 bg-surface/40 px-4 py-2.5 text-base font-semibold text-fg/65 transition-colors hover:bg-surface/60 hover:text-fg">
+          <Link href="/knowledge" className="inline-flex min-h-11 items-center rounded-xl border border-border/20 bg-surface/40 px-4 py-2.5 text-base font-semibold text-fg/65 transition-colors hover:bg-surface/60 hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
             ← 返回知识库
           </Link>
           <div className="mt-8 grid gap-8 lg:grid-cols-[12rem_minmax(0,1fr)_12rem]">
             <aside className="order-2 lg:order-1">
               <details className="rounded-xl border border-border/50 bg-surface/35 p-4 lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:overflow-hidden" open>
-                <summary className="cursor-pointer text-xs font-medium tracking-widest text-fg/45 uppercase">知识库导航</summary>
+                <summary className="cursor-pointer rounded-lg text-xs font-medium tracking-widest text-fg/45 uppercase focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">知识库导航</summary>
                 <ul className="mt-3 space-y-1 text-sm lg:max-h-[calc(100vh-11rem)] lg:overflow-y-auto lg:overscroll-contain lg:pr-1">
                   {categories.map((item) => (
                     <li key={item.slug}>
-                      <Link href={`/knowledge/${item.slug}`} title={item.title} className={`block truncate rounded-lg px-2 py-1.5 transition-colors ${item.slug === slug ? 'bg-accent/15 text-accent' : 'text-fg/60 hover:bg-surface hover:text-fg'}`}>
+                      <Link href={`/knowledge/${item.slug}`} title={item.title} className={`flex min-h-11 items-center truncate rounded-lg px-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${item.slug === slug ? 'bg-accent/15 text-accent' : 'text-fg/60 hover:bg-surface hover:text-fg'}`}>
                         {item.title}
                       </Link>
                     </li>
@@ -81,7 +81,7 @@ export default async function KnowledgeArticlePage({ params }: Props) {
               </header>
               <Article />
               {(entry.related.length > 0 || entry.sources.length > 0) && (
-                <footer className="not-prose mt-12 space-y-5 rounded-2xl border border-border/50 bg-surface/35 p-5">
+                <footer className="not-prose mt-12 space-y-5 rounded-2xl border border-border/40 bg-surface/50 p-5 backdrop-blur-md sm:p-6">
                   {entry.related.length > 0 && <p className="text-sm text-fg/60">相关文档：{entry.related.join('、')}</p>}
                   {entry.sources.length > 0 && <div><p className="text-sm text-fg/60">来源</p><ul className="mt-2 space-y-1">{entry.sources.map((source) => <li key={source.href}><a className="text-sm text-accent hover:underline" href={source.href} target="_blank" rel="noreferrer">{source.label}</a></li>)}</ul></div>}
                 </footer>

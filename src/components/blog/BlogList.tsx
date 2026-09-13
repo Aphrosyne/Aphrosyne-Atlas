@@ -125,8 +125,8 @@ export default function BlogList({ posts }: { posts: PostMetadata[] }) {
         <p className="py-12 text-center text-fg/40">{showingArchive ? '没有符合条件的归档文章。' : '没有符合条件的文章。'}</p>
       ) : (
         <div className="space-y-4">
-          {sortedPosts.map((post) => (
-            <BlogCard key={post.slug} {...post} onTagClick={setActiveTag} />
+          {sortedPosts.map((post, index) => (
+            <BlogCard key={post.slug} {...post} index={index} onTagClick={setActiveTag} />
           ))}
         </div>
       )}
