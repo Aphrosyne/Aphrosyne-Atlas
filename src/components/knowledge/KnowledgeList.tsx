@@ -5,6 +5,7 @@ import { useMemo, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { motion, useReducedMotion } from 'framer-motion'
 import type { KnowledgeMetadata, KnowledgeStatus, KnowledgeType } from '@/types/knowledge'
+import ContentToolbar from '@/components/shared/ContentToolbar'
 import SortControls, { type SortDirection } from '@/components/shared/SortControls'
 
 const TYPE_LABELS: Record<KnowledgeType, string> = {
@@ -106,7 +107,7 @@ export default function KnowledgeList({ entries }: { entries: KnowledgeMetadata[
       </aside>
 
       <div className="space-y-4">
-        <div className="flex justify-end">
+        <ContentToolbar className="sm:justify-end">
           <SortControls
             options={KNOWLEDGE_SORT_OPTIONS}
             value={sortBy}
@@ -114,8 +115,9 @@ export default function KnowledgeList({ entries }: { entries: KnowledgeMetadata[
             onValueChange={setSortBy}
             onDirectionChange={setSortDirection}
             label="知识库排序方式"
+            className="self-start sm:self-auto"
           />
-        </div>
+        </ContentToolbar>
         {sortedEntries.length === 0 ? (
           <p className="rounded-2xl border border-dashed border-border/60 px-5 py-12 text-center text-fg/45">{showingArchive ? '还没有归档条目。' : '这个分类还没有条目。'}</p>
         ) : (

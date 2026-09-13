@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import { useRouter, useSearchParams } from 'next/navigation'
 import type { PostMetadata } from '@/types/post'
+import ContentToolbar from '@/components/shared/ContentToolbar'
 import SortControls, { type SortDirection } from '@/components/shared/SortControls'
 import BlogCard from './BlogCard'
 
@@ -48,7 +49,7 @@ export default function BlogList({ posts }: { posts: PostMetadata[] }) {
   return (
     <div>
       {archivedCount > 0 && (
-        <div className="mb-5 inline-flex rounded-full border border-border/30 bg-surface/50 p-1 backdrop-blur-sm" aria-label="文章发布状态">
+        <div className="mb-5 inline-flex h-13 rounded-2xl border border-border/30 bg-surface/50 p-1 backdrop-blur-sm" aria-label="文章发布状态">
           <button
             type="button"
             onClick={() => { setActiveTag(null); router.replace('/blog', { scroll: false }) }}
@@ -67,15 +68,16 @@ export default function BlogList({ posts }: { posts: PostMetadata[] }) {
       )}
       {/* Search & filter */}
       <div className="mb-8 space-y-4">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <ContentToolbar className="sm:justify-between">
           <motion.input
             type="text"
+            aria-label={showingArchive ? '搜索归档文章' : '搜索文章'}
             placeholder={showingArchive ? '搜索归档文章…' : '搜索文章…'}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             {...fade}
             transition={fadeT()}
-            className="min-h-11 w-full rounded-full border border-border/20 bg-surface/50 px-4 py-2 text-sm text-fg/70 placeholder:text-fg/40 backdrop-blur-sm focus:outline-none focus:ring-1 focus:ring-accent sm:max-w-xs"
+            className="h-13 w-full rounded-2xl border border-border/30 bg-surface/50 px-4 text-sm text-fg/70 placeholder:text-fg/40 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-accent sm:max-w-xs"
           />
           <SortControls
             options={BLOG_SORT_OPTIONS}
@@ -84,14 +86,15 @@ export default function BlogList({ posts }: { posts: PostMetadata[] }) {
             onValueChange={setSortBy}
             onDirectionChange={setSortDirection}
             label="文章排序方式"
+            className="self-start sm:self-auto"
           />
-        </div>
+        </ContentToolbar>
         <div className="flex flex-wrap gap-2">
           <motion.button
             onClick={() => setActiveTag(null)}
             {...fade}
             transition={fadeT()}
-            className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+            className={`inline-flex min-h-11 items-center rounded-full px-3 text-xs font-medium transition-colors sm:min-h-8 ${
               !activeTag
                 ? 'bg-accent text-white'
                 : 'bg-surface/50 backdrop-blur-sm text-fg/70 hover:bg-surface/70 hover:text-accent'
@@ -105,7 +108,7 @@ export default function BlogList({ posts }: { posts: PostMetadata[] }) {
               onClick={() => setActiveTag(tag)}
               {...fade}
               transition={fadeT()}
-              className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+              className={`inline-flex min-h-11 items-center rounded-full px-3 text-xs font-medium transition-colors sm:min-h-8 ${
                 activeTag === tag
                   ? 'bg-accent text-white'
                   : 'bg-surface/50 backdrop-blur-sm text-fg/70 hover:bg-surface/70 hover:text-accent'
