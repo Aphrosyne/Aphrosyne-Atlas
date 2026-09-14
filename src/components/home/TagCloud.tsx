@@ -8,7 +8,10 @@ interface TagCloudProps {
 
 export default function TagCloud({ tags }: TagCloudProps) {
   const [ready, setReady] = useState(false)
-  useEffect(() => { setReady(true) }, [])
+  useEffect(() => {
+    const reveal = window.setTimeout(() => setReady(true), 0)
+    return () => window.clearTimeout(reveal)
+  }, [])
 
   const r = 120
 

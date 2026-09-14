@@ -153,6 +153,8 @@ export default function Dashboard({ siteName, recentPosts, knowledgeEntries, pro
                 className="absolute -inset-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-spin"
                 style={{ clipPath: 'url(#bio-avatar-clip)', background: 'var(--color-avatar-ring)', animationDuration: '4s' }}
               />
+              {/* Static export avatar: publicPath and SVG clip-path require a native image element. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={publicPath(SITE.assets.avatar)} alt="Avatar" className="relative w-16 h-16 object-cover" style={{ clipPath: 'url(#bio-avatar-clip)' }} />
             </div>
             <div>
@@ -354,6 +356,8 @@ function MemCard() {
 
   return (
     <button type="button" onClick={bounce} className="rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent" style={bounceStyle} aria-label="播放 Meme 弹跳动画">
+      {/* Static export meme: publicPath selects a local asset without a runtime image optimizer. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={publicPath(`/images/mems/${idx}.webp`)}
         alt="meme"

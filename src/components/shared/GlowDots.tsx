@@ -30,9 +30,16 @@ export default function GlowDots() {
         alpha: 0.40 + Math.random() * 0.15,
       })
     }
-    setDots(items)
-    // fade in with cards, 1s ease-out
-    setTimeout(() => setVisible(true), 50)
+    const reveal = window.setTimeout(() => {
+      setDots(items)
+    }, 0)
+    // Fade in with the cards after the initial client-only render.
+    const fadeIn = window.setTimeout(() => setVisible(true), 50)
+
+    return () => {
+      window.clearTimeout(reveal)
+      window.clearTimeout(fadeIn)
+    }
   }, [])
 
   if (!dots) return null

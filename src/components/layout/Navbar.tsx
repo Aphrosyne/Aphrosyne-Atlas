@@ -153,6 +153,8 @@ export default function Navbar() {
               animationDuration: '4s',
             }}
           />
+          {/* Static export avatar: publicPath and SVG clip-path require a native image element. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={publicPath(SITE.assets.avatar)}
             alt="Avatar"

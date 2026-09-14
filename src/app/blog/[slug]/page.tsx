@@ -18,16 +18,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params
+  const meta = await getPostBySlug(slug)
+  if (!meta) notFound()
+  const { default: Post } = await import(`@/content/blog/${slug}.mdx`)
+  const { prev, next } = await getAdjacentPosts(slug)
 
-  try {
-    const meta = await getPostBySlug(slug)
-    if (!meta) notFound()
-    const { default: Post } = await import(`@/content/blog/${slug}.mdx`)
-    const { prev, next } = await getAdjacentPosts(slug)
-
-    return (
-      <main className="relative mx-auto max-w-5xl px-4 py-12">
-        <div className="rounded-[2rem] border border-border/40 bg-surface/50 p-5 shadow-[0_25px_80px_rgba(0,0,0,0.32)] backdrop-blur-md sm:p-8">
+  return (
+    <main className="relative mx-auto max-w-5xl px-4 py-12">
+      <div className="rounded-[2rem] border border-border/40 bg-surface/50 p-5 shadow-[0_25px_80px_rgba(0,0,0,0.32)] backdrop-blur-md sm:p-8">
             {/* Back link */}
             <Link href="/blog" className="mb-8 inline-flex min-h-11 items-center gap-1 rounded-xl border border-border/10 bg-surface/40 px-4 py-2.5 text-base font-semibold text-fg/60 backdrop-blur-sm transition-colors hover:bg-surface/60 hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
               ← 返回博客
@@ -66,12 +64,9 @@ export default async function BlogPostPage({ params }: Props) {
               </aside>
             </div>
 
-        </div>
-      </main>
-    )
-  } catch {
-    notFound()
-  }
+      </div>
+    </main>
+  )
 }
 
 export async function generateStaticParams() {

@@ -20,9 +20,13 @@ export default function ClockCard() {
   const { bounce, bounceStyle } = useBounce()
 
   useEffect(() => {
-    setNow(new Date())
-    const id = setInterval(() => setNow(new Date()), 1000)
-    return () => clearInterval(id)
+    const update = () => setNow(new Date())
+    const initialUpdate = window.setTimeout(update, 0)
+    const interval = window.setInterval(update, 1000)
+    return () => {
+      window.clearTimeout(initialUpdate)
+      window.clearInterval(interval)
+    }
   }, [])
 
   if (!now) {

@@ -14,8 +14,8 @@
 
 | 项目 | 当前事实 | 对路线图的影响 |
 | --- | --- | --- |
-| Git | `master` 的 `HEAD` 为 `ab764a7`；三份审计均在该提交中，审计后没有代码提交；整理前工作树干净 | 三份报告与当前代码处于同一基线，仍需按关键调用链抽查，不需要第四次全仓审计 |
-| 框架 | Next.js 16.2.6、React 19.2.4、静态 `output: 'export'`、`trailingSlash: true` | 安全目标版本必须在 R0 开始时依据当时官方公告确认，不能沿用报告中的临时建议值 |
+| Git | 2026-09-14 规划 R0 时，`master` 的 `HEAD` 为 `8fab25b`，比 `origin/master` 领先 2 个提交；`ab764a7` 后的提交只整理路线图与项目 skill，未修改应用代码；本轮开始前工作树干净 | 三份报告与当前应用代码仍处于同一基线，按关键调用链抽查即可，不需要第四次全仓审计；本轮不提交或推送 |
+| 框架 | Next.js 16.3.5、React 19.2.4、静态 `output: 'export'`、`trailingSlash: true` | R0 已依据 2026-09-14 的官方公告与稳定版本完成安全升级；后续升级仍需重新核对当时信息 |
 | 发布 | GitHub Pages 仓库子路径构建和核心静态路由曾在同一代码基线通过；`npm start` 与静态导出不兼容 | 保留静态优先与 `out/` 独立可用能力；建立可重复的静态预览入口 |
 | 质量 | 报告记录 `npm run lint` 为 24 errors、4 warnings，TypeScript 与 build 通过；部署工作流只 build | 先恢复可信门禁，不能靠关规则或只看 build 掩盖问题 |
 | 移动阅读 | Blog、Knowledge 与 About 在 390px 出现 590–970px 等级的全文宽度；菜单在正常流中把正文下推约 506px | 页面几何与核心交互属于发布前 P1，先于视觉精修 |
@@ -23,7 +23,7 @@
 | 内容链路 | `posts.ts` 已使用 `gray-matter`，旧 `new Function` 已不存在；但应用、registry、search 仍分别解析和默认化 frontmatter | 不再安排“移除 `new Function`”；改为统一 schema、fail-closed 发布状态与构建索引 |
 | 主题与动效 | 基础颜色变量和背景切换已有可保留实现；状态色、阅读表面、focus、层级、motion policy 仍分散 | 先建立语义 token，再迁移局部颜色；页面结构稳定后才建设完整路由动效 |
 
-上述运行结果来自与当前 `HEAD` 相同的三份报告；本次规划不重复运行完整浏览器审计或应用构建。
+上述初始运行结果来自 `ab764a7` 的三份报告；后续提交未改变应用代码。R0 实施已重新运行依赖安装、安全审计、lint、TypeScript、两种 basePath 的生产构建与真实静态产物浏览器验收，结果记录在对应批次中。
 
 ## 使用与勾选规则
 
@@ -103,7 +103,7 @@ R0–R2 建立发布基线；R3–R8 解决发布前核心可用性；R9–R13 �
 
 ## 批次 R0：安全依赖与升级闭环
 
-- **状态 / 优先级：**[ ] / P1。
+- **状态 / 优先级：**[x] / P1。
 - **目标：**将 Next.js 及配套包升级到实施当日确认不受相关官方公告影响的受支持版本，同时保持静态导出、MDX 和 Pages 子路径行为。
 - **来源：**CQ-001。
 - **范围：**`package.json`、lockfile、Next/React/ESLint 配套版本、`next.config.ts`；第一步重新核对官方安全公告、目标版本发布说明和安装后本地文档。
@@ -113,9 +113,66 @@ R0–R2 建立发布基线；R3–R8 解决发布前核心可用性；R9–R13 �
 - **验收 / 退出条件：**重新执行 production audit；`npm ci`、TypeScript、当前 lint 差异检查、空 basePath 与仓库 basePath build、`out/` 核心路由/404/搜索/主题/资源检查均无升级回归。报告安全目标和残余公告，不猜测“零风险”。
 - **建议提交边界：**1 个依赖提交；若兼容改动不可避免，再加 1 个仅处理升级兼容性的提交。
 
+### R0 实施计划（2026-09-14）
+
+#### 已确认基线与目标版本
+
+- 当前直接版本为 `next@16.2.6`、`@next/mdx@^16.2.6`、`eslint-config-next@16.2.6`、`react@19.2.4`、`react-dom@19.2.4`；本地 Node 24.20.0 与 Pages 工作流 Node 22 均满足候选版本要求的 Node `>=20.9.0`。
+- 2026-09-14 重新执行 `npm audit --omit=dev --json`，仍得到 1 critical、3 high、1 moderate；直接依赖 `next@16.2.6` 命中截至 16.3.2 的公告，并带入受影响的 PostCSS、Sharp、Nano ID 与 Baseline Browser Mapping 路径。
+- [Next.js 官方 2026-08 安全发布](https://nextjs.org/blog/august-2026-security-release)要求 16.x 至少升级到 `16.3.3`；2026-09-14 的 npm `latest` 与[最新稳定 GitHub Release](https://github.com/vercel/next.js/releases/tag/v16.3.5)均为 `16.3.5`。因此本规划的首选目标是 `16.3.5`，不采用 `16.4.0-canary`。
+- `next@16.3.5` 仍兼容 React 19，`eslint-config-next@16.3.5` 仍兼容 ESLint 9；R0 默认保留 React/React DOM 19.2.4、ESLint 9、TypeScript 5 与现有 React Compiler 插件，只在安装后的 peer、安全或构建证据要求时做最小配套调整。
+- 实施开始时必须再次检查官方安全发布、稳定 dist-tag 和目标 release notes。若 `latest` 已变，优先选择当时 Active LTS 的最新稳定补丁；若已进入新的 minor，不自动跨 minor，先比较修复覆盖和迁移风险后更新本节目标。
+
+#### 文件与改动边界
+
+- 必改：`package.json`、`package-lock.json`。将 `next`、`@next/mdx`、`eslint-config-next` 对齐到同一稳定版本，锁文件仅由 npm 解析生成，不手工挑改传递依赖。
+- 条件改动：`next.config.ts`。先用 16.3.5 原配置验证；只有新版本文档、类型错误或静态构建证明确有兼容问题时才调整，并保持 `output: 'export'`、`trailingSlash`、构建期 `basePath`、`images.unoptimized`、MDX 插件和 React Compiler 现有语义。
+- 只读核对：三类动态详情路由的 `generateStaticParams()` 与 `dynamicParams = false`、`src/lib/public-path.ts`、搜索索引生成脚本、Knowledge registry 生成脚本、`.github/workflows/deploy-pages.yml`。
+- 明确不改：页面组件、文章正文、审计文档、R1 的 lint 根因与 CI 门禁、R2 的长期静态预览脚本；不启用 Cache Components、Partial Prefetching、Rust React Compiler 或其他 16.3 实验能力。
+
+#### 实施顺序
+
+1. **冻结升级前证据。**确认工作树归属，记录 `node --version`、`npm --version`、`npm ls`、production audit、TypeScript 与 lint 摘要。当前已知基线是 TypeScript 通过、lint 为 24 errors / 4 warnings；这些旧 lint 项留给 R1，R0 只阻止新增或规则漂移。
+2. **再次确定安全目标。**只依据 Next.js/Vercel 官方安全公告、Vercel GitHub Release 与 npm 包元数据核对受影响区间、最新稳定版本、Node engine 和 peer dependencies，并在实施记录中写明查询日期。
+3. **最小升级并重建锁文件。**同一次依赖操作对齐三个 Next 配套包；不执行 `npm audit fix --force`，不主动刷新无关顶层依赖。随后用 `npm ci` 从锁文件重装，确保 lockfile 可复现，并检查是否意外出现多版本 Next 配套包或 peer warning。
+4. **以安装后文档复核配置。**完整阅读新安装版本中与本项目直接相关的 static export、`basePath`、MDX、`generateStaticParams` 文档和升级说明；先验证现有配置，兼容改动必须有具体文档、类型或构建证据。
+5. **执行自动验证矩阵。**运行 TypeScript、lint 差异检查和两次 production build：一次空 `basePath`，一次模拟 `GITHUB_ACTIONS=true` 与仓库名的 Pages 子路径。两次都核对 `out/` 文件结构、生成索引和构建日志。
+6. **预览真实静态产物。**使用静态文件服务器分别挂载空路径产物和 `/Aphrosyne-Atlas/` 子路径产物，不用 `next dev` 代替；验证首页、Blog 列表与至少两篇文章、Knowledge 列表与至少两篇文章、Projects、About、404、搜索、主题、深层刷新、前后退、`_next`、字体、图片和 `search-index.json`，并检查控制台。
+7. **关闭安全与 Git 闭环。**重新执行 production audit 和 `npm ls`，记录仍存在的公告、适用条件与处理归属；用 `git diff --check`、`git diff --name-only` 和 `git status` 确认没有生成物、文章或无关依赖漂移，再决定是否将 R0 标为完成。
+
+#### 失败处理与降级
+
+- 若 16.3.5 无法通过静态导出、MDX 或 Pages 子路径验收，先保留升级分支上的失败证据并定位最小兼容改动；不得以恢复受影响的 16.2.6 作为完成状态，也不得关闭静态导出或删除页面来换取通过。
+- 若安装后出现新的 lint 规则，只修复由版本升级直接引入、且范围很小的兼容问题；旧 24 errors / 4 warnings 与大规模 lint 清理继续归 R1。无法清楚区分时，R0 保持 `[~]` 并记录差异。
+- 若 audit 仍有 critical/high，按“直接/传递、生产是否可达、官方是否有稳定修复”逐项判断。存在可用稳定修复却未采用时不得完成；没有修复或与静态产物不可达时可记录残余风险，但不能宣称“零风险”。
+- 若新稳定版本要求超出本批的框架迁移、视觉改动或内容模型修改，停止在计划闸门，另行确认范围，不把扩大改动混入 R0。
+
+#### R0 完成判定
+
+- 三个 Next 配套包版本一致，`npm ci` 无 lockfile 变更和不可接受的 peer warning；React 等未升级项有兼容依据。
+- production audit 不再包含已有 Next 16.2.6 公告链；任何残余项均有日期、影响面和后续归属。
+- TypeScript 继续通过；lint 相对升级前没有新增错误或 warning，也没有通过关规则、忽略文件或降级配置掩盖差异。
+- 空路径与 Pages 子路径的 production build、真实 `out/` 预览及上述核心路由/资源矩阵全部通过；未知动态 slug 仍返回 404。
+- 最终依赖 diff 默认只包含 `package.json` 与 `package-lock.json`，另回写本路线图的实施状态与证据；若确需 `next.config.ts` 兼容改动，必须独立说明证据。没有提交、推送或部署，除非用户另行授权。
+
+#### R0 实施结果（2026-09-14）
+
+- 将 `next`、`@next/mdx` 与 `eslint-config-next` 对齐到稳定版 `16.3.5`；保留 React/React DOM 19.2.4、ESLint 9、TypeScript 5 与现有 Next 配置。安装后的 16.3.5 本地文档确认现有 static export、`basePath`、MDX 与 `generateStaticParams` 用法仍适用，因此未修改 `next.config.ts`。
+- `package-lock.json` 由 npm 重新解析；Next 16.3.5 复用项目已有 `sharp@0.35.4`，并将受影响的 `baseline-browser-mapping` 解析到 2.11.23。`npm ci` 可重复完成，未出现 peer dependency 错误；npm 11 仅保留与本次升级无关的 `allowScripts` 提示。
+- `npm audit --omit=dev --json` 结果为 0 项生产依赖漏洞；原 Next 16.2.6 及其 PostCSS、Sharp、Nano ID、Baseline Browser Mapping 公告链已消除。完整 audit 仍报告 `brace-expansion`、`browserslist`、`js-yaml` 3 个仅开发依赖 high，均有可用修复，归入 R1 的工具链/门禁批次处理；未运行 `npm audit fix --force`。
+- `npx tsc --noEmit` 通过；`npm run lint` 仍为升级前已知的 24 errors / 4 warnings，没有新增错误、warning 或规则漂移，旧问题继续归 R1。
+- 空 `basePath` 与模拟 GitHub Pages `/Aphrosyne-Atlas` 子路径的 `npm run build` 均通过：34 个静态页面、8 篇 Blog、13 篇 Knowledge、3 个 Project，registry 13 项、搜索索引 23 项。
+- 两份 `out/` 均由静态文件服务器真实预览。首页、Blog/Knowledge 列表及各两篇详情、Projects、About、Studio、搜索索引、静态 API、深层刷新、404、搜索、主题、前后退和资源加载通过；未知 slug 返回 404。浏览器覆盖 390×844、768×1024 与 1440×900，未发现升级引入的控制台错误或破图。
+- 390px 阅读页原有整页横向溢出仍可复现，证据与 R3 的既有基线一致，本批未以样式改动越界处理。未提交、推送或部署。
+
+#### 建议提交边界
+
+1. `chore(R0): 升级 Next.js 安全依赖`
+2. 仅在确有必要时追加 `fix(R0): 适配 Next.js 升级后的静态导出`，且只包含有验证证据的兼容改动。
+
 ## 批次 R1：恢复 lint、类型与 CI 最小门禁
 
-- **状态 / 优先级：**[ ] / P2。
+- **状态 / 优先级：**[x] / P2。
 - **目标：**让仓库的官方质量命令重新可信，并在部署前独立失败，而不是由成功 build 掩盖 lint/类型问题。
 - **来源：**CQ-005、CQ-020。
 - **范围：**Blog 详情错误边界、Clock/TagCloud/ThemeToggle/GlowDots 等现有规则错误、`<img>` 例外说明、`typecheck` 脚本与 Pages workflow。
@@ -124,6 +181,15 @@ R0–R2 建立发布基线；R3–R8 解决发布前核心可用性；R9–R13 �
 - **实施注意事项与风险：**Blog 的 JSX `try/catch` 不能假装捕获子树渲染错误；必要规则例外只能局部、带理由。CI 应让 lint/type/build 各自可诊断。
 - **验收 / 退出条件：**`npm run lint` 零错误；`tsc --noEmit --incremental false` 通过；CI 中 lint/type/build 顺序清楚，故意制造的 lint/type 错误可阻断部署；现有文章不存在时仍返回正确 404，导入失败可诊断。
 - **建议提交边界：**2 个提交：修复现有 lint 根因；增加脚本与 CI 门禁。
+
+### R1 实施结果（2026-09-14）
+
+- 移除 Blog 详情页中包裹 JSX 的 `try/catch`：缺失 metadata 继续显式调用 `notFound()`；MDX 导入、相邻文章查询或渲染的非预期异常会冒泡到新增的 `app/blog/[slug]/error.tsx` 路由段错误边界。该边界向读者显示稳定中文恢复界面，并在控制台记录原始错误，避免把导入失败伪装成 404 或向生产用户泄露错误文本。
+- Clock、TagCloud、ThemeToggle 与 GlowDots 的首次客户端状态更新改为可清理的 timer 或 animation frame 回调，消除 effect 内同步 `setState` 的级联渲染规则错误；GlowDots 同时补齐原有 timer 清理。
+- 对 About、Dashboard 和 Navbar 的 4 个原生 `<img>` 添加逐处说明的 `no-img-element` 例外：它们是使用 `publicPath`、静态导出与 SVG clip-path 的本地资源，不引入运行时图像优化器。MDX 的同类例外保持原状。
+- 新增 `npm run typecheck`（`tsc --noEmit --incremental false`），Pages workflow 在 `npm ci` 后依次运行 lint、typecheck、build；任一前置命令非零退出即不会进入构建和部署。
+- `npm run lint` 与 `npm run typecheck` 均通过；空 basePath 和模拟 `/Aphrosyne-Atlas` 子路径的 production build 均通过，生成 34 个静态页面。临时加入后移除的无效 TypeScript 探针分别令 lint 和 typecheck 以退出码 1 失败，验证门禁阻断行为。
+- 在真实 Pages 子路径静态预览中验证现有 Blog 文章正常渲染、未知 Blog slug 返回 404。未提交、推送或部署；预览服务和临时文件均已清理。
 
 ## 批次 R2：建立可重复的静态发布契约
 
