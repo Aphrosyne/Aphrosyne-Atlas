@@ -1,4 +1,4 @@
 interface:
   display_name: "Aphrosyne Atlas 阶段推进"
-  short_description: "按 atlas-plan 规划、实施并验收当前开发阶段"
-  default_prompt: "使用 $atlas-stage 推进 docs/atlas-plan.md 的当前阶段，先给出实施计划。"
+  short_description: "按当前权威路线图审阅、规划、实施并验收单个阶段或批次"
+  default_prompt: "使用 $atlas-stage 识别当前权威路线图和任务模式，再推进一个阶段或批次。"
