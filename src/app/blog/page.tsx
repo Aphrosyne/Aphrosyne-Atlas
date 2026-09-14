@@ -1,12 +1,14 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { getAllPosts } from '@/lib/posts'
+import { siteUrl } from '@/lib/site-url'
 import BlogList from '@/components/blog/BlogList'
 import PageTransition from '@/components/shared/PageTransition'
 
 export const metadata: Metadata = {
   title: 'Blog',
   description: '一些想法、笔记和探索。',
+  alternates: { canonical: siteUrl('/blog') },
 }
 
 export default async function BlogPage() {

@@ -1,10 +1,12 @@
 import type { Metadata } from 'next'
 import { projects } from '@/config/projects'
 import ProjectCard from '@/components/shared/ProjectCard'
+import { siteUrl } from '@/lib/site-url'
 
 export const metadata: Metadata = {
   title: 'Projects',
   description: '公开项目、工具与阶段性探索。',
+  alternates: { canonical: siteUrl('/projects') },
 }
 
 export default function ProjectsPage() {

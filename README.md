@@ -17,7 +17,7 @@ npm run dev
 
 ```bash
 npm run build
-npx serve out -l 4173
+npm run preview:static -- --port 4173
 ```
 
 访问 `http://localhost:4173/`。本地构建不设置 GitHub Actions 环境变量，因此使用根路径；GitHub Pages 构建会自动从仓库名称生成子路径。
@@ -118,7 +118,21 @@ assets/images-source/knowledge/example/screenshot.png
 
 ## 部署
 
-推送到 `master` 会触发 [GitHub Pages 工作流](./.github/workflows/deploy-pages.yml)：它通过 `npm ci` 安装锁定依赖，构建 `out/`，再使用 GitHub 官方 Pages Actions 发布。
+推送到 `master` 会触发 [GitHub Pages 工作流](./.github/workflows/deploy-pages.yml)：它通过 `npm ci` 安装锁定依赖，执行 lint、类型检查、静态构建与产物 smoke，再使用 GitHub 官方 Pages Actions 发布。
+
+### 静态发布验证
+
+静态导出不支持 `next start`。构建和预览使用下面的脚本；`--base-path` 与 `--site-origin` 是发布配置的唯一输入，便于将来切换到根路径或自定义域名而不修改页面代码。
+
+```bash
+# GitHub Pages 仓库子路径
+npm run build:static -- --base-path /Aphrosyne-Atlas --site-origin https://aphrosyne.github.io
+npm run smoke:static -- --base-path /Aphrosyne-Atlas --site-origin https://aphrosyne.github.io
+npm run preview:static -- --base-path /Aphrosyne-Atlas --port 4173
+
+# 将来部署到自定义域名根路径时，只替换输入值。
+npm run build:static -- --site-origin https://example.com
+```
 
 首次使用时，在仓库的 `Settings → Pages` 中将发布来源设置为 `GitHub Actions`。
 

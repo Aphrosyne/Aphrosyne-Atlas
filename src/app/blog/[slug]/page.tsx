@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getPostBySlug, getPostSlugs, getAdjacentPosts } from '@/lib/posts'
+import { siteUrl } from '@/lib/site-url'
 import PostHeader from '@/components/blog/PostHeader'
 import TableOfContents from '@/components/blog/TableOfContents'
 import CopyAttribution from '@/components/blog/CopyAttribution'
@@ -13,7 +14,9 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const meta = await getPostBySlug(slug)
-  return meta ? { title: meta.title, description: meta.excerpt } : { title: 'Post Not Found' }
+  return meta
+    ? { title: meta.title, description: meta.excerpt, alternates: { canonical: siteUrl(`/blog/${slug}`) } }
+    : { title: 'Post Not Found' }
 }
 
 export default async function BlogPostPage({ params }: Props) {

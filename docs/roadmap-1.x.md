@@ -193,7 +193,7 @@ R0–R2 建立发布基线；R3–R8 解决发布前核心可用性；R9–R13 �
 
 ## 批次 R2：建立可重复的静态发布契约
 
-- **状态 / 优先级：**[ ] / P2；若新鲜产物复现 A20，则该缺陷升 P1。
+- **状态 / 优先级：**[x] / P2；新鲜产物未复现 A20。
 - **目标：**用一个明确脚本预览刚生成的 `out/`，并对静态导航、basePath 和发布元数据形成可重复 smoke 验收。
 - **来源：**A20、CQ-014、CQ-015、CQ-016、CQ-020。
 - **范围：**替换失效的 `npm start`、静态服务器预览入口、空路径/仓库子路径构建参数、robots/sitemap 与 canonical 配置、核心路由 smoke。
@@ -202,6 +202,14 @@ R0–R2 建立发布基线；R3–R8 解决发布前核心可用性；R9–R13 �
 - **实施注意事项与风险：**先确认预览服务正确处理目录式 `index.html` 和 404；将“运行于 Actions”和“部署于仓库子路径”拆开，部署路径继续只有一个事实源。自定义域名只验证空 basePath 构建，不实际切换。
 - **验收 / 退出条件：**新 build 的首页、Blog、两篇文章、Knowledge、深层刷新、前后退、404、主题、搜索和资源在静态服务器通过；空 basePath 与 `/Aphrosyne-Atlas` 均通过 HTML/资源扫描；robots/sitemap 只含公开路由且 URL 与配置一致；浏览器控制台无 404/hydration/runtime 错误。
 - **建议提交边界：**2–3 个提交：预览脚本；basePath 输入与 smoke；robots/sitemap 单一来源。
+
+### R2 实施结果（2026-09-15）
+
+- 新增 `site.config.mjs` 作为部署 origin、`basePath` 与公开 URL 的唯一输入源；`next.config.ts`、`SITE.url`、metadata canonical、`robots.txt` 和 `sitemap.xml` 均从此配置消费。工作流显式传入 `/Aphrosyne-Atlas` 与 `https://aphrosyne.github.io`，不再把 Actions 环境与仓库子路径隐式耦合。
+- 移除与 `output: 'export'` 不兼容的 `npm start`；新增 `build:static`、`preview:static` 与 `smoke:static`。预览器只服务刚生成的 `out/`，支持目录式路由、可配置子路径与 404；不引入常驻应用服务器。README 同步记录 Pages 子路径和未来根路径的本地验收命令。
+- `robots.ts` 与 `sitemap.ts` 以 Next metadata route 静态导出。sitemap 覆盖公开首页、列表、Blog、Knowledge 与 Projects 路由，沿用既有 publication 过滤排除 draft/unlisted，且不包含 Studio；核心公开页面和详情页生成与部署 URL 对齐的 canonical。
+- 在 `https://aphrosyne.github.io/Aphrosyne-Atlas` 子路径与 `https://example.com` 根路径各执行一次 production static build（各 36 条静态路由）和 smoke。smoke 检查 10 条核心路由、所有本地 HTML 资源、搜索索引目标、canonical、robots 与 sitemap；两种路径均通过。
+- 真实静态服务浏览器验收了 Pages 子路径首页、Blog 详情、Knowledge 详情、未知路径 404，以及前进/后退；链接、`_next`、图片、字体与中文内容均正确保留子路径。根路径静态服务对首页、两种详情、404、robots 与 sitemap 返回预期 200/404。未复现 A20；未部署、未推送。本批使用 `computer-use` 对实际静态产物完成浏览器路径验收。
 
 ## 批次 R3：修复页面收缩链与局部横向溢出
 

@@ -1,10 +1,8 @@
 import createMDX from '@next/mdx'
 import type { NextConfig } from 'next'
+import { getDeploymentConfig } from './site.config.mjs'
 
-const repositoryName = process.env.GITHUB_REPOSITORY?.split('/').at(-1)
-const basePath = process.env.GITHUB_ACTIONS === 'true' && repositoryName
-  ? `/${repositoryName}`
-  : ''
+const deployment = getDeploymentConfig()
 
 const nextConfig: NextConfig = {
   // Permit the local-network preview address to load Next.js dev-only assets
@@ -13,9 +11,10 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   output: 'export',
   trailingSlash: true,
-  basePath,
+  basePath: deployment.basePath,
   env: {
-    NEXT_PUBLIC_BASE_PATH: basePath,
+    NEXT_PUBLIC_BASE_PATH: deployment.basePath,
+    NEXT_PUBLIC_SITE_ORIGIN: deployment.siteOrigin,
   },
   images: {
     unoptimized: true,

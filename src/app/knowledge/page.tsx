@@ -4,10 +4,12 @@ import { Suspense } from 'react'
 import KnowledgeList from '@/components/knowledge/KnowledgeList'
 import PageTransition from '@/components/shared/PageTransition'
 import { getAllKnowledge } from '@/lib/knowledge'
+import { siteUrl } from '@/lib/site-url'
 
 export const metadata: Metadata = {
   title: 'Knowledge',
   description: '教程、问题修复、实验记录与参考资料。',
+  alternates: { canonical: siteUrl('/knowledge') },
 }
 
 export default async function KnowledgePage() {

@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import TableOfContents from '@/components/blog/TableOfContents'
 import { KNOWLEDGE_ARTICLE_LOADERS } from '@/lib/knowledge-articles'
 import { getAllKnowledge, getKnowledgeBySlug, getKnowledgeSlugs } from '@/lib/knowledge'
+import { siteUrl } from '@/lib/site-url'
 
 type Props = { params: Promise<{ slug: string }> }
 
@@ -28,7 +29,9 @@ const TYPE_LABELS = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const entry = await getKnowledgeBySlug((await params).slug)
-  return entry ? { title: entry.title, description: entry.excerpt } : { title: 'Knowledge Not Found' }
+  return entry
+    ? { title: entry.title, description: entry.excerpt, alternates: { canonical: siteUrl(`/knowledge/${entry.slug}`) } }
+    : { title: 'Knowledge Not Found' }
 }
 
 export default async function KnowledgeArticlePage({ params }: Props) {

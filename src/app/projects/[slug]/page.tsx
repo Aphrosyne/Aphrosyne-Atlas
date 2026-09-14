@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { projects, getProjectBySlug } from '@/config/projects'
+import { siteUrl } from '@/lib/site-url'
 import PageTransition from '@/components/shared/PageTransition'
 import Link from 'next/link'
 
@@ -26,6 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: project.title,
     description: project.description,
+    alternates: { canonical: siteUrl(`/projects/${project.slug}`) },
   }
 }
 

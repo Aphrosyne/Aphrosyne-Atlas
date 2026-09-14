@@ -17,7 +17,7 @@ export const SITE = {
   name: 'Aphrosyne',
   title: 'Aphrosyne Atlas',
   description: 'Aphrosyne Atlas is a personal space for projects, notes, and explorations.',
-  url: 'https://aphrosyne.github.io/Aphrosyne-Atlas',
+  url: deploymentConfig.siteUrl,
   author: 'Aphrosyne（柳江凝）',
   assets: {
     avatar: '/images/avatar/avatar.webp',
@@ -89,3 +89,4 @@ export const NAV_ITEMS = [
 export const SOCIAL_LINKS = [
   { platform: 'github', label: 'GitHub', href: 'https://github.com/aphrosyne' },
 ] as const satisfies readonly SocialLink[]
+import { deploymentConfig } from '@/lib/site-url'

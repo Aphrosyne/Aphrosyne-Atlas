@@ -2,8 +2,15 @@ import { getRecentPosts, getAllPosts } from '@/lib/posts'
 import { getAllKnowledge } from '@/lib/knowledge'
 import { projects } from '@/config/projects'
 import { SITE } from '@/config/site'
+import { siteUrl } from '@/lib/site-url'
 import HeroSection from '@/components/home/HeroSection'
 import Dashboard from '@/components/home/Dashboard'
+
+export const metadata = {
+  alternates: {
+    canonical: siteUrl('/'),
+  },
+}
 
 export default async function Home() {
   const recentPosts = await getRecentPosts(3)

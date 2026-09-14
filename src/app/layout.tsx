@@ -20,6 +20,7 @@ const sourceHanSans = localFont({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE.url),
   title: {
     default: SITE.title,
     template: `%s — ${SITE.title}`,
