@@ -28,7 +28,6 @@ const withMDX = createMDX({
     remarkPlugins: ['remark-gfm', 'remark-frontmatter', 'remark-breaks'],
     rehypePlugins: [
       'rehype-slug',
-      'rehype-autolink-headings',
       ['rehype-pretty-code', { theme: 'github-dark' }],
     ],
   },

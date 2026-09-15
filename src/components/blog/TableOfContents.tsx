@@ -27,9 +27,13 @@ type ScrollMetrics = {
   canScroll: boolean
 }
 
+type TableOfContentsProps = {
+  variant?: 'desktop' | 'mobile'
+}
+
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max)
 
-export default function TableOfContents() {
+export default function TableOfContents({ variant = 'desktop' }: TableOfContentsProps) {
   const [headings, setHeadings] = useState<Heading[]>([])
   const [collapsedIds, setCollapsedIds] = useState<Set<string>>(new Set())
   const [activeId, setActiveId] = useState('')
@@ -50,7 +54,14 @@ export default function TableOfContents() {
       .filter((element) => element.id && element.textContent)
       .map((element) => ({
         id: element.id,
-        text: element.textContent?.trim() || '',
+        text: Array.from(element.childNodes)
+          .filter(
+            (node) =>
+              !(node instanceof HTMLElement && node.classList.contains('article-heading-anchor')),
+          )
+          .map((node) => node.textContent ?? '')
+          .join('')
+          .trim(),
         level: Number(element.tagName[1]) as 2 | 3,
       }))
       .filter((heading) => {
@@ -95,7 +106,9 @@ export default function TableOfContents() {
           .map((heading) => document.getElementById(heading.id))
           .filter((element): element is HTMLElement => Boolean(element))
 
-        const activationLine = window.scrollY + 144
+        const rootStyles = getComputedStyle(document.documentElement)
+        const offset = Number.parseFloat(rootStyles.getPropertyValue('--size-anchor-offset')) * Number.parseFloat(rootStyles.fontSize) || 96
+        const activationLine = window.scrollY + offset
         let nextActiveId = headingElements[0]?.id ?? ''
         for (const element of headingElements) {
           if (element.getBoundingClientRect().top + window.scrollY <= activationLine) {
@@ -110,8 +123,8 @@ export default function TableOfContents() {
         const articleTop = articleRect.top + window.scrollY
         const articleBottom = articleTop + article.scrollHeight
         const documentEnd = Math.max(0, document.documentElement.scrollHeight - window.innerHeight)
-        const start = clamp(articleTop - 112, 0, documentEnd)
-        const end = clamp(articleBottom - window.innerHeight + 96, start, documentEnd)
+        const start = clamp(articleTop - offset, 0, documentEnd)
+        const end = clamp(articleBottom - window.innerHeight + offset, start, documentEnd)
         const distance = end - start
         const progress = distance > 0 ? clamp((window.scrollY - start) / distance, 0, 1) : 0
         const thumbPercent = clamp((window.innerHeight / Math.max(article.scrollHeight, 1)) * 100, 12, 38)
@@ -213,7 +226,9 @@ export default function TableOfContents() {
   return (
     <nav
       aria-label="文章目录"
-      className="sticky top-24 flex max-h-[calc(100vh-7rem)] flex-col overflow-hidden rounded-xl border border-border/60 bg-surface/50 p-3 backdrop-blur-sm"
+      className={variant === 'desktop'
+        ? 'sticky top-24 flex max-h-[calc(100vh-7rem)] flex-col overflow-hidden rounded-xl border border-border/60 bg-surface/50 p-3 backdrop-blur-sm'
+        : 'flex max-h-[52dvh] flex-col overflow-hidden rounded-xl border border-border/60 bg-surface/50 p-3 backdrop-blur-sm'}
     >
       <h2 className="mb-3 px-1 text-xs tracking-wider text-fg/40 uppercase">目录</h2>
       <div className="flex min-h-0 gap-2">
@@ -239,7 +254,7 @@ export default function TableOfContents() {
                     href={`#${section.heading.id}`}
                     title={section.heading.text}
                     aria-current={section.heading.id === activeId ? 'location' : undefined}
-                    className={`min-w-0 flex-1 truncate rounded-lg px-2 py-2 leading-relaxed transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus ${
+                    className={`min-w-0 flex-1 line-clamp-2 rounded-lg px-2 py-2 leading-relaxed transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus ${
                       isSectionActive ? 'font-medium text-accent' : 'text-fg/60 hover:text-accent'
                     }`}
                   >
@@ -279,7 +294,7 @@ export default function TableOfContents() {
                           href={`#${child.id}`}
                           title={child.text}
                           aria-current={child.id === activeId ? 'location' : undefined}
-                          className={`block truncate rounded-md px-2 py-1.5 text-xs leading-relaxed transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus ${
+                          className={`block line-clamp-2 rounded-md px-2 py-1.5 text-xs leading-relaxed transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus ${
                             child.id === activeId ? 'bg-accent/10 font-medium text-accent' : 'text-fg/50 hover:text-accent'
                           }`}
                         >
@@ -294,7 +309,7 @@ export default function TableOfContents() {
           })}
         </ul>
 
-        {scrollMetrics.canScroll && (
+        {variant === 'desktop' && scrollMetrics.canScroll && (
           <div
             role="scrollbar"
             tabIndex={0}

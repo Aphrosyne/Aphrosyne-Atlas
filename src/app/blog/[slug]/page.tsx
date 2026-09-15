@@ -41,6 +41,10 @@ export default async function BlogPostPage({ params }: Props) {
                 <CopyAttribution>
                   <article id="article-content" className={ARTICLE_PROSE_CLASS}>
                     <PostHeader {...meta} />
+                    <details className="not-prose mb-8 rounded-xl border border-border/50 bg-surface/35 p-3 lg:hidden">
+                      <summary className="cursor-pointer rounded-lg px-2 py-1 text-sm font-semibold text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus">本篇目录</summary>
+                      <div className="mt-3"><TableOfContents variant="mobile" /></div>
+                    </details>
                     <Post />
                   </article>
                 </CopyAttribution>
@@ -50,13 +54,13 @@ export default async function BlogPostPage({ params }: Props) {
                   {prev ? (
                     <Link href={`/blog/${prev.slug}`} className="group min-w-0 flex-1 rounded-xl border border-border/10 bg-surface/40 p-4 backdrop-blur-sm transition-colors hover:bg-surface/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
                       <span className="text-base font-semibold text-fg/40 group-hover:text-fg transition-colors">上一篇</span>
-                      <p className="mt-1 text-lg text-fg/70 group-hover:text-fg transition-colors truncate">{prev.title}</p>
+                      <p className="mt-1 line-clamp-2 text-lg text-fg/70 group-hover:text-fg transition-colors">{prev.title}</p>
                     </Link>
                   ) : <div className="flex-1" />}
                   {next ? (
                     <Link href={`/blog/${next.slug}`} className="group min-w-0 flex-1 rounded-xl border border-border/10 bg-surface/40 p-4 text-right backdrop-blur-sm transition-colors hover:bg-surface/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
                       <span className="text-base font-semibold text-fg/40 group-hover:text-fg transition-colors">下一篇</span>
-                      <p className="mt-1 text-lg text-fg/70 group-hover:text-fg transition-colors truncate">{next.title}</p>
+                      <p className="mt-1 line-clamp-2 text-lg text-fg/70 group-hover:text-fg transition-colors">{next.title}</p>
                     </Link>
                   ) : <div className="flex-1" />}
                 </nav>

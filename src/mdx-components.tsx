@@ -20,6 +20,32 @@ function ArticleCodeBlock(props: ComponentProps<'pre'>) {
   )
 }
 
+function ArticleHeading({ id, children, ...props }: ComponentProps<'h2'>) {
+  return (
+    <h2 id={id} {...props}>
+      {id && (
+        <a href={`#${id}`} className="article-heading-anchor" aria-label="跳转到此标题">
+          <span aria-hidden="true">#</span>
+        </a>
+      )}
+      {children}
+    </h2>
+  )
+}
+
+function ArticleSubheading({ id, children, ...props }: ComponentProps<'h3'>) {
+  return (
+    <h3 id={id} {...props}>
+      {id && (
+        <a href={`#${id}`} className="article-heading-anchor" aria-label="跳转到此标题">
+          <span aria-hidden="true">#</span>
+        </a>
+      )}
+      {children}
+    </h3>
+  )
+}
+
 function ArticleLink({ href, ...props }: ComponentProps<'a'>) {
   return <a {...props} href={href?.startsWith('/') ? publicPath(href) : href} />
 }
@@ -45,6 +71,8 @@ function ArticleImage({ src, alt = '', ...props }: ComponentProps<'img'>) {
 
 const components = {
   a: ArticleLink,
+  h2: ArticleHeading,
+  h3: ArticleSubheading,
   img: ArticleImage,
   table: ArticleTable,
   pre: ArticleCodeBlock,

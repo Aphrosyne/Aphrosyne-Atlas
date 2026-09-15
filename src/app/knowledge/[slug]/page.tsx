@@ -72,6 +72,10 @@ export default async function KnowledgeArticlePage({ params }: Props) {
                 </div>
                 <div className="mt-4 flex flex-wrap gap-2">{entry.tags.map((tag) => <span key={tag} className="rounded-full bg-surface px-2.5 py-1 text-xs text-fg/55">{tag}</span>)}</div>
               </header>
+              <details className="not-prose mb-8 rounded-xl border border-border/50 bg-surface/35 p-3 lg:hidden">
+                <summary className="cursor-pointer rounded-lg px-2 py-1 text-sm font-semibold text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus">本篇目录</summary>
+                <div className="mt-3"><TableOfContents variant="mobile" /></div>
+              </details>
               <Article />
               {(entry.related.length > 0 || entry.sources.length > 0) && (
                 <footer className="not-prose mt-12 space-y-5 rounded-2xl border border-border/40 bg-surface/50 p-5 backdrop-blur-md sm:p-6">
