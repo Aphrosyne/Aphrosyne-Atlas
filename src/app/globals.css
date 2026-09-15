@@ -175,8 +175,8 @@ body {
   color: var(--color-code-muted);
 }
 
-/* Prose body follows theme */
-.prose {
+/* Shared Blog/Knowledge MDX typography follows the semantic theme roles. */
+.article-prose {
   --tw-prose-body: color-mix(in srgb, var(--color-fg) 80%, transparent);
   --tw-prose-headings: var(--color-fg);
   --tw-prose-bold: var(--color-fg);
@@ -185,45 +185,100 @@ body {
   --tw-prose-captions: var(--color-reading-muted);
 }
 
-/* List markers follow theme */
-.prose :where(ul, ol) ::marker {
+.article-prose :where(h4, h5, h6) {
+  color: var(--color-fg);
+  font-weight: 600;
+  line-height: 1.45;
+  scroll-margin-top: var(--size-anchor-offset);
+}
+
+.article-prose :where(h4) { font-size: 1.25rem; margin-top: 2.5rem; }
+.article-prose :where(h5) { font-size: 1.125rem; margin-top: 2rem; }
+.article-prose :where(h6) { font-size: 1rem; margin-top: 1.5rem; }
+
+/* List markers, links and quotes retain a readable shared baseline. */
+.article-prose :where(ul, ol) ::marker {
   color: var(--color-fg);
 }
 
+.article-prose :where(a):focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.article-prose :where(a) {
+  background-image: linear-gradient(90deg, var(--color-accent), var(--color-avatar-ring));
+  background-position: 0 calc(100% - 0.08em);
+  background-repeat: no-repeat;
+  background-size: 100% 1px;
+}
+
+.article-prose :where(a:hover) {
+  background-size: 100% 2px;
+}
+
+.article-prose :where(blockquote) {
+  color: color-mix(in srgb, var(--color-fg) 82%, transparent);
+  border-inline-start-color: var(--color-border);
+}
+
+.article-prose :where(hr) {
+  border-color: var(--color-border);
+}
+
 /* Long data stays reachable in its own scroll region instead of widening a reading page. */
-.prose .article-scroll-region {
+.article-prose .article-scroll-region {
   max-width: 100%;
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scrollbar-gutter: stable both-edges;
 }
 
-.prose .article-scroll-region:focus-visible {
+.article-prose .article-scroll-region:focus-visible {
   outline: 2px solid var(--color-focus);
   outline-offset: 4px;
 }
 
-.prose .article-scroll-region > table,
-.prose .article-scroll-region > pre {
+.article-prose .article-scroll-region > table,
+.article-prose .article-scroll-region > pre {
   width: max-content;
   min-width: 100%;
   max-width: none;
   margin: 0;
 }
 
-.prose img {
+.article-prose :where(table) {
+  border: 1px solid var(--color-border);
+  border-collapse: collapse;
+}
+
+.article-prose :where(th, td) {
+  border: 1px solid var(--color-border);
+  padding: 0.5rem 0.75rem;
+}
+
+.article-prose :where(thead tr) {
+  background: color-mix(in srgb, var(--color-accent) 20%, transparent);
+}
+
+.article-prose :where(tbody tr:nth-child(even)) {
+  background: color-mix(in srgb, var(--color-surface) 70%, transparent);
+}
+
+.article-prose img {
   max-width: 100%;
   height: auto;
 }
 
-.prose code:not(pre code) {
+.article-prose code:not(pre code) {
   overflow-wrap: anywhere;
   word-break: break-word;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
 }
 
-.prose a {
+.article-prose a {
   overflow-wrap: anywhere;
   word-break: break-word;
 }

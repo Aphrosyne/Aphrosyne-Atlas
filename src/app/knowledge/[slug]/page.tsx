@@ -6,6 +6,7 @@ import { KNOWLEDGE_ARTICLE_LOADERS } from '@/lib/knowledge-articles'
 import { getAllKnowledge, getKnowledgeBySlug, getKnowledgeSlugs } from '@/lib/knowledge'
 import { siteUrl } from '@/lib/site-url'
 import { ARCHIVED_STATUS_CLASS, KNOWLEDGE_STATUS_CLASSES, KNOWLEDGE_STATUS_LABELS } from '@/components/shared/content-status'
+import { ARTICLE_PROSE_CLASS } from '@/components/content/article-prose'
 
 type Props = { params: Promise<{ slug: string }> }
 
@@ -56,7 +57,7 @@ export default async function KnowledgeArticlePage({ params }: Props) {
               </details>
             </aside>
 
-            <article id="article-content" className="order-1 min-w-0 prose max-w-none prose-headings:font-semibold prose-a:text-accent prose-a:no-underline [&_a:hover]:text-avatar-ring [&_a]:transition-colors prose-pre:border-0 prose-pre:bg-transparent prose-code:rounded prose-code:bg-code-bg/40 prose-code:px-1.5 prose-code:py-0.5 dark:prose-invert lg:order-2">
+            <article id="article-content" className={`order-1 min-w-0 ${ARTICLE_PROSE_CLASS} lg:order-2`}>
               <header className="mb-10 not-prose">
                 <div className="flex flex-wrap items-center gap-2 text-xs">
                   <span className="rounded-full bg-accent/15 px-2.5 py-1 text-accent">{TYPE_LABELS[entry.type]}</span>
