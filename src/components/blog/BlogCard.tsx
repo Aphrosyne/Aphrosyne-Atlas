@@ -1,10 +1,11 @@
 'use client'
 
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import Link from 'next/link'
 import type { PublicationState } from '@/types/publication'
 import { CONTENT_CARD_FOCUS, CONTENT_CARD_PADDING, CONTENT_CARD_SURFACE } from '@/components/shared/content-card'
 import { ARCHIVED_STATUS_CLASS } from '@/components/shared/content-status'
+import { useMotionPolicy } from '@/lib/use-motion-policy'
 
 interface BlogCardProps {
   slug: string
@@ -18,7 +19,7 @@ interface BlogCardProps {
 }
 
 export default function BlogCard({ slug, title, date, excerpt, tags, publication, index, onTagClick }: BlogCardProps) {
-  const shouldReduceMotion = useReducedMotion()
+  const { shouldReduceMotion } = useMotionPolicy()
 
   return (
     <motion.div

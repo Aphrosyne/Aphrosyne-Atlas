@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { NAV_ITEMS, SITE } from '@/config/site'
 import { publicPath, sitePathname } from '@/lib/public-path'
 import SearchModal from '@/components/layout/SearchModal'
+import { useMotionPolicy } from '@/lib/use-motion-policy'
 
 /** Generate SVG path for superellipse |x|^n + |y|^n = 1 (objectBoundingBox coords) */
 function superellipsePath(n: number, points = 48): string {
@@ -38,6 +39,7 @@ function NavDropdown({
   href: string
   children: readonly { label: string; href: string }[]
 }) {
+  const { shouldReduceMotion } = useMotionPolicy()
   const pathname = sitePathname(usePathname())
   const active = isParentActive(pathname, href)
   const [open, setOpen] = useState(false)
@@ -121,10 +123,10 @@ function NavDropdown({
           {open && (
             <motion.div
               id={menuId}
-              initial={{ opacity: 0, y: -4, scale: 0.95 }}
+              initial={shouldReduceMotion ? false : { opacity: 0, y: -4, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -4, scale: 0.95 }}
-              transition={{ duration: 0.2, ease: 'easeOut' }}
+              exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -4, scale: 0.95 }}
+              transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.2, ease: 'easeOut' }}
               onMouseEnter={onEnterMenu}
               onMouseLeave={onLeaveMenu}
               className="absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 min-w-37.5 rounded-2xl bg-bg/50 backdrop-blur-md border border-border/10 shadow-[0_15px_35px_rgba(0,0,0,0.3)] overflow-hidden"
@@ -147,6 +149,7 @@ function NavDropdown({
 }
 
 export default function Navbar() {
+  const { shouldReduceMotion } = useMotionPolicy()
   const pathname = sitePathname(usePathname())
   const [searchOpen, setSearchOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -215,7 +218,7 @@ export default function Navbar() {
         <Link href="/" className="shrink-0 relative group">
           {/* Rotating purple border ring on hover */}
           <div
-            className="absolute -inset-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-spin"
+            className="absolute -inset-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 motion-reduce:animate-none animate-spin"
             style={{
               clipPath: 'url(#avatar-clip)',
               background: 'var(--color-avatar-ring)',
@@ -289,7 +292,7 @@ export default function Navbar() {
           aria-label="搜索"
         >
           <span
-            className="absolute -inset-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-spin"
+            className="absolute -inset-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 motion-reduce:animate-none animate-spin"
             style={{
               clipPath: 'url(#avatar-clip)',
               background: 'var(--color-accent)',
@@ -311,7 +314,7 @@ export default function Navbar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.18, ease: 'easeOut' }}
+            transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.18, ease: 'easeOut' }}
             className="fixed inset-0 z-[60] bg-black/35 md:hidden"
           >
             <div className="absolute inset-0" aria-hidden="true" onClick={closeMenu} />
@@ -321,10 +324,10 @@ export default function Navbar() {
               role="dialog"
               aria-modal="true"
               aria-label="主导航"
-              initial={{ opacity: 0, y: -8 }}
+              initial={shouldReduceMotion ? false : { opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.18, ease: 'easeOut' }}
+              exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
+              transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.18, ease: 'easeOut' }}
               className="absolute inset-x-4 top-3 max-h-[calc(100dvh-1.5rem)] overflow-y-auto rounded-3xl border border-border/20 bg-surface/95 p-2 shadow-[0_18px_45px_rgba(0,0,0,0.22)] backdrop-blur-xl"
             >
               <div className="flex items-center justify-between px-3 py-2">

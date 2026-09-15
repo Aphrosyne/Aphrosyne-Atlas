@@ -307,7 +307,7 @@ R0–R2 建立发布基线；R3–R8 解决发布前核心可用性；R9–R13 �
 
 ## 批次 R8：统一 reduced-motion 与连续运动降级
 
-- **状态 / 优先级：**[ ] / P1。
+- **状态 / 优先级：**[x] / P1。
 - **目标：**系统偏好 reduce 时取消空间飞入、连续旋转和自动跑马灯，同时保留内容、导航和即时反馈。
 - **来源：**A14、A16、CQ-011。
 - **范围：**共享 motion policy；Hero、Dashboard、TagCloud、Navbar/Search、PageTransition、BackToTop、Backdrop 与 About 技能跑马灯；技能的单份语义清单和静态换行降级。
@@ -316,6 +316,12 @@ R0–R2 建立发布基线；R3–R8 解决发布前核心可用性；R9–R13 �
 - **实施注意事项与风险：**CSS、Framer Motion hook 与命令式滚动必须遵循同一政策；默认模式继续保留 Hero 与表达动效。恢复偏好时不得遗留暂停或隐藏状态。
 - **验收 / 退出条件：**真实或可验证媒体模拟的 reduce=true 下无连续旋转/跑马/长距离飞入/smooth 强制滚动，所有技能与内容可见；导航、搜索、目录、回顶可用；恢复默认后原有品牌动效正常。
 - **建议提交边界：**2 个提交：共享策略与主要动效消费；Marquee 语义/静态降级及回归。
+
+### R8 实施结果（2026-09-15）
+
+- 新增共享 `useMotionPolicy`，为 Framer Motion、命令式滚动与交互弹跳提供统一的系统 reduce 偏好；Hero、BackToTop、PageTransition、AnimatedSection、Backdrop、Blog/Knowledge/Project 卡片、Dashboard、Navbar 与 SearchModal 都遵循该策略。
+- reduce 模式不再执行 Hero 流光/浮动、头像 hover 旋转、TagCloud 3D 自旋、技能跑马灯或菜单/搜索/卡片的空间位移；Hero 与回顶改为即时滚动。TagCloud 以完整静态标签展示，技能跑马灯有单份读屏列表并显示不重复的静态换行内容。
+- lint、TypeScript、根路径与 Pages 子路径静态构建、smoke 和图片校验通过。未推送、未部署；真实设备的系统 reduce 偏好与读屏验证仍按 T4 留待发布前设备验收。
 
 ## 批次 R9：统一 Blog/Knowledge 的共享文章渲染规则
 

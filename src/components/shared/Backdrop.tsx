@@ -1,10 +1,11 @@
 'use client'
 
 import { useEffect, useLayoutEffect, useRef, useState, type SyntheticEvent } from 'react'
-import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from 'framer-motion'
+import { motion, useScroll, useTransform, type MotionValue } from 'framer-motion'
 import { usePathname } from 'next/navigation'
 import { publicPath } from '@/lib/public-path'
 import { SITE } from '@/config/site'
+import { useMotionPolicy } from '@/lib/use-motion-policy'
 
 type BackgroundPanel = keyof typeof SITE.assets.backgrounds
 
@@ -57,7 +58,7 @@ function PanelImage({ panel, blur }: {
  */
 export default function Backdrop() {
   const pathname = usePathname()
-  const shouldReduceMotion = useReducedMotion()
+  const { shouldReduceMotion } = useMotionPolicy()
   const { scrollYProgress } = useScroll()
   const scrollBlur = useTransform(scrollYProgress, [0, 1], ['blur(0px)', 'blur(12px)'])
   const requestedPanel = getPanel(pathname)

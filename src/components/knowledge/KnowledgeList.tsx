@@ -3,12 +3,13 @@
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import type { KnowledgeMetadata, KnowledgeType } from '@/types/knowledge'
 import ContentToolbar from '@/components/shared/ContentToolbar'
 import { CONTENT_CARD_FOCUS, CONTENT_CARD_PADDING, CONTENT_CARD_SURFACE } from '@/components/shared/content-card'
 import SortControls, { type SortDirection } from '@/components/shared/SortControls'
 import { ARCHIVED_STATUS_CLASS, KNOWLEDGE_STATUS_CLASSES, KNOWLEDGE_STATUS_LABELS } from '@/components/shared/content-status'
+import { useMotionPolicy } from '@/lib/use-motion-policy'
 
 const TYPE_LABELS: Record<KnowledgeType, string> = {
   guide: '教程',
@@ -27,7 +28,7 @@ type KnowledgeSort = (typeof KNOWLEDGE_SORT_OPTIONS)[number]['value']
 export default function KnowledgeList({ entries }: { entries: KnowledgeMetadata[] }) {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const shouldReduceMotion = useReducedMotion()
+  const { shouldReduceMotion } = useMotionPolicy()
   const selectedType = searchParams.get('type')
   const [sortBy, setSortBy] = useState<KnowledgeSort>('title')
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc')

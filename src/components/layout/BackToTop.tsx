@@ -2,8 +2,10 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
+import { useMotionPolicy } from '@/lib/use-motion-policy'
 
 export default function BackToTop() {
+  const { shouldReduceMotion, scrollBehavior } = useMotionPolicy()
   const [visible, setVisible] = useState(false)
   const raf = useRef(0)
 
@@ -28,9 +30,11 @@ export default function BackToTop() {
 
   return (
     <motion.button
-      animate={{ opacity: visible ? 1 : 0, scale: visible ? 1 : 0.8 }}
+      initial={shouldReduceMotion ? false : undefined}
+      animate={shouldReduceMotion ? { opacity: visible ? 1 : 0 } : { opacity: visible ? 1 : 0, scale: visible ? 1 : 0.8 }}
+      transition={shouldReduceMotion ? { duration: 0 } : undefined}
       style={{ pointerEvents: visible ? 'auto' : 'none' }}
-      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      onClick={() => window.scrollTo({ top: 0, behavior: scrollBehavior })}
       className="fixed bottom-6 right-6 z-[var(--z-nav)] grid size-11 place-items-center rounded-full bg-accent-fill text-on-accent shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
       aria-label="返回顶部"
       aria-hidden={!visible}

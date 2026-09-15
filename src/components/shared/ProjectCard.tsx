@@ -1,10 +1,11 @@
 'use client'
 
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import Link from 'next/link'
 import type { Project } from '@/config/projects'
 import { CONTENT_CARD_FOCUS, CONTENT_CARD_PADDING, CONTENT_CARD_SURFACE } from './content-card'
 import { PROJECT_STATUS } from './content-status'
+import { useMotionPolicy } from '@/lib/use-motion-policy'
 
 interface ProjectCardProps {
   title: string
@@ -26,7 +27,7 @@ export default function ProjectCard({
   featured = false,
 }: ProjectCardProps) {
   const statusMeta = PROJECT_STATUS[status]
-  const shouldReduceMotion = useReducedMotion()
+  const { shouldReduceMotion } = useMotionPolicy()
 
   return (
     <motion.div

@@ -12,6 +12,7 @@ import { DASHBOARD_LAYOUT, type DashboardCardId, type DashboardLayoutItem } from
 import type { PostMetadata } from '@/types/post'
 import type { KnowledgeMetadata } from '@/types/knowledge'
 import { publicPath } from '@/lib/public-path'
+import { useMotionPolicy } from '@/lib/use-motion-policy'
 
 interface DashboardProps {
   siteName: string
@@ -74,13 +75,14 @@ const GLASS =
   'hover:shadow-[0_18px_40px_rgba(75,169,178,0.1)] ' +
   'transition-shadow duration-300'
 
-function Card({ children, className = '', direction = 'bottom', layout, liftOnHover = true, withBackdropBlur = true }: {
+function Card({ children, className = '', direction = 'bottom', layout, liftOnHover = true, withBackdropBlur = true, shouldReduceMotion }: {
   children: React.ReactNode
   className?: string
   direction?: Direction
   layout: DashboardLayoutItem
   liftOnHover?: boolean
   withBackdropBlur?: boolean
+  shouldReduceMotion: boolean
 }) {
   const style = {
     '--dashboard-column': `${layout.column} / span ${layout.columnSpan}`,
@@ -90,7 +92,8 @@ function Card({ children, className = '', direction = 'bottom', layout, liftOnHo
   return (
     <motion.div
       variants={CARD_VARIANTS[direction]}
-      whileHover={liftOnHover ? { y: -3 } : undefined}
+      initial={shouldReduceMotion ? false : undefined}
+      whileHover={!shouldReduceMotion && liftOnHover ? { y: -3 } : undefined}
       style={style}
       className={`${GLASS} ${withBackdropBlur ? 'backdrop-blur-[15px]' : ''} p-5 md:[grid-column:var(--dashboard-column)] md:[grid-row:var(--dashboard-row)] ${className}`}
     >
@@ -99,10 +102,10 @@ function Card({ children, className = '', direction = 'bottom', layout, liftOnHo
   )
 }
 
-function ProjectSubCard({ project }: { project: DashboardProps['projects'][number] }) {
+function ProjectSubCard({ project, shouldReduceMotion }: { project: DashboardProps['projects'][number]; shouldReduceMotion: boolean }) {
   return (
     <motion.div
-      whileHover={{ y: -2, scale: 1.02 }}
+      whileHover={shouldReduceMotion ? undefined : { y: -2, scale: 1.02 }}
       className="rounded-2xl overflow-hidden bg-white/2 backdrop-blur-md border-t border-t-white/15 border-b border-b-white/5 p-3 shadow-[0_10px_25px_rgba(0,0,0,0.1)] hover:shadow-[0_14px_30px_rgba(75,169,178,0.08)] transition-shadow duration-300 group cursor-pointer"
     >
       <div className="text-sm font-medium text-fg/90 group-hover:text-accent transition-colors truncate">{project.title}</div>
@@ -128,17 +131,19 @@ const DIR: Record<DashboardCardId, Direction> = {
 }
 
 export default function Dashboard({ siteName, recentPosts, knowledgeEntries, projects, tags }: DashboardProps) {
+  const { shouldReduceMotion } = useMotionPolicy()
+
   return (
     <section id="content" className="scroll-mt-24 px-4 pb-12 max-w-5xl mx-auto">
       <motion.div
         variants={containerVariants}
-        initial="hidden"
+        initial={shouldReduceMotion ? false : 'hidden'}
         whileInView="visible"
         viewport={{ once: true, margin: '-50px' }}
         className="grid grid-cols-1 md:grid-cols-12 md:grid-rows-[repeat(6,minmax(120px,auto))] gap-4 lg:gap-5"
       >
         {/* Bio */}
-        <Card layout={DASHBOARD_LAYOUT.bio} direction={DIR.bio} withBackdropBlur={false} className="flex flex-col gap-3 py-6">
+        <Card layout={DASHBOARD_LAYOUT.bio} direction={DIR.bio} withBackdropBlur={false} className="flex flex-col gap-3 py-6" shouldReduceMotion={shouldReduceMotion}>
           <div className="text-[10px] text-muted tracking-widest uppercase mb-3">Profile</div>
           <div className="flex flex-col items-center gap-3 flex-1 justify-center">
             <svg width="0" height="0" aria-hidden="true">
@@ -150,7 +155,7 @@ export default function Dashboard({ siteName, recentPosts, knowledgeEntries, pro
             </svg>
             <div className="relative w-16 h-16 group">
               <div
-                className="absolute -inset-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-spin"
+                className="absolute -inset-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 motion-reduce:animate-none animate-spin"
                 style={{ clipPath: 'url(#bio-avatar-clip)', background: 'var(--color-avatar-ring)', animationDuration: '4s' }}
               />
               {/* Static export avatar: publicPath and SVG clip-path require a native image element. */}
@@ -172,7 +177,7 @@ export default function Dashboard({ siteName, recentPosts, knowledgeEntries, pro
         </Card>
 
         {/* Knowledge */}
-        <Card layout={DASHBOARD_LAYOUT.knowledge} direction={DIR.knowledge} withBackdropBlur={false}>
+        <Card layout={DASHBOARD_LAYOUT.knowledge} direction={DIR.knowledge} withBackdropBlur={false} shouldReduceMotion={shouldReduceMotion}>
           <div className="mb-3 flex items-center justify-between">
             <div className="text-[10px] tracking-widest text-muted uppercase">Knowledge</div>
             <Link href="/knowledge" className="rounded-lg text-xs text-accent transition-colors hover:text-avatar-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus">查看全部 →</Link>
@@ -193,7 +198,7 @@ export default function Dashboard({ siteName, recentPosts, knowledgeEntries, pro
         </Card>
 
         {/* Posts */}
-        <Card layout={DASHBOARD_LAYOUT.posts} direction={DIR.posts}>
+        <Card layout={DASHBOARD_LAYOUT.posts} direction={DIR.posts} shouldReduceMotion={shouldReduceMotion}>
           <div className="mb-3 flex items-center justify-between">
             <div className="text-[10px] tracking-widest text-muted uppercase">Blog</div>
             <Link href="/blog" className="rounded-lg text-xs text-accent transition-colors hover:text-avatar-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus">查看全部 →</Link>
@@ -210,40 +215,40 @@ export default function Dashboard({ siteName, recentPosts, knowledgeEntries, pro
         </Card>
 
         {/* Projects */}
-        <Card layout={DASHBOARD_LAYOUT.projects} direction={DIR.projects}>
+        <Card layout={DASHBOARD_LAYOUT.projects} direction={DIR.projects} shouldReduceMotion={shouldReduceMotion}>
           <div className="mb-3 flex items-center justify-between">
             <div className="text-[10px] tracking-widest text-muted uppercase">Projects</div>
             <Link href="/projects" className="rounded-lg text-xs text-accent transition-colors hover:text-avatar-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus">查看全部 →</Link>
           </div>
           <div className="grid grid-cols-2 gap-3">
             {projects.slice(0, 4).map((p) => (
-              <Link key={p.slug} href={`/projects/${p.slug}`} className="block rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"><ProjectSubCard project={p} /></Link>
+              <Link key={p.slug} href={`/projects/${p.slug}`} className="block rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"><ProjectSubCard project={p} shouldReduceMotion={shouldReduceMotion} /></Link>
             ))}
           </div>
         </Card>
 
         {/* TagCloud */}
-        <Card layout={DASHBOARD_LAYOUT.tagcloud} direction={DIR.tagcloud} className="flex items-center justify-center">
+        <Card layout={DASHBOARD_LAYOUT.tagcloud} direction={DIR.tagcloud} className="flex items-center justify-center" shouldReduceMotion={shouldReduceMotion}>
           <TagCloud tags={tags} />
         </Card>
 
         {/* Memes */}
-        <Card layout={DASHBOARD_LAYOUT.memes} direction={DIR.memes} className="flex flex-col">
+        <Card layout={DASHBOARD_LAYOUT.memes} direction={DIR.memes} className="flex flex-col" shouldReduceMotion={shouldReduceMotion}>
           <div className="text-[10px] text-muted tracking-widest uppercase mb-3">Memes</div>
           <div className="flex-1 flex items-center justify-center"><MemCard /></div>
         </Card>
 
         {/* Status */}
-        <Card layout={DASHBOARD_LAYOUT.status} direction={DIR.status}><StatusCard /></Card>
+        <Card layout={DASHBOARD_LAYOUT.status} direction={DIR.status} shouldReduceMotion={shouldReduceMotion}><StatusCard /></Card>
 
         {/* Clock */}
-        <Card layout={DASHBOARD_LAYOUT.clock} direction={DIR.clock} className="flex flex-col">
+        <Card layout={DASHBOARD_LAYOUT.clock} direction={DIR.clock} className="flex flex-col" shouldReduceMotion={shouldReduceMotion}>
           <div className="text-[10px] text-muted tracking-widest uppercase mb-3">Clock</div>
           <div className="flex-1 flex items-center justify-center"><ClockCard /></div>
         </Card>
 
         {/* Hitokoto */}
-        <Card layout={DASHBOARD_LAYOUT.hitokoto} direction={DIR.hitokoto} className="flex flex-col"><HitokotoCard /></Card>
+        <Card layout={DASHBOARD_LAYOUT.hitokoto} direction={DIR.hitokoto} className="flex flex-col" shouldReduceMotion={shouldReduceMotion}><HitokotoCard /></Card>
 
       </motion.div>
 

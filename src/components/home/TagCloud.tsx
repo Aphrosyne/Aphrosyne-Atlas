@@ -1,12 +1,14 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useMotionPolicy } from '@/lib/use-motion-policy'
 
 interface TagCloudProps {
   tags: string[]
 }
 
 export default function TagCloud({ tags }: TagCloudProps) {
+  const { shouldReduceMotion } = useMotionPolicy()
   const [ready, setReady] = useState(false)
   useEffect(() => {
     const reveal = window.setTimeout(() => setReady(true), 0)
@@ -19,7 +21,14 @@ export default function TagCloud({ tags }: TagCloudProps) {
     <div className="relative w-64 h-64 mx-auto" style={{ perspective: '800px' }}>
       {/* Placeholder — always rendered, fixes layout shift */}
       {!ready && <div className="w-full h-full" />}
-      {ready && (
+      {ready && shouldReduceMotion && (
+        <div className="flex h-full content-center justify-center gap-2 overflow-y-auto px-3 py-6">
+          <div className="flex flex-wrap justify-center gap-2">
+            {tags.map((tag) => <span key={tag} className="rounded-full bg-fg/8 px-2.5 py-1 text-sm font-medium text-fg/80">{tag}</span>)}
+          </div>
+        </div>
+      )}
+      {ready && !shouldReduceMotion && (
         <>
           <div
             className="w-full h-full relative"

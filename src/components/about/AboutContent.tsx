@@ -5,6 +5,7 @@ import MarqueeTechStack from '@/components/shared/MarqueeTechStack'
 import socialIcons from '@/components/shared/SocialIcons'
 import { SITE, SOCIAL_LINKS } from '@/config/site'
 import { publicPath } from '@/lib/public-path'
+import { useMotionPolicy } from '@/lib/use-motion-policy'
 
 function superellipsePath(n: number, points = 48): string {
   const coords: string[] = []
@@ -22,12 +23,14 @@ function superellipsePath(n: number, points = 48): string {
 const AVATAR_CLIP_PATH = superellipsePath(3)
 
 export default function AboutContent() {
+  const { shouldReduceMotion } = useMotionPolicy()
+
   return (
     <div className="mx-auto w-full min-w-0 max-w-3xl px-4 py-16">
       <motion.div
-        initial={{ opacity: 0 }}
+        initial={shouldReduceMotion ? false : { opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.4, ease: 'easeOut' }}
+        transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.4, ease: 'easeOut' }}
         className="min-w-0 rounded-2xl border border-border/10 bg-bg/30 p-8 backdrop-blur-xl sm:p-10"
       >
         {/* Avatar — superellipse */}
@@ -41,7 +44,7 @@ export default function AboutContent() {
           </svg>
           <div className="relative w-20 h-20 group">
             <div
-              className="absolute -inset-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-spin"
+              className="absolute -inset-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 motion-reduce:animate-none animate-spin"
               style={{
                 clipPath: 'url(#about-avatar-clip)',
                 background: 'var(--color-avatar-ring)',

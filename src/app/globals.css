@@ -148,8 +148,16 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .banner-track,
   .animate-marquee,
-  .animate-marquee-reverse {
-    animation-play-state: paused !important;
+  .animate-marquee-reverse,
+  .flow-text,
+  .scroll-arrow {
+    animation: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
   }
 }
 

@@ -22,8 +22,11 @@ function MarqueeRow({ items, reverse }: { items: string[]; reverse?: boolean }) 
         WebkitMaskImage: 'linear-gradient(to right, transparent, black 12%, black 88%, transparent)',
       }}
     >
+      <ul className="sr-only">
+        {items.map((tech) => <li key={tech}>{tech}</li>)}
+      </ul>
       <div
-        className={`flex w-max gap-2.5 group-hover:[animation-play-state:paused] ${reverse ? 'animate-marquee-reverse' : 'animate-marquee'}`}
+        className={`flex w-max gap-2.5 group-hover:[animation-play-state:paused] motion-reduce:hidden ${reverse ? 'animate-marquee-reverse' : 'animate-marquee'}`}
         aria-hidden
       >
         {doubled.map((tech, i) => (
@@ -31,6 +34,13 @@ function MarqueeRow({ items, reverse }: { items: string[]; reverse?: boolean }) 
             key={`${tech}-${i}`}
             className="shrink-0 select-none rounded-full border border-white/10 bg-white/30 backdrop-blur-lg px-3.5 py-1 text-sm text-white whitespace-nowrap"
           >
+            {tech}
+          </span>
+        ))}
+      </div>
+      <div className="hidden flex-wrap justify-center gap-2.5 motion-reduce:flex" aria-hidden="true">
+        {items.map((tech) => (
+          <span key={tech} className="shrink-0 select-none rounded-full border border-white/10 bg-white/30 backdrop-blur-lg px-3.5 py-1 text-sm text-white whitespace-nowrap">
             {tech}
           </span>
         ))}

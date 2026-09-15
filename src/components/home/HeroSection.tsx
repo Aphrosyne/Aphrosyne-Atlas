@@ -2,16 +2,19 @@
 
 import { motion } from 'framer-motion'
 import { SITE } from '@/config/site'
+import { useMotionPolicy } from '@/lib/use-motion-policy'
 
 const EASE_OUT = [0.25, 0.1, 0.25, 1] as const
 
-const fadeIn = (delay: number) => ({
-  initial: { opacity: 0 },
+const fadeIn = (delay: number, shouldReduceMotion: boolean) => ({
+  initial: shouldReduceMotion ? false : { opacity: 0 },
   animate: { opacity: 1 },
-  transition: { duration: 0.8, delay, ease: EASE_OUT },
+  transition: shouldReduceMotion ? { duration: 0 } : { duration: 0.8, delay, ease: EASE_OUT },
 })
 
 export default function HeroSection() {
+  const { shouldReduceMotion, scrollBehavior } = useMotionPolicy()
+
   return (
     <section className="relative flex min-h-[calc(100svh-3.75rem)] flex-col items-center justify-center px-4 text-center">
       <style>{`
@@ -43,14 +46,14 @@ export default function HeroSection() {
       `}</style>
 
       <motion.p
-        {...fadeIn(0)}
+        {...fadeIn(0, shouldReduceMotion)}
         className="max-w-md text-base text-white/70 leading-relaxed mb-6"
       >
         {SITE.profile.heroQuote}
       </motion.p>
 
       <motion.p
-        {...fadeIn(0.15)}
+        {...fadeIn(0.15, shouldReduceMotion)}
         className="mb-8"
       >
         <span className="text-md text-white/60 tracking-[0.2em] uppercase">{SITE.profile.heroPrefix}</span>
@@ -59,12 +62,12 @@ export default function HeroSection() {
 
       {/* Scroll arrow */}
       <motion.div
-        {...fadeIn(0.5)}
+        {...fadeIn(0.5, shouldReduceMotion)}
         className="absolute bottom-12 left-1/2 -translate-x-1/2 sm:bottom-20"
       >
         <button
-          onClick={() => document.getElementById('content')?.scrollIntoView({ behavior: 'smooth' })}
-          className="scroll-arrow grid size-11 place-items-center rounded-full cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          onClick={() => document.getElementById('content')?.scrollIntoView({ behavior: scrollBehavior })}
+          className="scroll-arrow grid size-11 place-items-center rounded-full cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
           aria-label="滚动到主要内容"
           type="button"
         >
