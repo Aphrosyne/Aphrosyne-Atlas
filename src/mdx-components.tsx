@@ -1,6 +1,7 @@
 import type { MDXComponents } from 'mdx/types'
 import type { ComponentProps } from 'react'
 import ArticleScrollRegion from '@/components/content/ArticleScrollRegion'
+import { IMAGE_DIMENSIONS } from '@/lib/image-dimensions'
 import { publicPath } from '@/lib/public-path'
 
 function ArticleTable(props: ComponentProps<'table'>) {
@@ -24,10 +25,22 @@ function ArticleLink({ href, ...props }: ComponentProps<'a'>) {
 }
 
 function ArticleImage({ src, alt = '', ...props }: ComponentProps<'img'>) {
-  const resolvedSrc = typeof src === 'string' && src.startsWith('/') ? publicPath(src) : src
+  const sourcePath = typeof src === 'string' ? src : undefined
+  const dimensions = sourcePath ? IMAGE_DIMENSIONS[sourcePath] : undefined
+  const resolvedSrc = sourcePath?.startsWith('/') ? publicPath(sourcePath) : src
   // Static MDX assets use native images so the authored source and aspect ratio remain intact.
-  // eslint-disable-next-line @next/next/no-img-element
-  return <img {...props} src={resolvedSrc} alt={alt} />
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      {...props}
+      src={resolvedSrc}
+      alt={alt}
+      width={dimensions?.width}
+      height={dimensions?.height}
+      loading={props.loading ?? "lazy"}
+      decoding="async"
+    />
+  )
 }
 
 const components = {

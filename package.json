@@ -12,6 +12,7 @@
     "build:static": "node scripts/build-static.mjs",
     "preview:static": "node scripts/preview-static.mjs",
     "smoke:static": "node scripts/smoke-static.mjs",
+    "verify:images": "node scripts/verify-image-dimensions.mjs",
     "lint": "eslint",
     "typecheck": "tsc --noEmit --incremental false"
   },

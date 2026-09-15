@@ -100,7 +100,7 @@ assets/images-source/knowledge/example/screenshot.png
   → Markdown 中引用 /images/knowledge/example/screenshot.webp
 ```
 
-转换器会跳过没有变化的图片；修改压缩规则后可运行 `npm run optimize:assets -- --force` 强制重新生成。SVG 和动画 GIF 不经过此转换器，应按需直接放入 `public/images/`，视频动画建议另行转换为 WebM。
+转换器会跳过没有变化的图片，并从所有发布图片生成 `src/lib/image-dimensions.ts`；MDX 文章图片据此在 HTML 中写入真实 `width`/`height`，以便加载前预留比例。修改压缩规则后可运行 `npm run optimize:assets -- --force` 强制重新生成。SVG 和动画 GIF 不经过此转换器，应按需直接放入 `public/images/`，视频动画建议另行转换为 WebM。静态构建后可运行 `npm run verify:images -- --base-path /Aphrosyne-Atlas --site-origin https://aphrosyne.github.io` 核对文章图片的尺寸、替代文本和实际资产。
 
 ## Dashboard 布局工作台
 

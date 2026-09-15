@@ -130,6 +130,11 @@ body {
   margin: 0;
 }
 
+.prose img {
+  max-width: 100%;
+  height: auto;
+}
+
 .prose code:not(pre code) {
   overflow-wrap: anywhere;
   word-break: break-word;

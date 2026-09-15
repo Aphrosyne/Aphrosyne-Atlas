@@ -9,6 +9,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const FONT_DIR = path.join(ROOT, 'src/app/fonts')
 const IMAGE_SOURCE_DIR = path.join(ROOT, 'assets/images-source')
 const IMAGE_OUTPUT_DIR = path.join(ROOT, 'public/images')
+const IMAGE_DIMENSIONS_OUTPUT = path.join(ROOT, 'src/lib/image-dimensions.ts')
 const FORCE_IMAGE_BUILD = process.argv.includes('--force')
 const BACKGROUND_MAX_DIMENSION = 2048
 
@@ -190,6 +191,29 @@ async function convertImages() {
   }
 }
 
+async function generateImageDimensions() {
+  const imagePaths = await globby('images/**/*.{avif,gif,jpeg,jpg,png,webp}', {
+    cwd: path.join(ROOT, 'public'),
+    absolute: true,
+    caseSensitiveMatch: false,
+  })
+
+  const entries = await Promise.all(imagePaths.sort().map(async (imagePath) => {
+    const metadata = await sharp(imagePath).metadata()
+    if (!metadata.width || !metadata.height) {
+      throw new Error(`无法读取图片尺寸：${path.relative(ROOT, imagePath)}`)
+    }
+    const publicPath = `/${path.relative(path.join(ROOT, 'public'), imagePath).split(path.sep).join('/')}`
+    return { publicPath, width: metadata.width, height: metadata.height }
+  }))
+
+  const generated = `// 此文件由 scripts/optimize-static-assets.mjs 自动生成，请勿手动编辑。\n\nexport type ImageDimensions = { width: number; height: number }\n\nexport const IMAGE_DIMENSIONS: Record<string, ImageDimensions> = {\n${entries.map(({ publicPath, width, height }) => `  ${JSON.stringify(publicPath)}: { width: ${width}, height: ${height} },`).join('\n')}\n}\n`
+  const current = await fs.readFile(IMAGE_DIMENSIONS_OUTPUT, 'utf8').catch(() => '')
+  if (current !== generated) await fs.writeFile(IMAGE_DIMENSIONS_OUTPUT, generated, 'utf8')
+  console.log(`Generated image dimensions for ${entries.length} public images.`)
+}
+
 const characters = await collectSiteCharacters()
 console.log(`Subsetting fonts for ${[...characters].length} code points.`)
 await Promise.all([buildFontSubsets(characters), convertImages()])
+await generateImageDimensions()

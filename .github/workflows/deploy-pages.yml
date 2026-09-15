@@ -43,6 +43,9 @@ jobs:
       - name: 检查静态发布产物
         run: npm run smoke:static -- --base-path "$STATIC_BASE_PATH" --site-origin "$STATIC_SITE_ORIGIN"
 
+      - name: 检查文章图片尺寸
+        run: npm run verify:images -- --base-path "$STATIC_BASE_PATH" --site-origin "$STATIC_SITE_ORIGIN"
+
       - name: 配置 GitHub Pages
         uses: actions/configure-pages@v5
 
