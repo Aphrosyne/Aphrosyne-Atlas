@@ -151,6 +151,7 @@ export default function Navbar() {
   const [searchOpen, setSearchOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const menuButtonRef = useRef<HTMLButtonElement>(null)
+  const searchButtonRef = useRef<HTMLButtonElement>(null)
   const menuRef = useRef<HTMLElement>(null)
   const handleCloseSearch = useCallback(() => setSearchOpen(false), [])
   const closeMenu = useCallback(() => setMenuOpen(false), [])
@@ -282,6 +283,7 @@ export default function Navbar() {
 
         {/* Search */}
         <button
+          ref={searchButtonRef}
           onClick={() => setSearchOpen(true)}
           className="relative w-12 h-12 flex items-center justify-center text-fg/40 hover:text-fg transition-colors cursor-pointer group"
           aria-label="搜索"
@@ -368,7 +370,7 @@ export default function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
-      <SearchModal open={searchOpen} onClose={handleCloseSearch} />
+      <SearchModal open={searchOpen} onClose={handleCloseSearch} triggerRef={searchButtonRef} />
     </header>
   )
 }

@@ -1,120 +1,20 @@
 'use client'
-
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useEffect, useMemo, useRef, useState, type RefObject } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
 import { publicPath } from '@/lib/public-path'
 import type { PublicationState } from '@/types/publication'
 
-interface SearchItem {
-  title: string
-  href: string
-  excerpt: string
-  type: 'blog' | 'knowledge' | 'page'
-  publication?: PublicationState
-  searchableText: string
-}
+interface SearchItem { title:string; href:string; excerpt:string; type:'blog'|'knowledge'|'page'; publication?:PublicationState; searchableText:string }
+interface Props { open:boolean; onClose:()=>void; triggerRef:RefObject<HTMLButtonElement|null> }
+type State='idle'|'loading'|'ready'|'error'
+const valid=(v:unknown):v is SearchItem=>{const x=v as Record<string,unknown>;return !!x&&typeof x.title==='string'&&typeof x.href==='string'&&typeof x.excerpt==='string'&&typeof x.searchableText==='string'&&['blog','knowledge','page'].includes(String(x.type))}
 
-interface SearchModalProps {
-  open: boolean
-  onClose: () => void
-}
-
-export default function SearchModal({ open, onClose }: SearchModalProps) {
-  const [query, setQuery] = useState('')
-  const [data, setData] = useState<SearchItem[]>([])
-  const [scope, setScope] = useState<'all' | 'blog' | 'knowledge'>('all')
-  const inputRef = useRef<HTMLInputElement>(null)
-
-  useEffect(() => {
-    if (open) {
-      fetch(publicPath('/search-index.json')).then(r => r.json()).then(setData)
-      setTimeout(() => inputRef.current?.focus(), 100)
-    }
-  }, [open])
-
-  const filteredResults = useMemo(() => {
-    if (!query.trim()) return []
-    const q = query.toLocaleLowerCase()
-    return data
-      .filter((item) => scope === 'all' || item.type === scope)
-      .filter((item) => item.searchableText.toLocaleLowerCase().includes(q))
-      .slice(0, 8)
-  }, [data, query, scope])
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
-      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-        e.preventDefault()
-        onClose()
-      }
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [onClose])
-
-  return (
-    <AnimatePresence>
-      {open && (
-        <>
-          {/* Overlay: bg-black kept intentionally — darker than themed bg-bg for contrast */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
-            onClick={onClose}
-          />
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: -10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: -10 }}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
-            className="fixed top-[15%] left-1/2 -translate-x-1/2 z-50 w-full max-w-lg px-4"
-          >
-            <div className="rounded-2xl bg-surface/90 backdrop-blur-xl border border-border/10 shadow-2xl overflow-hidden">
-              <div className="flex items-center gap-3 px-4 py-3 border-b border-border/5">
-                <svg className="w-4 h-4 text-fg/30 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-                <input
-                  ref={inputRef}
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="搜索文章、知识库、项目..."
-                  className="flex-1 bg-transparent text-fg placeholder:text-fg/30 text-sm outline-none"
-                />
-                <kbd className="hidden sm:inline text-[10px] text-fg/20 border border-border/10 rounded px-1.5 py-0.5">ESC</kbd>
-              </div>
-              <div className="flex gap-2 border-b border-border/5 px-4 py-2 text-xs">
-                {([['all', '全部'], ['knowledge', '知识库'], ['blog', 'Blog']] as const).map(([value, label]) => (
-                  <button key={value} type="button" onClick={() => setScope(value)} className={`rounded-full px-2.5 py-1 transition-colors ${scope === value ? 'bg-accent text-white' : 'text-fg/50 hover:bg-fg/5 hover:text-fg'}`}>{label}</button>
-                ))}
-              </div>
-              {filteredResults.length > 0 && (
-                <div className="py-2">
-                  {filteredResults.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onClick={onClose}
-                      className="flex items-center gap-3 px-4 py-2.5 hover:bg-fg/5 transition-colors group"
-                    >
-                      <span className="min-w-0 truncate text-sm text-fg/80 group-hover:text-fg">{item.title}</span>
-                      {item.publication === 'archived' && <span className="shrink-0 rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[10px] text-amber-800 dark:text-amber-200">归档</span>}
-                      <span className="text-[11px] text-fg/30 truncate ml-auto hidden sm:block">{item.href}</span>
-                    </Link>
-                  ))}
-                </div>
-              )}
-              {query && filteredResults.length === 0 && data.length > 0 && (
-                <div className="px-4 py-6 text-center text-sm text-fg/30">没有找到相关结果</div>
-              )}
-            </div>
-          </motion.div>
-        </>
-      )}
-    </AnimatePresence>
-  )
+export default function SearchModal({open,onClose,triggerRef}:Props) {
+ const [query,setQuery]=useState(''); const [data,setData]=useState<SearchItem[]>([]); const [scope,setScope]=useState<'all'|'blog'|'knowledge'>('all'); const [state,setState]=useState<State>('idle')
+ const dialogRef=useRef<HTMLDivElement>(null); const inputRef=useRef<HTMLInputElement>(null)
+ const load=async(signal?:AbortSignal)=>{setState('loading');try{const r=await fetch(publicPath('/search-index.json'),{signal});if(!r.ok)throw Error();const p:unknown=await r.json();if(!Array.isArray(p)||!p.every(valid))throw Error();setData(p);setState('ready')}catch(e){if((e as Error).name!=='AbortError')setState('error')}}
+ useEffect(()=>{if(!open)return;const c=new AbortController(),overflow=document.body.style.overflow,trigger=triggerRef.current;document.body.style.overflow='hidden';requestAnimationFrame(()=>inputRef.current?.focus());if(!data.length)void Promise.resolve().then(()=>load(c.signal));const key=(e:KeyboardEvent)=>{if(e.key==='Escape'){e.preventDefault();onClose();return}if(e.key!=='Tab'||!dialogRef.current)return;const f=Array.from(dialogRef.current.querySelectorAll<HTMLElement>('a[href],button:not([disabled]),input:not([disabled])')),first=f[0],last=f.at(-1);if(!first||!last)return;if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}};addEventListener('keydown',key);return()=>{c.abort();document.body.style.overflow=overflow;removeEventListener('keydown',key);trigger?.focus()}},[data.length,open,onClose,triggerRef])
+ const results=useMemo(()=>{const q=query.trim().toLocaleLowerCase();return q?data.filter(x=>(scope==='all'||x.type===scope)&&x.searchableText.toLocaleLowerCase().includes(q)).slice(0,8):[]},[data,query,scope])
+ return <AnimatePresence>{open&&<motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="fixed inset-0 z-[70] bg-black/60 p-4 backdrop-blur-sm"><div className="absolute inset-0" aria-hidden="true" onClick={onClose}/><motion.div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="search-title" initial={{opacity:0,scale:.95,y:-10}} animate={{opacity:1,scale:1,y:0}} exit={{opacity:0,scale:.95,y:-10}} className="relative mx-auto mt-[10vh] w-full max-w-lg overflow-hidden rounded-2xl border border-border/10 bg-surface/95 shadow-2xl"><div className="flex gap-3 border-b border-border/5 px-4 py-3"><span id="search-title" className="sr-only">站内搜索</span><input ref={inputRef} value={query} onChange={e=>setQuery(e.target.value)} aria-label="搜索关键词" placeholder="搜索文章、知识库、项目…" className="min-w-0 flex-1 bg-transparent text-sm text-fg outline-none placeholder:text-fg/30"/><button type="button" onClick={onClose} className="min-h-11 px-3 text-sm">关闭</button></div><div className="flex gap-2 border-b border-border/5 px-4 py-2">{([['all','全部'],['knowledge','知识库'],['blog','Blog']]as const).map(([v,l])=><button key={v} type="button" onClick={()=>setScope(v)} className={`min-h-11 rounded-full px-3 text-xs ${scope===v?'bg-accent text-white':'text-fg/60'}`}>{l}</button>)}</div><div className="max-h-[55dvh] overflow-y-auto py-2" aria-live="polite">{state==='loading'&&<p className="px-4 py-6 text-center text-sm text-fg/50">正在加载搜索索引…</p>}{state==='error'&&<div className="px-4 py-6 text-center text-sm text-fg/60">搜索索引暂时无法加载。<button type="button" onClick={()=>void load()} className="ml-3 min-h-11 text-accent">重试</button></div>}{state==='ready'&&query&&results.length===0&&<p className="px-4 py-6 text-center text-sm text-fg/50">没有找到相关结果</p>}{results.map(x=><Link key={x.href} href={x.href} onClick={onClose} className="flex min-h-13 items-center px-4 py-2.5 hover:bg-fg/5"><span className="min-w-0"><span className="block truncate text-sm text-fg">{x.title}</span><span className="block truncate text-xs text-fg/55">{x.excerpt}</span></span></Link>)}</div></motion.div></motion.div>}</AnimatePresence>
 }
