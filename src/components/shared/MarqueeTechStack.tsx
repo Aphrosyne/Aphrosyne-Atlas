@@ -16,7 +16,7 @@ function MarqueeRow({ items, reverse }: { items: string[]; reverse?: boolean }) 
 
   return (
     <div
-      className="overflow-hidden py-2"
+      className="min-w-0 overflow-hidden py-2"
       style={{
         maskImage: 'linear-gradient(to right, transparent, black 12%, black 88%, transparent)',
         WebkitMaskImage: 'linear-gradient(to right, transparent, black 12%, black 88%, transparent)',
@@ -41,7 +41,7 @@ function MarqueeRow({ items, reverse }: { items: string[]; reverse?: boolean }) 
 
 export default function MarqueeTechStack() {
   return (
-    <div className="group rounded-xl border border-white/10 bg-white/3 py-5">
+    <div className="group w-full min-w-0 rounded-xl border border-white/10 bg-white/3 py-5">
       <MarqueeRow items={row1} />
       <MarqueeRow items={row2} reverse />
     </div>

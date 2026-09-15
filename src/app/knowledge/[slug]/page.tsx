@@ -46,13 +46,13 @@ export default async function KnowledgeArticlePage({ params }: Props) {
   const categories = await getAllKnowledge()
 
   return (
-    <main className="mx-auto max-w-7xl px-4 py-12">
-        <div className="rounded-[2rem] border border-border/40 bg-surface/50 p-5 shadow-[0_25px_80px_rgba(0,0,0,0.32)] backdrop-blur-md sm:p-8">
+    <main className="mx-auto w-full min-w-0 max-w-7xl px-4 py-12">
+        <div className="min-w-0 rounded-[2rem] border border-border/40 bg-surface/50 p-5 shadow-[0_25px_80px_rgba(0,0,0,0.32)] backdrop-blur-md sm:p-8">
           <Link href="/knowledge" className="inline-flex min-h-11 items-center rounded-xl border border-border/20 bg-surface/40 px-4 py-2.5 text-base font-semibold text-fg/65 transition-colors hover:bg-surface/60 hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
             ← 返回知识库
           </Link>
-          <div className="mt-8 grid gap-8 lg:grid-cols-[12rem_minmax(0,1fr)_12rem]">
-            <aside className="order-2 lg:order-1">
+          <div className="mt-8 grid min-w-0 gap-8 lg:grid-cols-[12rem_minmax(0,1fr)_12rem]">
+            <aside className="order-2 min-w-0 lg:order-1">
               <details className="rounded-xl border border-border/50 bg-surface/35 p-4 lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:overflow-hidden" open>
                 <summary className="cursor-pointer rounded-lg text-xs font-medium tracking-widest text-fg/45 uppercase focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">知识库导航</summary>
                 <ul className="mt-3 space-y-1 text-sm lg:max-h-[calc(100vh-11rem)] lg:overflow-y-auto lg:overscroll-contain lg:pr-1">
@@ -67,7 +67,7 @@ export default async function KnowledgeArticlePage({ params }: Props) {
               </details>
             </aside>
 
-            <article id="article-content" className="order-1 prose max-w-none prose-headings:font-semibold prose-a:text-accent prose-a:no-underline [&_a:hover]:text-avatar-ring [&_a]:transition-colors prose-pre:border-0 prose-pre:bg-transparent prose-code:rounded prose-code:bg-code-bg/40 prose-code:px-1.5 prose-code:py-0.5 dark:prose-invert lg:order-2">
+            <article id="article-content" className="order-1 min-w-0 prose max-w-none prose-headings:font-semibold prose-a:text-accent prose-a:no-underline [&_a:hover]:text-avatar-ring [&_a]:transition-colors prose-pre:border-0 prose-pre:bg-transparent prose-code:rounded prose-code:bg-code-bg/40 prose-code:px-1.5 prose-code:py-0.5 dark:prose-invert lg:order-2">
               <header className="mb-10 not-prose">
                 <div className="flex flex-wrap items-center gap-2 text-xs">
                   <span className="rounded-full bg-accent/15 px-2.5 py-1 text-accent">{TYPE_LABELS[entry.type]}</span>
@@ -91,7 +91,7 @@ export default async function KnowledgeArticlePage({ params }: Props) {
               )}
             </article>
 
-            <aside className="order-3 hidden lg:block"><TableOfContents /></aside>
+            <aside className="order-3 hidden min-w-0 lg:block"><TableOfContents /></aside>
           </div>
         </div>
     </main>

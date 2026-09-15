@@ -213,7 +213,7 @@ R0–R2 建立发布基线；R3–R8 解决发布前核心可用性；R9–R13 �
 
 ## 批次 R3：修复页面收缩链与局部横向溢出
 
-- **状态 / 优先级：**[ ] / P1。
+- **状态 / 优先级：**[x] / P1。
 - **目标：**320/390/768px 下 Blog、Knowledge、About 不再整页横滚；宽表、代码和必要长内容只在自身容器中可达。
 - **来源：**A01、A12、CQ-002、AR01、AR02、AR10。
 - **范围：**root flex item、Blog/Knowledge/About 页面壳、阅读卡片和内容列、上下篇、Knowledge 导航、Marquee 内在宽度、table/pre/长 inline code 的局部边界。
@@ -222,6 +222,14 @@ R0–R2 建立发布基线；R3–R8 解决发布前核心可用性；R9–R13 �
 - **实施注意事项与风险：**按“根 main → 页面壳 → grid/flex item → article → 局部可滚元素”逐层定位；表格结构壳在本批建立，颜色与密度留给 R9。修复换行会改变页面高度，需回归 Footer 与现有 TOC。
 - **验收 / 退出条件：**四篇审计压力样本和 About 在 320/390/768 深浅主题下 `document.scrollWidth <= clientWidth + 1`；长 URL、中英连续串、上下篇、17 列表格、代码与跑马灯内容不丢失；table/pre 可键盘进入、横滚、退出；1440 桌面行宽不倒退。
 - **建议提交边界：**2 个提交：页面/布局收缩边界；局部 table/pre/inline-code 溢出边界。
+
+### R3 实施结果（2026-09-15）
+
+- root `main`、About、Blog 与 Knowledge 阅读壳、三栏 grid、文章列、侧栏和上下篇导航均补齐 `w-full`/`min-w-0` 收缩边界；窄屏上下篇改为纵向排列，保留桌面双列与既有玻璃、Hero 和正文尺寸。
+- 新增全局 MDX `table`/`pre` 映射：每个宽表和代码块都进入带名称、焦点样式与 `tabIndex=0` 的局部滚动区域。客户端小岛支持左右方向键与 Home/End 横滚；长 inline code 与裸露长链接可在行内断开，文字不丢失。
+- MDX 根路径链接和图片统一经已有 `publicPath` 处理。修复了启用共享 MDX 组件后在 Pages 子路径下暴露的根路径链接与图片引用，而未修改文章正文或本地资源路径。
+- 对 MDX 样式帖、Experience 修复、彩色魔法 Boss 长文和 About，使用新建的静态 `out/` 在 320/390/768 深浅主题矩阵测量 `document.scrollWidth <= clientWidth + 1`，全部通过；1440 宽度四样本亦无横向回归。宽表/代码区域只在自身 `scrollWidth > clientWidth` 时横滚，键盘验收确认聚焦后右方向键可移动局部 `scrollLeft`（320px 样本为 0 → 184）。
+- `npm run lint`、`npm run typecheck`、Pages 子路径 `build:static` 和 `smoke:static` 均通过。未部署、未推送；R4 继续处理图片加载前的尺寸预留，不把本批的 `max-width` 约束误作 CLS 修复。
 
 ## 批次 R4：为文章图片建立尺寸契约
 

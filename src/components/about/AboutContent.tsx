@@ -23,12 +23,12 @@ const AVATAR_CLIP_PATH = superellipsePath(3)
 
 export default function AboutContent() {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-16">
+    <div className="mx-auto w-full min-w-0 max-w-3xl px-4 py-16">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4, ease: 'easeOut' }}
-        className="rounded-2xl backdrop-blur-xl bg-bg/30 border border-border/10 p-8 sm:p-10"
+        className="min-w-0 rounded-2xl border border-border/10 bg-bg/30 p-8 backdrop-blur-xl sm:p-10"
       >
         {/* Avatar — superellipse */}
         <div className="flex justify-center mb-6">

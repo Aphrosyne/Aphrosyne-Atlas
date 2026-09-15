@@ -109,3 +109,36 @@ body {
   color: var(--color-fg);
 }
 
+/* Long data stays reachable in its own scroll region instead of widening a reading page. */
+.prose .article-scroll-region {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-gutter: stable both-edges;
+}
+
+.prose .article-scroll-region:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+}
+
+.prose .article-scroll-region > table,
+.prose .article-scroll-region > pre {
+  width: max-content;
+  min-width: 100%;
+  max-width: none;
+  margin: 0;
+}
+
+.prose code:not(pre code) {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.prose a {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
