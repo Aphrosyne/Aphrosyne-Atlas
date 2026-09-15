@@ -289,7 +289,7 @@ R0–R2 建立发布基线；R3–R8 解决发布前核心可用性；R9–R13 �
 
 ## 批次 R7：建立语义 token 并修复客观对比问题
 
-- **状态 / 优先级：**[ ] / P1（对比缺陷）+ P2（系统治理）。
+- **状态 / 优先级：**[x] / P1（对比缺陷）+ P2（系统治理）。
 - **目标：**让状态、强调、正文/次要文字、阅读表面、代码、focus 和层级有稳定语义来源，再由组件消费，而不是继续复制白色和任意 alpha。
 - **来源：**A05、A06、A14、A17、A18、CQ-017、CQ-023、AR08、AR11。
 - **范围：**`globals.css` Tailwind v4 变量；status fg/bg/border、accent-fill/on-accent、expressive/content/reading/dialog surface、reading/code muted、focus、shadow、z-layer、导航/锚点尺寸；迁移 Knowledge 状态、代码行号、Dashboard/About 必要文字和核心 focus 消费者。
@@ -298,6 +298,12 @@ R0–R2 建立发布基线；R3–R8 解决发布前核心可用性；R9–R13 �
 - **实施注意事项与风险：**先把现有值迁移为命名角色，再只调整有证据的对比缺陷；半透明玻璃按最终复合背景验收。Tailwind v4 映射遵循本地版本实现。
 - **验收 / 退出条件：**普通文字/必要小字目标 4.5:1、适用大字 3:1；verified/needs-review/outdated 不只靠颜色；深色 accent 上文字合格；固定暗色代码行号与 focus 可读；深浅主题、hover/focus/disabled 和复杂背景均检查；组件不再各自维护相同状态色映射。
 - **建议提交边界：**2 个提交：定义/迁移语义 token；修复核心消费者对比与重复映射。
+
+### R7 实施结果（2026-09-15）
+
+- `globals.css` 现定义强调文字/填充/填充上文字、状态前景/背景/边框、表达/内容/阅读/对话表面、阅读与代码次要文字、focus、阴影、层级和导航/锚点尺寸等 Tailwind v4 可消费 token；固定暗色代码行号改用 `code-muted`。
+- Knowledge 列表与详情页改为共享状态标签元数据；Blog 归档与项目公开/归档也复用同一来源，状态以“已验证 / 待复查 / 已过时”等文字表达，不只依赖颜色。Dashboard 与 About 的必要文字和核心导航、目录、卡片、搜索焦点环已迁移，强调填充统一使用合格的 on-accent 文本。
+- 对 token 的实色前景/背景组合计算得到 5.49–8.24:1（深色 accent/三类状态）与 5.98–7.07:1（浅色 accent/三类状态）。lint、TypeScript、根路径与 Pages 子路径静态构建、smoke 和图片校验通过；本地静态预览检查了首页、知识库列表与文章的深浅主题。未推送、未部署。
 
 ## 批次 R8：统一 reduced-motion 与连续运动降级
 

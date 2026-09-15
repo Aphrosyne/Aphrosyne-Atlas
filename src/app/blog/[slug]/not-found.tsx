@@ -9,7 +9,7 @@ export default function BlogNotFound() {
       </p>
       <Link
         href="/blog"
-        className="mt-8 rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-white hover:opacity-90 transition-opacity"
+        className="mt-8 rounded-lg bg-accent-fill px-5 py-2.5 text-sm font-medium text-on-accent hover:opacity-90 transition-opacity"
       >
         Back to blog
       </Link>

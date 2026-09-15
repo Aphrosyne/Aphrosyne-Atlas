@@ -4,28 +4,17 @@ import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { motion, useReducedMotion } from 'framer-motion'
-import type { KnowledgeMetadata, KnowledgeStatus, KnowledgeType } from '@/types/knowledge'
+import type { KnowledgeMetadata, KnowledgeType } from '@/types/knowledge'
 import ContentToolbar from '@/components/shared/ContentToolbar'
 import { CONTENT_CARD_FOCUS, CONTENT_CARD_PADDING, CONTENT_CARD_SURFACE } from '@/components/shared/content-card'
 import SortControls, { type SortDirection } from '@/components/shared/SortControls'
+import { ARCHIVED_STATUS_CLASS, KNOWLEDGE_STATUS_CLASSES, KNOWLEDGE_STATUS_LABELS } from '@/components/shared/content-status'
 
 const TYPE_LABELS: Record<KnowledgeType, string> = {
   guide: '教程',
   fix: '问题修复',
   experiment: '实验记录',
   reference: '参考资料',
-}
-
-const STATUS_LABELS: Record<KnowledgeStatus, string> = {
-  verified: '已验证',
-  'needs-review': '待复查',
-  outdated: '已过时',
-}
-
-const STATUS_CLASSES: Record<KnowledgeStatus, string> = {
-  verified: 'border-emerald-400/30 bg-emerald-400/10 text-emerald-300',
-  'needs-review': 'border-amber-400/30 bg-amber-400/10 text-amber-200',
-  outdated: 'border-rose-400/30 bg-rose-400/10 text-rose-200',
 }
 
 const MotionLink = motion.create(Link)
@@ -75,7 +64,7 @@ export default function KnowledgeList({ entries }: { entries: KnowledgeMetadata[
             type="button"
             onClick={() => router.replace('/knowledge', { scroll: false })}
             className={`min-h-11 w-full rounded-xl px-3 py-2 text-left text-sm transition-colors ${
-              !showingArchive && activeType === 'all' ? 'bg-accent text-white' : 'text-fg/65 hover:bg-surface hover:text-fg'
+              !showingArchive && activeType === 'all' ? 'bg-accent-fill text-on-accent' : 'text-fg/65 hover:bg-surface hover:text-fg'
             }`}
           >
             全部条目 <span className="float-right opacity-60">{publishedEntries.length}</span>
@@ -88,7 +77,7 @@ export default function KnowledgeList({ entries }: { entries: KnowledgeMetadata[
                 type="button"
                 onClick={() => router.replace(`/knowledge?type=${type}`, { scroll: false })}
                 className={`min-h-11 w-full rounded-xl px-3 py-2 text-left text-sm transition-colors ${
-                  !showingArchive && activeType === type ? 'bg-accent text-white' : 'text-fg/65 hover:bg-surface hover:text-fg'
+                  !showingArchive && activeType === type ? 'bg-accent-fill text-on-accent' : 'text-fg/65 hover:bg-surface hover:text-fg'
                 }`}
               >
                 {TYPE_LABELS[type]} <span className="float-right opacity-60">{count}</span>
@@ -99,7 +88,7 @@ export default function KnowledgeList({ entries }: { entries: KnowledgeMetadata[
             <button
               type="button"
               onClick={() => router.replace('/knowledge?view=archive', { scroll: false })}
-              className={`col-span-2 min-h-11 w-full cursor-pointer rounded-xl border-t border-border/30 px-3 py-2 text-left text-sm transition-colors lg:mt-2 lg:rounded-t-none ${showingArchive ? 'bg-accent text-white' : 'text-fg/65 hover:bg-surface hover:text-fg'}`}
+              className={`col-span-2 min-h-11 w-full cursor-pointer rounded-xl border-t border-border/30 px-3 py-2 text-left text-sm transition-colors lg:mt-2 lg:rounded-t-none ${showingArchive ? 'bg-accent-fill text-on-accent' : 'text-fg/65 hover:bg-surface hover:text-fg'}`}
             >
               归档条目 <span className="float-right opacity-60">{archivedEntries.length}</span>
             </button>
@@ -133,8 +122,8 @@ export default function KnowledgeList({ entries }: { entries: KnowledgeMetadata[
             >
               <div className="flex flex-wrap items-center gap-2 text-xs">
                 <span className="rounded-full bg-accent/15 px-2.5 py-1 text-accent">{TYPE_LABELS[entry.type]}</span>
-                <span className={`rounded-full border px-2.5 py-1 ${STATUS_CLASSES[entry.status]}`}>{STATUS_LABELS[entry.status]}</span>
-                {entry.publication === 'archived' && <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-1 text-amber-800 dark:text-amber-200">归档</span>}
+                <span className={`rounded-full border px-2.5 py-1 ${KNOWLEDGE_STATUS_CLASSES[entry.status]}`}>{KNOWLEDGE_STATUS_LABELS[entry.status]}</span>
+                {entry.publication === 'archived' && <span className={`rounded-full border px-2.5 py-1 ${ARCHIVED_STATUS_CLASS.archived}`}>归档</span>}
                 {entry.gameVersion && <span className="text-fg/45">{entry.gameVersion}</span>}
               </div>
               <h2 className="mt-3 text-lg font-semibold leading-snug text-fg/90 transition-colors group-hover:text-accent sm:text-xl">{entry.title}</h2>

@@ -57,7 +57,7 @@ function NavDropdown({
   const triggerClass = open
     ? 'bg-fg/10 text-fg'
     : active
-      ? 'bg-accent text-white shadow-sm'
+      ? 'bg-accent-fill text-on-accent shadow-sm'
       : 'text-fg/60 hover:text-fg'
 
   return (
@@ -66,7 +66,7 @@ function NavDropdown({
       <Link
         href={href}
         className={`md:hidden rounded-full px-4 py-1.5 text-[13px] font-semibold transition-colors ${
-          active ? 'bg-accent text-white shadow-sm' : 'text-fg/60'
+          active ? 'bg-accent-fill text-on-accent shadow-sm' : 'text-fg/60'
         }`}
       >
         {label}
@@ -85,7 +85,7 @@ function NavDropdown({
           <Link
             href={href}
             aria-current={active ? 'page' : undefined}
-            className="rounded-l-full py-1.5 pl-4 pr-1 text-[13px] font-semibold select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            className="rounded-l-full py-1.5 pl-4 pr-1 text-[13px] font-semibold select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
           >
             {label}
           </Link>
@@ -98,7 +98,7 @@ function NavDropdown({
             onKeyDown={(event) => {
               if (event.key === 'Escape') setOpen(false)
             }}
-            className="rounded-r-full py-1.5 pl-1 pr-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            className="rounded-r-full py-1.5 pl-1 pr-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
           >
             <svg
               className={`w-3 h-3 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
@@ -254,7 +254,7 @@ export default function Navbar() {
                 aria-current={isActive ? 'page' : undefined}
                 className={`rounded-full px-4 py-1.5 text-[13px] font-semibold transition-colors ${
                   isActive
-                    ? 'bg-accent text-white shadow-sm'
+                    ? 'bg-accent-fill text-on-accent shadow-sm'
                     : 'text-fg/60 hover:text-fg'
                 }`}
               >
@@ -269,7 +269,7 @@ export default function Navbar() {
           type="button"
           onClick={() => setMenuOpen((open) => !open)}
           ref={menuButtonRef}
-          className="grid size-11 place-items-center rounded-2xl border border-border/20 bg-surface/65 text-fg/75 shadow-sm backdrop-blur-xl transition-colors hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent md:hidden"
+          className="grid size-11 place-items-center rounded-2xl border border-border/20 bg-surface/65 text-fg/75 shadow-sm backdrop-blur-xl transition-colors hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus md:hidden"
           aria-label={menuOpen ? '关闭导航菜单' : '打开导航菜单'}
           aria-expanded={menuOpen}
           aria-controls="mobile-navigation"
@@ -329,7 +329,7 @@ export default function Navbar() {
             >
               <div className="flex items-center justify-between px-3 py-2">
                 <span className="text-sm font-semibold text-fg">导航</span>
-                <button type="button" onClick={closeMenu} className="grid size-11 place-items-center rounded-2xl text-fg/70 transition-colors hover:bg-fg/8 hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent" aria-label="关闭导航菜单">
+                <button type="button" onClick={closeMenu} className="grid size-11 place-items-center rounded-2xl text-fg/70 transition-colors hover:bg-fg/8 hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" aria-label="关闭导航菜单">
                   <svg className="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
                     <path strokeLinecap="round" d="m6 6 12 12M18 6 6 18" />
                   </svg>
@@ -343,8 +343,8 @@ export default function Navbar() {
                     href={item.href}
                     onClick={() => setMenuOpen(false)}
                     aria-current={active ? 'page' : undefined}
-                    className={`flex min-h-11 items-center rounded-2xl px-4 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
-                      active ? 'bg-accent text-white' : 'text-fg/75 hover:bg-fg/8 hover:text-fg'
+                    className={`flex min-h-11 items-center rounded-2xl px-4 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus ${
+                      active ? 'bg-accent-fill text-on-accent' : 'text-fg/75 hover:bg-fg/8 hover:text-fg'
                     }`}
                   >
                     {item.label}
@@ -356,7 +356,7 @@ export default function Navbar() {
                           key={child.href}
                           href={child.href}
                           onClick={() => setMenuOpen(false)}
-                          className="flex min-h-11 items-center rounded-xl px-3 text-sm text-fg/65 transition-colors hover:bg-fg/8 hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                          className="flex min-h-11 items-center rounded-xl px-3 text-sm text-fg/65 transition-colors hover:bg-fg/8 hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
                         >
                           {child.label}
                         </Link>

@@ -53,14 +53,14 @@ export default function BlogList({ posts }: { posts: PostMetadata[] }) {
           <button
             type="button"
             onClick={() => { setActiveTag(null); router.replace('/blog', { scroll: false }) }}
-            className={`min-h-11 cursor-pointer rounded-full px-4 py-2 text-sm font-medium transition-colors ${!showingArchive ? 'bg-accent text-white' : 'text-fg/65 hover:bg-surface/70 hover:text-fg'}`}
+            className={`min-h-11 cursor-pointer rounded-full px-4 py-2 text-sm font-medium transition-colors ${!showingArchive ? 'bg-accent-fill text-on-accent' : 'text-fg/65 hover:bg-surface/70 hover:text-fg'}`}
           >
             当前文章
           </button>
           <button
             type="button"
             onClick={() => { setActiveTag(null); router.replace('/blog?view=archive', { scroll: false }) }}
-            className={`min-h-11 cursor-pointer rounded-full px-4 py-2 text-sm font-medium transition-colors ${showingArchive ? 'bg-accent text-white' : 'text-fg/65 hover:bg-surface/70 hover:text-fg'}`}
+            className={`min-h-11 cursor-pointer rounded-full px-4 py-2 text-sm font-medium transition-colors ${showingArchive ? 'bg-accent-fill text-on-accent' : 'text-fg/65 hover:bg-surface/70 hover:text-fg'}`}
           >
             归档 <span className="opacity-70">{archivedCount}</span>
           </button>
@@ -96,7 +96,7 @@ export default function BlogList({ posts }: { posts: PostMetadata[] }) {
             transition={fadeT()}
             className={`inline-flex min-h-11 items-center rounded-full px-3 text-xs font-medium transition-colors sm:min-h-8 ${
               !activeTag
-                ? 'bg-accent text-white'
+                ? 'bg-accent-fill text-on-accent'
                 : 'bg-surface/50 backdrop-blur-sm text-fg/70 hover:bg-surface/70 hover:text-accent'
             }`}
           >
@@ -110,7 +110,7 @@ export default function BlogList({ posts }: { posts: PostMetadata[] }) {
               transition={fadeT()}
               className={`inline-flex min-h-11 items-center rounded-full px-3 text-xs font-medium transition-colors sm:min-h-8 ${
                 activeTag === tag
-                  ? 'bg-accent text-white'
+                  ? 'bg-accent-fill text-on-accent'
                   : 'bg-surface/50 backdrop-blur-sm text-fg/70 hover:bg-surface/70 hover:text-accent'
               }`}
             >

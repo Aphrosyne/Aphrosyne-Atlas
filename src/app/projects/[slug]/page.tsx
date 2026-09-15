@@ -4,17 +4,7 @@ import { projects, getProjectBySlug } from '@/config/projects'
 import { siteUrl } from '@/lib/site-url'
 import PageTransition from '@/components/shared/PageTransition'
 import Link from 'next/link'
-
-const STATUS = {
-  public: {
-    label: '公开',
-    className: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300',
-  },
-  archived: {
-    label: '公开归档',
-    className: 'border-amber-500/30 bg-amber-500/10 text-amber-800 dark:text-amber-200',
-  },
-} as const
+import { PROJECT_STATUS } from '@/components/shared/content-status'
 
 type Props = {
   params: Promise<{ slug: string }>
@@ -36,7 +26,7 @@ export default async function ProjectDetailPage({ params }: Props) {
   const project = getProjectBySlug(slug)
 
   if (!project) notFound()
-  const statusMeta = STATUS[project.status]
+  const statusMeta = PROJECT_STATUS[project.status]
 
   return (
     <PageTransition>
@@ -44,7 +34,7 @@ export default async function ProjectDetailPage({ params }: Props) {
         <div className="rounded-[2rem] border border-border/40 bg-surface/50 p-5 shadow-[0_25px_80px_rgba(0,0,0,0.24)] backdrop-blur-md sm:p-8">
           <Link
             href="/projects"
-            className="inline-flex rounded-xl border border-border/20 bg-surface/40 px-4 py-2.5 text-sm font-semibold text-fg/65 transition-colors hover:bg-surface/60 hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            className="inline-flex rounded-xl border border-border/20 bg-surface/40 px-4 py-2.5 text-sm font-semibold text-fg/65 transition-colors hover:bg-surface/60 hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
           >
             &larr; 返回项目
           </Link>
@@ -71,7 +61,7 @@ export default async function ProjectDetailPage({ params }: Props) {
               {project.links.map((link) => {
                 const isExternal = /^https?:\/\//.test(link.href)
                 const className =
-                  'inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent'
+                  'inline-flex items-center gap-2 rounded-xl bg-accent-fill px-5 py-2.5 text-sm font-medium text-on-accent transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus'
                 const content = (
                   <>
                     {link.label}

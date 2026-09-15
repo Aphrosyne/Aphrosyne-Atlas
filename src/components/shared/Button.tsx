@@ -12,7 +12,7 @@ export default function Button({ href, children, variant = 'primary', className 
     'inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium transition-all duration-200'
 
   const styles = {
-    primary: 'bg-accent text-white hover:opacity-90',
+    primary: 'bg-accent-fill text-on-accent hover:opacity-90',
     outline:
       'border border-border text-fg hover:bg-surface',
   }

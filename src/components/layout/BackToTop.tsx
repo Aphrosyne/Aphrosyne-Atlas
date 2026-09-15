@@ -31,7 +31,7 @@ export default function BackToTop() {
       animate={{ opacity: visible ? 1 : 0, scale: visible ? 1 : 0.8 }}
       style={{ pointerEvents: visible ? 'auto' : 'none' }}
       onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-      className="fixed bottom-6 right-6 z-50 grid size-11 place-items-center rounded-full bg-accent text-white shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+      className="fixed bottom-6 right-6 z-[var(--z-nav)] grid size-11 place-items-center rounded-full bg-accent-fill text-on-accent shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
       aria-label="返回顶部"
       aria-hidden={!visible}
       tabIndex={visible ? 0 : -1}

@@ -68,7 +68,7 @@ const CARD_VARIANTS: Record<Direction, Variants> = {
 
 const GLASS =
   'rounded-3xl overflow-hidden ' +
-  'bg-white/3 ' +
+  'bg-expressive-surface ' +
   'border-t border-t-white/20 border-b border-b-white/5 ' +
   'shadow-[0_15px_35px_rgba(0,0,0,0.12)] ' +
   'hover:shadow-[0_18px_40px_rgba(75,169,178,0.1)] ' +
@@ -105,8 +105,8 @@ function ProjectSubCard({ project }: { project: DashboardProps['projects'][numbe
       whileHover={{ y: -2, scale: 1.02 }}
       className="rounded-2xl overflow-hidden bg-white/2 backdrop-blur-md border-t border-t-white/15 border-b border-b-white/5 p-3 shadow-[0_10px_25px_rgba(0,0,0,0.1)] hover:shadow-[0_14px_30px_rgba(75,169,178,0.08)] transition-shadow duration-300 group cursor-pointer"
     >
-      <div className="text-sm font-medium text-white/80 group-hover:text-accent transition-colors truncate">{project.title}</div>
-      <div className="text-[11px] text-white/50 leading-snug mt-1 line-clamp-2">{project.description}</div>
+      <div className="text-sm font-medium text-fg/90 group-hover:text-accent transition-colors truncate">{project.title}</div>
+      <div className="text-[11px] text-muted leading-snug mt-1 line-clamp-2">{project.description}</div>
     </motion.div>
   )
 }
@@ -139,7 +139,7 @@ export default function Dashboard({ siteName, recentPosts, knowledgeEntries, pro
       >
         {/* Bio */}
         <Card layout={DASHBOARD_LAYOUT.bio} direction={DIR.bio} withBackdropBlur={false} className="flex flex-col gap-3 py-6">
-          <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Profile</div>
+          <div className="text-[10px] text-muted tracking-widest uppercase mb-3">Profile</div>
           <div className="flex flex-col items-center gap-3 flex-1 justify-center">
             <svg width="0" height="0" aria-hidden="true">
               <defs>
@@ -158,12 +158,12 @@ export default function Dashboard({ siteName, recentPosts, knowledgeEntries, pro
               <img src={publicPath(SITE.assets.avatar)} alt="Avatar" className="relative w-16 h-16 object-cover" style={{ clipPath: 'url(#bio-avatar-clip)' }} />
             </div>
             <div>
-              <div className="text-sm font-semibold text-white">{siteName}</div>
-              <div className="text-[11px] text-white/50">{SITE.profile.tagline}</div>
+              <div className="text-sm font-semibold text-fg">{siteName}</div>
+              <div className="text-[11px] text-muted">{SITE.profile.tagline}</div>
             </div>
             <div className="flex gap-3 mt-2">
               {SOCIAL_LINKS.map((link) => (
-                <a key={link.platform} href={link.href} target="_blank" rel="noopener noreferrer" className="flex size-11 items-center justify-center rounded-xl border border-border/20 bg-surface/50 text-fg/40 transition-colors duration-300 hover:border-border/70 hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent" title={link.label}>
+                <a key={link.platform} href={link.href} target="_blank" rel="noopener noreferrer" className="flex size-11 items-center justify-center rounded-xl border border-border/20 bg-surface/50 text-fg/40 transition-colors duration-300 hover:border-border/70 hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus" title={link.label}>
                   <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">{socialIcons[link.platform]}</svg>
                 </a>
               ))}
@@ -174,18 +174,18 @@ export default function Dashboard({ siteName, recentPosts, knowledgeEntries, pro
         {/* Knowledge */}
         <Card layout={DASHBOARD_LAYOUT.knowledge} direction={DIR.knowledge} withBackdropBlur={false}>
           <div className="mb-3 flex items-center justify-between">
-            <div className="text-[10px] tracking-widest text-white/40 uppercase">Knowledge</div>
-            <Link href="/knowledge" className="rounded-lg text-xs text-accent transition-colors hover:text-avatar-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">查看全部 →</Link>
+            <div className="text-[10px] tracking-widest text-muted uppercase">Knowledge</div>
+            <Link href="/knowledge" className="rounded-lg text-xs text-accent transition-colors hover:text-avatar-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus">查看全部 →</Link>
           </div>
           {knowledgeEntries.length === 0 ? (
-            <p className="text-sm text-white/50">知识库正在整理中。</p>
+            <p className="text-sm text-muted">知识库正在整理中。</p>
           ) : (
             <div className="max-h-52 space-y-0.5 overflow-y-auto pr-1">
               {knowledgeEntries.map((entry) => (
-                <Link key={entry.slug} href={`/knowledge/${entry.slug}`} className="flex min-h-11 items-center gap-3 rounded-lg px-1.5 py-2 text-sm transition-colors hover:bg-surface/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
+                <Link key={entry.slug} href={`/knowledge/${entry.slug}`} className="flex min-h-11 items-center gap-3 rounded-lg px-1.5 py-2 text-sm transition-colors hover:bg-surface/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus">
                   <span className="text-base">📚</span>
-                  <span className="min-w-0 flex-1 truncate text-white/80">{entry.title}</span>
-                  <span className="shrink-0 text-[11px] text-white/40">{entry.lastEdited ?? '未更新'}</span>
+                  <span className="min-w-0 flex-1 truncate text-fg/90">{entry.title}</span>
+                  <span className="shrink-0 text-[11px] text-muted">{entry.lastEdited ?? '未更新'}</span>
                 </Link>
               ))}
             </div>
@@ -195,15 +195,15 @@ export default function Dashboard({ siteName, recentPosts, knowledgeEntries, pro
         {/* Posts */}
         <Card layout={DASHBOARD_LAYOUT.posts} direction={DIR.posts}>
           <div className="mb-3 flex items-center justify-between">
-            <div className="text-[10px] tracking-widest text-white/40 uppercase">Blog</div>
-            <Link href="/blog" className="rounded-lg text-xs text-accent transition-colors hover:text-avatar-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">查看全部 →</Link>
+            <div className="text-[10px] tracking-widest text-muted uppercase">Blog</div>
+            <Link href="/blog" className="rounded-lg text-xs text-accent transition-colors hover:text-avatar-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus">查看全部 →</Link>
           </div>
           {recentPosts.map((p) => (
-            <Link key={p.slug} href={`/blog/${p.slug}`} className="group -mx-1.5 flex min-h-11 items-center gap-3 rounded-lg px-1.5 py-2 transition-colors hover:bg-surface/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
+            <Link key={p.slug} href={`/blog/${p.slug}`} className="group -mx-1.5 flex min-h-11 items-center gap-3 rounded-lg px-1.5 py-2 transition-colors hover:bg-surface/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus">
               <div className="w-10 h-10 rounded-lg bg-accent/6 flex items-center justify-center shrink-0 text-sm group-hover:bg-accent/10 transition-colors">📄</div>
               <div className="min-w-0">
-                <div className="text-sm font-medium text-white/80 truncate group-hover:text-accent transition-colors">{p.title}</div>
-                <div className="text-[11px] text-white/40">{p.date}</div>
+                <div className="text-sm font-medium text-fg/90 truncate group-hover:text-accent transition-colors">{p.title}</div>
+                <div className="text-[11px] text-muted">{p.date}</div>
               </div>
             </Link>
           ))}
@@ -212,12 +212,12 @@ export default function Dashboard({ siteName, recentPosts, knowledgeEntries, pro
         {/* Projects */}
         <Card layout={DASHBOARD_LAYOUT.projects} direction={DIR.projects}>
           <div className="mb-3 flex items-center justify-between">
-            <div className="text-[10px] tracking-widest text-white/40 uppercase">Projects</div>
-            <Link href="/projects" className="rounded-lg text-xs text-accent transition-colors hover:text-avatar-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">查看全部 →</Link>
+            <div className="text-[10px] tracking-widest text-muted uppercase">Projects</div>
+            <Link href="/projects" className="rounded-lg text-xs text-accent transition-colors hover:text-avatar-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus">查看全部 →</Link>
           </div>
           <div className="grid grid-cols-2 gap-3">
             {projects.slice(0, 4).map((p) => (
-              <Link key={p.slug} href={`/projects/${p.slug}`} className="block rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"><ProjectSubCard project={p} /></Link>
+              <Link key={p.slug} href={`/projects/${p.slug}`} className="block rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"><ProjectSubCard project={p} /></Link>
             ))}
           </div>
         </Card>
@@ -229,7 +229,7 @@ export default function Dashboard({ siteName, recentPosts, knowledgeEntries, pro
 
         {/* Memes */}
         <Card layout={DASHBOARD_LAYOUT.memes} direction={DIR.memes} className="flex flex-col">
-          <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Memes</div>
+          <div className="text-[10px] text-muted tracking-widest uppercase mb-3">Memes</div>
           <div className="flex-1 flex items-center justify-center"><MemCard /></div>
         </Card>
 
@@ -238,7 +238,7 @@ export default function Dashboard({ siteName, recentPosts, knowledgeEntries, pro
 
         {/* Clock */}
         <Card layout={DASHBOARD_LAYOUT.clock} direction={DIR.clock} className="flex flex-col">
-          <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Clock</div>
+          <div className="text-[10px] text-muted tracking-widest uppercase mb-3">Clock</div>
           <div className="flex-1 flex items-center justify-center"><ClockCard /></div>
         </Card>
 
@@ -304,10 +304,10 @@ function HitokotoCard() {
 
   return (
     <>
-      <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Hitokoto</div>
+      <div className="text-[10px] text-muted tracking-widest uppercase mb-3">Hitokoto</div>
       <div className="flex-1 flex flex-col items-center justify-center text-center">
-        <p className="text-sm text-white/50 italic leading-relaxed">「{text}」</p>
-        {quote?.from && <p className="mt-2 text-xs text-white/35">— {quote.from}</p>}
+        <p className="text-sm text-muted italic leading-relaxed">「{text}」</p>
+        {quote?.from && <p className="mt-2 text-xs text-muted">— {quote.from}</p>}
       </div>
     </>
   )
@@ -340,8 +340,8 @@ function StatusCard() {
 
   return (
     <>
-      <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">Status</div>
-      <button type="button" className="mx-auto flex min-h-11 items-center text-center text-sm text-white/70 cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent" onClick={bounce} style={bounceStyle}>
+      <div className="text-[10px] text-muted tracking-widest uppercase mb-3">Status</div>
+      <button type="button" className="mx-auto flex min-h-11 items-center text-center text-sm text-fg/85 cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus" onClick={bounce} style={bounceStyle}>
         {status.emoji ? `${status.emoji} ${status.status}` : status.status}
       </button>
     </>
@@ -355,7 +355,7 @@ function MemCard() {
   const { bounce, bounceStyle } = useBounce()
 
   return (
-    <button type="button" onClick={bounce} className="rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent" style={bounceStyle} aria-label="播放 Meme 弹跳动画">
+    <button type="button" onClick={bounce} className="rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus" style={bounceStyle} aria-label="播放 Meme 弹跳动画">
       {/* Static export meme: publicPath selects a local asset without a runtime image optimizer. */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img

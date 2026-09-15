@@ -239,7 +239,7 @@ export default function TableOfContents() {
                     href={`#${section.heading.id}`}
                     title={section.heading.text}
                     aria-current={section.heading.id === activeId ? 'location' : undefined}
-                    className={`min-w-0 flex-1 truncate rounded-lg px-2 py-2 leading-relaxed transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent ${
+                    className={`min-w-0 flex-1 truncate rounded-lg px-2 py-2 leading-relaxed transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus ${
                       isSectionActive ? 'font-medium text-accent' : 'text-fg/60 hover:text-accent'
                     }`}
                   >
@@ -252,7 +252,7 @@ export default function TableOfContents() {
                       aria-expanded={!isCollapsed}
                       aria-controls={groupId}
                       onClick={() => toggleSection(section.heading.id)}
-                      className="mr-0.5 grid size-8 shrink-0 place-items-center rounded-lg text-fg/45 transition-colors hover:bg-surface hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent"
+                      className="mr-0.5 grid size-8 shrink-0 place-items-center rounded-lg text-fg/45 transition-colors hover:bg-surface hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus"
                     >
                       <svg
                         aria-hidden="true"
@@ -279,7 +279,7 @@ export default function TableOfContents() {
                           href={`#${child.id}`}
                           title={child.text}
                           aria-current={child.id === activeId ? 'location' : undefined}
-                          className={`block truncate rounded-md px-2 py-1.5 text-xs leading-relaxed transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent ${
+                          className={`block truncate rounded-md px-2 py-1.5 text-xs leading-relaxed transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus ${
                             child.id === activeId ? 'bg-accent/10 font-medium text-accent' : 'text-fg/50 hover:text-accent'
                           }`}
                         >
@@ -323,7 +323,7 @@ export default function TableOfContents() {
             onPointerCancel={() => {
               dragPointerRef.current = null
             }}
-            className="relative min-h-36 w-3 shrink-0 touch-none cursor-pointer rounded-full bg-fg/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            className="relative min-h-36 w-3 shrink-0 touch-none cursor-pointer rounded-full bg-fg/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
           >
             <span
               aria-hidden="true"

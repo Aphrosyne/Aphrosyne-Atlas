@@ -15,7 +15,7 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-      className="grid size-11 cursor-pointer place-items-center rounded-xl text-xl text-fg/50 transition-colors duration-300 hover:bg-surface/70 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+      className="grid size-11 cursor-pointer place-items-center rounded-xl text-xl text-fg/50 transition-colors duration-300 hover:bg-surface/70 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
       aria-label="切换主题"
     >
       {mounted ? (theme === 'dark' ? '☾' : '☀') : ' '}

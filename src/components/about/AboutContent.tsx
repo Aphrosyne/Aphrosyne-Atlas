@@ -64,7 +64,7 @@ export default function AboutContent() {
           <p>创建于 {SITE.about.createdAt}</p>
           <p>最后编辑 {SITE.about.updatedAt}</p>
         </div>
-        <hr className="mt-8 border-0 h-0.5 bg-linear-to-r from-transparent via-white/40 to-transparent" />
+        <hr className="mt-8 border-0 h-0.5 bg-linear-to-r from-transparent via-border to-transparent" />
         {SITE.about.paragraphs.map((paragraph, index) => (
           <p key={paragraph} className={`${index === 0 ? 'mt-8' : 'mt-4'} text-fg leading-relaxed`}>
             {paragraph}
@@ -87,7 +87,7 @@ export default function AboutContent() {
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex size-11 items-center justify-center rounded-xl border border-border/30 bg-surface/50 text-fg/40 transition-colors duration-300 hover:border-fg/30 hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              className="flex size-11 items-center justify-center rounded-xl border border-border/30 bg-surface/50 text-fg/40 transition-colors duration-300 hover:border-fg/30 hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
               title={link.label}
             >
               <svg viewBox="0 0 24 24" fill="currentColor" className="w-4.5 h-4.5">

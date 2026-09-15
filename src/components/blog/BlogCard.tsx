@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from 'framer-motion'
 import Link from 'next/link'
 import type { PublicationState } from '@/types/publication'
 import { CONTENT_CARD_FOCUS, CONTENT_CARD_PADDING, CONTENT_CARD_SURFACE } from '@/components/shared/content-card'
+import { ARCHIVED_STATUS_CLASS } from '@/components/shared/content-status'
 
 interface BlogCardProps {
   slug: string
@@ -37,7 +38,7 @@ export default function BlogCard({ slug, title, date, excerpt, tags, publication
           <div className="relative z-10 flex items-start gap-2 text-xs text-fg/60 pointer-events-none sm:flex-col sm:gap-1 sm:border-r sm:border-border/30 sm:pr-6">
             <time className="font-medium tabular-nums text-fg/75">{date}</time>
             <span className="hidden text-[0.65rem] tracking-[0.18em] text-fg/35 uppercase sm:block">Article</span>
-            {publication === 'archived' && <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-amber-800 dark:text-amber-200">归档</span>}
+            {publication === 'archived' && <span className={`rounded-full border px-2 py-0.5 ${ARCHIVED_STATUS_CLASS.archived}`}>归档</span>}
           </div>
           <div className="min-w-0">
             <h3 className="text-lg font-semibold leading-snug text-fg/90 transition-colors group-hover:text-accent sm:text-xl">{title}</h3>
@@ -47,7 +48,7 @@ export default function BlogCard({ slug, title, date, excerpt, tags, publication
                 <button
                   key={tag}
                   onClick={() => onTagClick?.(tag)}
-                  className="cursor-pointer rounded-full bg-fg/5 px-2 py-0.5 text-xs text-fg/70 transition-colors hover:bg-surface/70 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                  className="cursor-pointer rounded-full bg-fg/5 px-2 py-0.5 text-xs text-fg/70 transition-colors hover:bg-surface/70 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
                 >
                   {tag}
                 </button>

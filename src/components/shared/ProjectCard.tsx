@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from 'framer-motion'
 import Link from 'next/link'
 import type { Project } from '@/config/projects'
 import { CONTENT_CARD_FOCUS, CONTENT_CARD_PADDING, CONTENT_CARD_SURFACE } from './content-card'
+import { PROJECT_STATUS } from './content-status'
 
 interface ProjectCardProps {
   title: string
@@ -15,17 +16,6 @@ interface ProjectCardProps {
   featured?: boolean
 }
 
-const STATUS = {
-  public: {
-    label: '公开',
-    className: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300',
-  },
-  archived: {
-    label: '公开归档',
-    className: 'border-amber-500/30 bg-amber-500/10 text-amber-800 dark:text-amber-200',
-  },
-} as const
-
 export default function ProjectCard({
   title,
   description,
@@ -35,7 +25,7 @@ export default function ProjectCard({
   href,
   featured = false,
 }: ProjectCardProps) {
-  const statusMeta = STATUS[status]
+  const statusMeta = PROJECT_STATUS[status]
   const shouldReduceMotion = useReducedMotion()
 
   return (

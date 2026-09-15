@@ -39,9 +39,9 @@ export default function SortControls<T extends string>({
               type="button"
               onClick={() => onValueChange(option.value)}
               aria-pressed={isActive}
-              className={`min-h-11 cursor-pointer rounded-xl px-2 text-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+              className={`min-h-11 cursor-pointer rounded-xl px-2 text-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus ${
                 isActive
-                  ? 'bg-accent font-semibold text-white shadow-sm'
+                  ? 'bg-accent-fill font-semibold text-on-accent shadow-sm'
                   : 'font-medium text-fg/60 hover:bg-surface hover:text-fg'
               }`}
             >
@@ -55,7 +55,7 @@ export default function SortControls<T extends string>({
         onClick={() => onDirectionChange(direction === 'desc' ? 'asc' : 'desc')}
         aria-label={`当前${directionLabel}，切换为${direction === 'desc' ? '升序' : '降序'}`}
         title={`当前${directionLabel}`}
-        className="inline-flex min-h-11 w-20 shrink-0 cursor-pointer items-center justify-center rounded-xl px-2 text-fg/65 transition-colors hover:bg-surface hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+        className="inline-flex min-h-11 w-20 shrink-0 cursor-pointer items-center justify-center rounded-xl px-2 text-fg/65 transition-colors hover:bg-surface hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
       >
         <span>{directionLabel}</span>
       </button>
