@@ -3,29 +3,16 @@ import path from 'path'
 import matter from 'gray-matter'
 import { globby } from 'globby'
 import type { PostMetadata } from '@/types/post'
-import { asPublicationState, isRoutablePublication } from '@/types/publication'
+import { isRoutablePublication } from '@/types/publication'
+import { parseBlogMetadata } from '@/lib/content-schema.js'
 
 const CONTENT_DIR = path.join(process.cwd(), 'src/content/blog')
 
 /** Parse and validate YAML frontmatter without executing source text. */
-function parseMetadataFromFile(filePath: string): PostMetadata | null {
+function parseMetadataFromFile(filePath: string, slug: string): PostMetadata {
   const content = fs.readFileSync(filePath, 'utf-8')
   const { data } = matter(content)
-  if (typeof data.title !== 'string' || typeof data.excerpt !== 'string') return null
-  if (!Array.isArray(data.tags) || !data.tags.every((tag) => typeof tag === 'string')) return null
-  const date = data.date instanceof Date
-    ? data.date.toISOString().slice(0, 10)
-    : typeof data.date === 'string' ? data.date : null
-  if (!date) return null
-  return {
-    slug: '',
-    title: data.title,
-    date,
-    tags: data.tags,
-    excerpt: data.excerpt,
-    publication: asPublicationState(data.publication),
-    readingTime: typeof data.readingTime === 'string' ? data.readingTime : undefined,
-  }
+  return parseBlogMetadata(data, filePath, slug) as PostMetadata
 }
 
 interface PostQueryOptions {
@@ -45,8 +32,8 @@ export async function getPostSlugs(): Promise<string[]> {
   const files = await globby('*.mdx', { cwd: CONTENT_DIR })
   return files.flatMap((file) => {
     const slug = file.replace(/\.mdx$/, '')
-    const metadata = parseMetadataFromFile(path.join(CONTENT_DIR, file))
-    return metadata && isRoutablePublication(metadata.publication) ? [slug] : []
+    const metadata = parseMetadataFromFile(path.join(CONTENT_DIR, file), slug)
+    return isRoutablePublication(metadata.publication) ? [slug] : []
   }).sort()
 }
 
@@ -58,11 +45,8 @@ export async function getAllPosts(options: PostQueryOptions = {}): Promise<PostM
   for (const file of files) {
     const slug = file.replace(/\.mdx$/, '')
     const filePath = path.join(CONTENT_DIR, file)
-    const meta = parseMetadataFromFile(filePath)
-    if (meta) {
-      const post = { ...meta, slug }
-      if (matchesPostQuery(post, options)) posts.push(post)
-    }
+    const post = parseMetadataFromFile(filePath, slug)
+    if (matchesPostQuery(post, options)) posts.push(post)
   }
 
   return posts.sort(
@@ -82,10 +66,8 @@ export async function getPostBySlug(
 ): Promise<PostMetadata | null> {
   const filePath = path.join(CONTENT_DIR, `${slug}.mdx`)
   if (!fs.existsSync(filePath)) return null
-  const metadata = parseMetadataFromFile(filePath)
-  return metadata && isRoutablePublication(metadata.publication)
-    ? { ...metadata, slug }
-    : null
+  const metadata = parseMetadataFromFile(filePath, slug)
+  return isRoutablePublication(metadata.publication) ? metadata : null
 }
 
 /** Return prev/next posts for navigation. */

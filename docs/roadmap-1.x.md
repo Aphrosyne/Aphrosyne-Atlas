@@ -361,7 +361,7 @@ R0–R2 建立发布基线；R3–R8 解决发布前核心可用性；R9–R13 �
 
 ## 批次 R11：建立 Blog/Knowledge 内容 schema 与校验边界
 
-- **状态 / 优先级：**[ ] / P1 安全子项 + P2。
+- **状态 / 优先级：**[x] / P1 安全子项 + P2。
 - **目标：**让应用、路由和生成脚本对同一内容得出一致结论；损坏 metadata、非法 publication、重复 slug 或死锚点在构建时明确失败。
 - **来源：**CQ-006、CQ-009、CQ-020、AR12。
 - **范围：**可由 Node 脚本与应用共享的解析/规范化层；Blog/Knowledge 独立 schema；publication 迁移规则；中文、CRLF、日期、枚举、sources/related、重复 basename、文章内重复 id/死 hash fixture；修复已确认的 Boss `#boss24`/重复 `#boss4` 内容错误。
@@ -370,6 +370,12 @@ R0–R2 建立发布基线；R3–R8 解决发布前核心可用性；R9–R13 �
 - **实施注意事项与风险：**非法显式 publication 必须 fail-closed；“缺失 publication 是否沿用公开默认”要以一次明确迁移决定处理。错误必须带文件路径，兼容 UTF-8、中文和 Windows 路径。
 - **验收 / 退出条件：**表驱动 fixture 覆盖空/错/缺字段、CRLF、中文、空格路径、重复 slug、broken related、draft/unlisted/archived；registry、route params、search 对同一输入一致；46 个 Boss hash 均存在且唯一；当前 21 篇内容全部通过且无无关正文改写。
 - **建议提交边界：**2–3 个提交：schema/规范化；fixture 与校验；已确认单篇锚点修复。
+
+### R11 实施结果（2026-09-15）
+
+- 新增 Blog 与 Knowledge 各自的共享 fail-closed schema，应用读取路径、Knowledge loader registry 和搜索索引生成都使用同一规范化结果。用户确认：缺失或非法 `publication` 一律使构建失败，不再默认公开。
+- 构建新增 schema fixture 与全量内容验证：覆盖 CRLF、中文/空格路径、日期、publication、枚举、`related` 与 `sources`；同时拒绝重复 slug、重复显式 id、死 hash 与不存在的 Knowledge `related`。
+- 修复 Colorful Magic Boss 文档中第 24 个 Boss 误写为第二个 `#boss4` 的锚点；46 个 Boss 锚点现均存在且唯一。lint、TypeScript、静态构建、smoke 与图片校验通过。未推送、未部署。
 
 ## 批次 R12：统一 canonical 内容索引、生成链与搜索数据
 

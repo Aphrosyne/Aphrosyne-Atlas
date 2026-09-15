@@ -2,77 +2,17 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import matter from 'gray-matter'
 import { globby } from 'globby'
-import {
-  KNOWLEDGE_STATUSES,
-  KNOWLEDGE_TYPES,
-  type KnowledgeMetadata,
-  type KnowledgeSource,
-  type KnowledgeStatus,
-  type KnowledgeType,
-} from '@/types/knowledge'
-import { asPublicationState, isRoutablePublication } from '@/types/publication'
+import { type KnowledgeMetadata } from '@/types/knowledge'
+import { isRoutablePublication } from '@/types/publication'
+import { parseKnowledgeMetadata } from '@/lib/content-schema.js'
 
 const CONTENT_DIR = path.join(process.cwd(), 'src/content/knowledge')
 
-function asDate(value: unknown): string | undefined {
-  if (value instanceof Date) return value.toISOString().slice(0, 10)
-  return typeof value === 'string' && value ? value : undefined
-}
-
-function asStringArray(value: unknown): string[] {
-  return Array.isArray(value) && value.every((item) => typeof item === 'string') ? value : []
-}
-
-function asSources(value: unknown): KnowledgeSource[] {
-  if (!Array.isArray(value)) return []
-
-  return value.flatMap((source) => {
-    if (
-      typeof source === 'object' &&
-      source !== null &&
-      typeof source.label === 'string' &&
-      typeof source.href === 'string'
-    ) {
-      return [{ label: source.label, href: source.href }]
-    }
-    return []
-  })
-}
-
-function isKnowledgeType(value: unknown): value is KnowledgeType {
-  return typeof value === 'string' && (KNOWLEDGE_TYPES as readonly string[]).includes(value)
-}
-
-function isKnowledgeStatus(value: unknown): value is KnowledgeStatus {
-  return typeof value === 'string' && (KNOWLEDGE_STATUSES as readonly string[]).includes(value)
-}
-
-async function parseKnowledgeFile(filePath: string, slug: string): Promise<KnowledgeMetadata | null> {
+async function parseKnowledgeFile(filePath: string, slug: string): Promise<KnowledgeMetadata> {
   const source = await fs.readFile(filePath, 'utf8')
   const { data } = matter(source)
 
-  if (
-    typeof data.title !== 'string' ||
-    typeof data.excerpt !== 'string' ||
-    !isKnowledgeType(data.type) ||
-    !isKnowledgeStatus(data.status)
-  ) {
-    return null
-  }
-
-  return {
-    slug,
-    title: data.title,
-    type: data.type,
-    status: data.status,
-    publication: asPublicationState(data.publication),
-    excerpt: data.excerpt,
-    tags: asStringArray(data.tags),
-    gameVersion: typeof data.game_version === 'string' ? data.game_version : undefined,
-    lastEdited: asDate(data.last_edited),
-    related: asStringArray(data.related),
-    sources: asSources(data.sources),
-  }
+  return parseKnowledgeMetadata(data, filePath, slug) as KnowledgeMetadata
 }
 
 interface KnowledgeQueryOptions {
@@ -96,7 +36,7 @@ async function readKnowledgeEntries(): Promise<KnowledgeMetadata[]> {
     }),
   )
 
-  return entries.filter((entry): entry is KnowledgeMetadata => entry !== null)
+  return entries
 }
 
 export async function getAllKnowledge(options: KnowledgeQueryOptions = {}): Promise<KnowledgeMetadata[]> {

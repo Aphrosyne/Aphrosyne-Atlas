@@ -2,20 +2,13 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import matter from 'gray-matter'
 import { globby } from 'globby'
+import { parseBlogMetadata, parseKnowledgeMetadata } from '../src/lib/content-schema.js'
 
 const root = process.cwd()
 const contentRoot = path.join(root, 'src/content')
 
-function asStringArray(value) {
-  return Array.isArray(value) && value.every((item) => typeof item === 'string') ? value : []
-}
-
 function dateString(value) {
   return value instanceof Date ? value.toISOString().slice(0, 10) : value
-}
-
-function publicationState(value) {
-  return ['published', 'archived', 'unlisted', 'draft'].includes(value) ? value : 'published'
 }
 
 function textFromMarkdown(markdown) {
@@ -33,20 +26,23 @@ async function readEntries(directory, kind) {
   const entries = await Promise.all(files.map(async (relativePath) => {
     const source = await fs.readFile(path.join(directory, relativePath), 'utf8')
     const { data, content } = matter(source)
-    const publication = publicationState(data.publication)
-    if (publication === 'draft' || publication === 'unlisted') return null
     const slug = path.basename(relativePath, '.mdx')
-    const tags = asStringArray(data.tags)
+    const validated = kind === 'knowledge'
+      ? parseKnowledgeMetadata(data, path.join(directory, relativePath), slug)
+      : parseBlogMetadata(data, path.join(directory, relativePath), slug)
+    const publication = validated.publication
+    if (publication === 'draft' || publication === 'unlisted') return null
+    const tags = validated.tags
     const metadata = kind === 'knowledge'
       ? [data.type, data.status, data.game_version, dateString(data.last_edited)].filter(Boolean)
       : [data.date, data.readingTime].filter(Boolean)
 
     return {
-      title: typeof data.title === 'string' ? data.title : slug,
+      title: validated.title,
       href: `/${kind}/${slug}`,
       type: kind,
       publication,
-      excerpt: typeof data.excerpt === 'string' ? data.excerpt : '',
+      excerpt: validated.excerpt,
       tags,
       searchableText: textFromMarkdown([
         data.title,
