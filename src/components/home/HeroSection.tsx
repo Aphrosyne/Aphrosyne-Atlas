@@ -13,7 +13,7 @@ const fadeIn = (delay: number) => ({
 
 export default function HeroSection() {
   return (
-    <section className="relative flex flex-col items-center justify-center min-h-screen px-4 text-center">
+    <section className="relative flex min-h-[calc(100svh-3.75rem)] flex-col items-center justify-center px-4 text-center">
       <style>{`
         @keyframes flow {
           0% { background-position: 200% 0; }
@@ -60,11 +60,13 @@ export default function HeroSection() {
       {/* Scroll arrow */}
       <motion.div
         {...fadeIn(0.5)}
-        className="absolute bottom-32 left-1/2 -translate-x-1/2"
+        className="absolute bottom-12 left-1/2 -translate-x-1/2 sm:bottom-20"
       >
         <button
           onClick={() => document.getElementById('content')?.scrollIntoView({ behavior: 'smooth' })}
-          className="scroll-arrow cursor-pointer"
+          className="scroll-arrow grid size-11 place-items-center rounded-full cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          aria-label="滚动到主要内容"
+          type="button"
         >
           <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="var(--color-accent)">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 9l7 7 7-7" />

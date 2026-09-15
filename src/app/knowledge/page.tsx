@@ -16,7 +16,7 @@ export default async function KnowledgePage() {
   const entries = await getAllKnowledge({ includeArchived: true })
 
   return (
-    <main className="mx-auto w-full max-w-6xl px-4 py-16">
+    <div className="mx-auto w-full max-w-6xl px-4 py-16">
       <PageTransition>
         <h1 className="text-3xl font-bold tracking-tight text-fg sm:text-4xl">Knowledge</h1>
         <p className="mt-2 text-fg/65">按分类、版本与验证状态整理的长期记录。</p>
@@ -32,6 +32,6 @@ export default async function KnowledgePage() {
           <KnowledgeList entries={entries} />
         </Suspense>
       </div>
-    </main>
+    </div>
   )
 }

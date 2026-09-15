@@ -129,7 +129,7 @@ const DIR: Record<DashboardCardId, Direction> = {
 
 export default function Dashboard({ siteName, recentPosts, knowledgeEntries, projects, tags }: DashboardProps) {
   return (
-    <section id="content" className="px-4 pb-12 max-w-5xl mx-auto">
+    <section id="content" className="scroll-mt-24 px-4 pb-12 max-w-5xl mx-auto">
       <motion.div
         variants={containerVariants}
         initial="hidden"

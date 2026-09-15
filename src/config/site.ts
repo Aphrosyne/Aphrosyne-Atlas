@@ -66,14 +66,7 @@ export const NAV_ITEMS = [
       { label: '参考资料', href: '/knowledge?type=reference' },
     ],
   },
-  {
-    label: '博客',
-    href: '/blog',
-    children: [
-      { label: '全部文章', href: '/blog' },
-      { label: '标签', href: '/blog?view=tags' },
-    ],
-  },
+  { label: '博客', href: '/blog' },
   {
     label: '项目',
     href: '/projects',
