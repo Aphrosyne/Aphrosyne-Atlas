@@ -7,6 +7,7 @@ import { getAllKnowledge, getKnowledgeBySlug, getKnowledgeSlugs } from '@/lib/kn
 import { siteUrl } from '@/lib/site-url'
 import { ARCHIVED_STATUS_CLASS, KNOWLEDGE_STATUS_CLASSES, KNOWLEDGE_STATUS_LABELS } from '@/components/shared/content-status'
 import { ARTICLE_PROSE_CLASS } from '@/components/content/article-prose'
+import PageTransition from '@/components/shared/PageTransition'
 
 type Props = { params: Promise<{ slug: string }> }
 
@@ -36,7 +37,7 @@ export default async function KnowledgeArticlePage({ params }: Props) {
   const categories = await getAllKnowledge()
 
   return (
-    <div className="mx-auto w-full min-w-0 max-w-7xl px-4 py-12">
+    <PageTransition><div className="mx-auto w-full min-w-0 max-w-7xl px-4 py-12">
         <div className="min-w-0 rounded-[2rem] border border-border/40 bg-reading-surface p-5 shadow-[0_25px_80px_rgba(0,0,0,0.32)] backdrop-blur-md sm:p-8">
           <Link href="/knowledge" className="inline-flex min-h-11 items-center rounded-xl border border-border/20 bg-surface/40 px-4 py-2.5 text-base font-semibold text-fg/65 transition-colors hover:bg-surface/60 hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus">
             ← 返回知识库
@@ -91,7 +92,7 @@ export default async function KnowledgeArticlePage({ params }: Props) {
             <aside className="order-3 hidden min-w-0 lg:block"><TableOfContents /></aside>
           </div>
         </div>
-    </div>
+    </div></PageTransition>
   )
 }
 
