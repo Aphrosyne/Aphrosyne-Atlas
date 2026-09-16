@@ -266,7 +266,6 @@ export default function Navbar() {
             )
           })}
         </div>
-
         {/* Mobile navigation: keep touch targets intact instead of squeezing every label into the header. */}
         <button
           type="button"

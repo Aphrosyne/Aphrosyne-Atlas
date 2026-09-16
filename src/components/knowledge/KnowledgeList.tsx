@@ -32,6 +32,11 @@ export default function KnowledgeList({ entries }: { entries: KnowledgeMetadata[
   const selectedType = searchParams.get('type')
   const [sortBy, setSortBy] = useState<KnowledgeSort>('title')
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc')
+  const replace = (next: Record<string, string | null>) => {
+    const params = new URLSearchParams(searchParams.toString())
+    Object.entries(next).forEach(([key, value]) => value ? params.set(key, value) : params.delete(key))
+    router.replace(`/knowledge${params.size ? `?${params}` : ''}`, { scroll: false })
+  }
   const showingArchive = searchParams.get('view') === 'archive'
   const activeType = (Object.keys(TYPE_LABELS) as string[]).includes(selectedType ?? '')
     ? selectedType as KnowledgeType
@@ -63,7 +68,7 @@ export default function KnowledgeList({ entries }: { entries: KnowledgeMetadata[
         <div className="grid grid-cols-2 gap-2 lg:flex lg:flex-col">
           <button
             type="button"
-            onClick={() => router.replace('/knowledge', { scroll: false })}
+            onClick={() => replace({ type: null, view: null })}
             className={`min-h-11 w-full rounded-xl px-3 py-2 text-left text-sm transition-colors ${
               !showingArchive && activeType === 'all' ? 'bg-accent-fill text-on-accent' : 'text-fg/65 hover:bg-surface hover:text-fg'
             }`}
@@ -76,7 +81,7 @@ export default function KnowledgeList({ entries }: { entries: KnowledgeMetadata[
               <button
                 key={type}
                 type="button"
-                onClick={() => router.replace(`/knowledge?type=${type}`, { scroll: false })}
+                onClick={() => replace({ type, view: null })}
                 className={`min-h-11 w-full rounded-xl px-3 py-2 text-left text-sm transition-colors ${
                   !showingArchive && activeType === type ? 'bg-accent-fill text-on-accent' : 'text-fg/65 hover:bg-surface hover:text-fg'
                 }`}
@@ -88,7 +93,7 @@ export default function KnowledgeList({ entries }: { entries: KnowledgeMetadata[
           {archivedEntries.length > 0 && (
             <button
               type="button"
-              onClick={() => router.replace('/knowledge?view=archive', { scroll: false })}
+              onClick={() => replace({ view: 'archive', type: null })}
               className={`col-span-2 min-h-11 w-full cursor-pointer rounded-xl border-t border-border/30 px-3 py-2 text-left text-sm transition-colors lg:mt-2 lg:rounded-t-none ${showingArchive ? 'bg-accent-fill text-on-accent' : 'text-fg/65 hover:bg-surface hover:text-fg'}`}
             >
               归档条目 <span className="float-right opacity-60">{archivedEntries.length}</span>
