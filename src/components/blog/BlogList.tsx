@@ -30,10 +30,13 @@ export default function BlogList({ posts }: { posts: PostMetadata[] }) {
   }
   const showingArchive = searchParams.get('view') === 'archive'
   useEffect(() => {
-    setQuery(searchParams.get('q') ?? '')
-    setActiveTag(searchParams.get('tag'))
-    setSortBy(searchParams.get('sort') === 'title' ? 'title' : 'date')
-    setSortDirection(searchParams.get('dir') === 'asc' ? 'asc' : 'desc')
+    const frame = requestAnimationFrame(() => {
+      setQuery(searchParams.get('q') ?? '')
+      setActiveTag(searchParams.get('tag'))
+      setSortBy(searchParams.get('sort') === 'title' ? 'title' : 'date')
+      setSortDirection(searchParams.get('dir') === 'asc' ? 'asc' : 'desc')
+    })
+    return () => cancelAnimationFrame(frame)
   }, [searchParams])
   const archivedCount = posts.filter((post) => post.publication === 'archived').length
   const visiblePosts = posts.filter((post) => showingArchive
