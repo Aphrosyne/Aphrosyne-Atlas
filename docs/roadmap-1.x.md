@@ -379,7 +379,7 @@ R0–R2 建立发布基线；R3–R8 解决发布前核心可用性；R9–R13 �
 
 ## 批次 R12：统一 canonical 内容索引、生成链与搜索数据
 
-- **状态 / 优先级：**[ ] / P2。
+- **状态 / 优先级：**[x] / P2。
 - **目标：**让路由、registry、列表、搜索、related 与构建查询共享一次已校验的 canonical 数据，避免“搜索可见但页面 404”和 N×N 扫描。
 - **来源：**A04、CQ-006、CQ-008、CQ-009、CQ-018、CQ-020。
 - **范围：**构建期 metadata map/list、slug lookup、static params、Knowledge loader registry、search document model、Projects 纯数据索引、related 标题/链接解析、读取次数与规模 fixture。
@@ -388,6 +388,12 @@ R0–R2 建立发布基线；R3–R8 解决发布前核心可用性；R9–R13 �
 - **实施注意事项与风险：**生成文件仍只在内容变化时写入；搜索 JSON 必须运行时校验并兼容 R6 状态模型；Projects 从单一纯数据源进入索引，不在脚本复制清单。优化前后产物、排序和 URL 必须相同。
 - **验收 / 退出条件：**Blog/Knowledge/Projects 标题、标签、中文描述可命中正确路由；related 显示标题并可跳转；route/registry/search 数量一致；20/100/500 fixture 的文件读取次数不再按页面数平方增长；静态 build 和两种 basePath 通过。
 - **建议提交边界：**2 个提交：canonical 内容索引与消费者迁移；搜索/Projects/related 与性能回归。
+
+### R12 实施结果（2026-09-16）
+
+- Blog 与 Knowledge 在进程内构建一次已校验的 canonical index；列表、单篇 lookup、静态参数、sitemap、首页消费的既有查询、Knowledge loader registry 和搜索生成均不再各自扫描内容目录。所有 slug、publication 与 `related` 在索引建立时统一验证。
+- 搜索生成直接消费该 index，并将 `projects.ts` 的单一项目数据源加入搜索文档；Knowledge `related` 以 canonical metadata 显示可跳转标题。新增一致性回归，确认路由/搜索数量为 8 篇 Blog、13 篇 Knowledge、3 个 Projects，20/100/500 次查询均复用同一索引。
+- lint、TypeScript、根路径与 Pages 子路径静态构建、smoke 和图片校验通过。未推送、未部署。
 
 ## 批次 R13：收敛页面状态、筛选历史与页面族一致性
 

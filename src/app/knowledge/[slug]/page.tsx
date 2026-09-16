@@ -79,7 +79,10 @@ export default async function KnowledgeArticlePage({ params }: Props) {
               <Article />
               {(entry.related.length > 0 || entry.sources.length > 0) && (
                 <footer className="not-prose mt-12 space-y-5 rounded-2xl border border-border/40 bg-surface/50 p-5 backdrop-blur-md sm:p-6">
-                  {entry.related.length > 0 && <p className="text-sm text-fg/60">相关文档：{entry.related.join('、')}</p>}
+                  {entry.related.length > 0 && <p className="text-sm text-fg/60">相关文档：{entry.related.map((relatedSlug, index) => {
+                    const related = categories.find((candidate) => candidate.slug === relatedSlug)
+                    return <span key={relatedSlug}>{index > 0 && '、'}{related ? <Link className="text-accent hover:underline" href={`/knowledge/${related.slug}`}>{related.title}</Link> : relatedSlug}</span>
+                  })}</p>}
                   {entry.sources.length > 0 && <div><p className="text-sm text-fg/60">来源</p><ul className="mt-2 space-y-1">{entry.sources.map((source) => <li key={source.href}><a className="text-sm text-accent hover:underline" href={source.href} target="_blank" rel="noreferrer">{source.label}</a></li>)}</ul></div>}
                 </footer>
               )}

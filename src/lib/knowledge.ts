@@ -1,19 +1,6 @@
-import fs from 'node:fs/promises'
-import path from 'node:path'
-import matter from 'gray-matter'
-import { globby } from 'globby'
 import { type KnowledgeMetadata } from '@/types/knowledge'
 import { isRoutablePublication } from '@/types/publication'
-import { parseKnowledgeMetadata } from '@/lib/content-schema.js'
-
-const CONTENT_DIR = path.join(process.cwd(), 'src/content/knowledge')
-
-async function parseKnowledgeFile(filePath: string, slug: string): Promise<KnowledgeMetadata> {
-  const source = await fs.readFile(filePath, 'utf8')
-  const { data } = matter(source)
-
-  return parseKnowledgeMetadata(data, filePath, slug) as KnowledgeMetadata
-}
+import { getCanonicalContentIndex } from '@/lib/content-index.js'
 
 interface KnowledgeQueryOptions {
   includeArchived?: boolean
@@ -27,17 +14,7 @@ function matchesKnowledgeQuery(entry: KnowledgeMetadata, options: KnowledgeQuery
   return true
 }
 
-async function readKnowledgeEntries(): Promise<KnowledgeMetadata[]> {
-  const files = await globby('**/*.mdx', { cwd: CONTENT_DIR })
-  const entries = await Promise.all(
-    files.map(async (relativePath) => {
-      const slug = path.basename(relativePath, '.mdx')
-      return parseKnowledgeFile(path.join(CONTENT_DIR, relativePath), slug)
-    }),
-  )
-
-  return entries
-}
+async function readKnowledgeEntries(): Promise<KnowledgeMetadata[]> { return (await getCanonicalContentIndex()).knowledge.map((entry) => entry.metadata as KnowledgeMetadata) }
 
 export async function getAllKnowledge(options: KnowledgeQueryOptions = {}): Promise<KnowledgeMetadata[]> {
   return (await readKnowledgeEntries())

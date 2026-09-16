@@ -1,15 +1,9 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import matter from 'gray-matter'
-import { globby } from 'globby'
-import { parseBlogMetadata, parseKnowledgeMetadata } from '../src/lib/content-schema.js'
+import { getCanonicalContentIndex } from '../src/lib/content-index.js'
+import { projects } from '../src/config/projects.ts'
 
 const root = process.cwd()
-const contentRoot = path.join(root, 'src/content')
-
-function dateString(value) {
-  return value instanceof Date ? value.toISOString().slice(0, 10) : value
-}
 
 function textFromMarkdown(markdown) {
   return markdown
@@ -21,45 +15,26 @@ function textFromMarkdown(markdown) {
     .trim()
 }
 
-async function readEntries(directory, kind) {
-  const files = await globby('**/*.mdx', { cwd: directory })
-  const entries = await Promise.all(files.map(async (relativePath) => {
-    const source = await fs.readFile(path.join(directory, relativePath), 'utf8')
-    const { data, content } = matter(source)
-    const slug = path.basename(relativePath, '.mdx')
-    const validated = kind === 'knowledge'
-      ? parseKnowledgeMetadata(data, path.join(directory, relativePath), slug)
-      : parseBlogMetadata(data, path.join(directory, relativePath), slug)
-    const publication = validated.publication
-    if (publication === 'draft' || publication === 'unlisted') return null
-    const tags = validated.tags
-    const metadata = kind === 'knowledge'
-      ? [data.type, data.status, data.game_version, dateString(data.last_edited)].filter(Boolean)
-      : [data.date, data.readingTime].filter(Boolean)
-
-    return {
-      title: validated.title,
-      href: `/${kind}/${slug}`,
-      type: kind,
-      publication,
-      excerpt: validated.excerpt,
-      tags,
-      searchableText: textFromMarkdown([
-        data.title,
-        data.excerpt,
-        ...tags,
-        ...metadata,
-        content,
-      ].filter(Boolean).join(' ')),
-    }
-  }))
-  return entries.filter(Boolean)
+function searchEntries(entries, kind) {
+  return entries.filter(({ metadata }) => metadata.publication !== 'draft' && metadata.publication !== 'unlisted').map(({ metadata, source }) => {
+    const details = kind === 'knowledge'
+      ? [metadata.type, metadata.status, metadata.gameVersion, metadata.lastEdited]
+      : [metadata.date, metadata.readingTime]
+    return { title: metadata.title, href: `/${kind}/${metadata.slug}`, type: kind, publication: metadata.publication, excerpt: metadata.excerpt, tags: metadata.tags, searchableText: textFromMarkdown([metadata.title, metadata.excerpt, ...metadata.tags, ...details, source].filter(Boolean).join(' ')) }
+  })
 }
 
-const [blog, knowledge] = await Promise.all([
-  readEntries(path.join(contentRoot, 'blog'), 'blog'),
-  readEntries(path.join(contentRoot, 'knowledge'), 'knowledge'),
-])
+const canonical = await getCanonicalContentIndex()
+const blog = searchEntries(canonical.blog, 'blog')
+const knowledge = searchEntries(canonical.knowledge, 'knowledge')
+const projectEntries = projects.map((project) => ({
+  title: project.title,
+  href: `/projects/${project.slug}`,
+  type: 'project',
+  excerpt: project.description,
+  tags: project.tags,
+  searchableText: textFromMarkdown([project.title, project.description, project.longDescription, ...project.tags, project.language, project.status].join(' ')),
+}))
 
 const pages = [
   { title: '关于', href: '/about', type: 'page', excerpt: '关于我和这个网站', tags: [], searchableText: '关于 我 作者 网站' },
@@ -67,5 +42,5 @@ const pages = [
 ]
 
 const output = path.join(root, 'public/search-index.json')
-await fs.writeFile(output, `${JSON.stringify([...pages, ...blog, ...knowledge])}\n`, 'utf8')
-console.log(`Generated search index with ${pages.length + blog.length + knowledge.length} entries.`)
+await fs.writeFile(output, `${JSON.stringify([...pages, ...projectEntries, ...blog, ...knowledge])}\n`, 'utf8')
+console.log(`Generated search index with ${pages.length + projectEntries.length + blog.length + knowledge.length} entries.`)

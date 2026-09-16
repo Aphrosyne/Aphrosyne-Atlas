@@ -1,30 +1,12 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import matter from 'gray-matter'
-import { globby } from 'globby'
-import { parseKnowledgeMetadata } from '../src/lib/content-schema.js'
+import { getCanonicalContentIndex } from '../src/lib/content-index.js'
 
 const root = process.cwd()
-const contentDirectory = path.join(root, 'src/content/knowledge')
 const outputPath = path.join(root, 'src/lib/knowledge-articles.ts')
-
-const files = await globby('**/*.mdx', { cwd: contentDirectory })
-const entries = []
-const seenSlugs = new Map()
-
-for (const relativePath of files.sort()) {
-  const source = await fs.readFile(path.join(contentDirectory, relativePath), 'utf8')
-  const { data } = matter(source)
-  const slug = path.basename(relativePath, '.mdx')
-  const metadata = parseKnowledgeMetadata(data, path.join(contentDirectory, relativePath), slug)
-  if (metadata.publication === 'draft') continue
-  const duplicate = seenSlugs.get(slug)
-  if (duplicate) {
-    throw new Error(`知识库 slug 重复：${slug}\n- ${duplicate}\n- ${relativePath}`)
-  }
-  seenSlugs.set(slug, relativePath)
-  entries.push({ slug, relativePath: relativePath.replaceAll('\\', '/') })
-}
+const entries = (await getCanonicalContentIndex()).knowledge
+  .filter((entry) => entry.metadata.publication !== 'draft')
+  .map((entry) => ({ slug: entry.metadata.slug, relativePath: entry.relativePath }))
 
 const loaders = entries
   .map(({ slug, relativePath }) => `  ${JSON.stringify(slug)}: () => import(${JSON.stringify(`@/content/knowledge/${relativePath}`)}),`)
