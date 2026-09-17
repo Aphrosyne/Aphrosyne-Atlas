@@ -252,6 +252,10 @@ export default function Dashboard({ siteName, recentPosts, knowledgeEntries, pro
 
       </motion.div>
 
+      <p className="mt-5 rounded-xl bg-content-surface px-4 py-3 text-center text-xs leading-relaxed text-fg/80 backdrop-blur-md">
+        首页「一言」与「状态」会由你的浏览器分别向一言 API 和 GitHub Gist 请求公开内容，第三方会收到常规网络请求信息（如 IP 地址）；请求失败时显示本站预设文案。
+      </p>
+
     </section>
   )
 }

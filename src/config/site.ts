@@ -81,5 +81,6 @@ export const NAV_ITEMS = [
 // 只添加已确认可公开的链接；数组顺序即页面显示顺序。
 export const SOCIAL_LINKS = [
   { platform: 'github', label: 'GitHub', href: 'https://github.com/aphrosyne' },
+  { platform: 'bilibili', label: 'Bilibili', href: 'https://space.bilibili.com/3691012826335694' },
 ] as const satisfies readonly SocialLink[]
 import { deploymentConfig } from '@/lib/site-url'

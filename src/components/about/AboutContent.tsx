@@ -1,11 +1,10 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import PageTransition from '@/components/shared/PageTransition'
 import MarqueeTechStack from '@/components/shared/MarqueeTechStack'
 import socialIcons from '@/components/shared/SocialIcons'
 import { SITE, SOCIAL_LINKS } from '@/config/site'
 import { publicPath } from '@/lib/public-path'
-import { useMotionPolicy } from '@/lib/use-motion-policy'
 
 function superellipsePath(n: number, points = 48): string {
   const coords: string[] = []
@@ -23,16 +22,10 @@ function superellipsePath(n: number, points = 48): string {
 const AVATAR_CLIP_PATH = superellipsePath(3)
 
 export default function AboutContent() {
-  const { shouldReduceMotion } = useMotionPolicy()
-
   return (
     <div className="mx-auto w-full min-w-0 max-w-3xl px-4 py-16">
-      <motion.div
-        initial={shouldReduceMotion ? false : { opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.4, ease: 'easeOut' }}
-        className="min-w-0 rounded-2xl border border-border/10 bg-bg/30 p-8 backdrop-blur-xl sm:p-10"
-      >
+      <div className="min-w-0 rounded-2xl border border-border/10 bg-bg/30 p-8 backdrop-blur-xl sm:p-10">
+        <PageTransition>
         {/* Avatar — superellipse */}
         <div className="flex justify-center mb-6">
           <svg width="0" height="0" className="absolute">
@@ -99,7 +92,8 @@ export default function AboutContent() {
             </a>
           ))}
         </div>
-      </motion.div>
+        </PageTransition>
+      </div>
     </div>
   )
 }

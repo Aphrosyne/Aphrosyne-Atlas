@@ -2,6 +2,7 @@
 title: Aphrosyne Atlas 知识库：分类、状态与使用说明
 date: 2026-09-07
 publication: published
+pinned: false
 tags: [knowledge, meta, Skyrim, documentation]
 excerpt: 为什么将知识库与博客分开，以及分类、验证状态、版本、来源、搜索和归档分别代表什么。
 readingTime: 6 min
@@ -51,6 +52,20 @@ Knowledge 更适合按问题查找：条目需要写明分类、适用版本、�
 全局搜索可以切换“全部 / 知识库 / Blog”，并检索标题、摘要、正文、小标题、标签和版本字段。中文、英文名称和 Mod 缩写可以混合输入。知识库列表则按教程、问题修复、实验记录和参考资料筛选。
 
 搜索结果只能帮助定位内容，不能替代版本与状态判断。打开条目后，先看状态和适用版本，再决定是否采用其中的步骤。
+
+## 置顶内容
+
+Blog 和 Knowledge 都支持置顶，用于把当前最想让读者看到的**公开内容**放在各自列表的最前面。置顶内容会显示“置顶”标记；在日期、标题或最后更新排序之前，系统会先把置顶项排到前面。
+
+在对应文章的 MDX frontmatter 中加入一行即可：
+
+```yaml
+pinned: true
+```
+
+例如 Blog 根目录的文章和 `src/content/knowledge/` 下任意分类目录中的 Knowledge 条目都使用同一个字段。只允许 `publication: published` 的内容置顶；归档、未列出和草稿不能置顶，构建时会报错。移除这行或改为 `pinned: false` 就会取消置顶。
+
+本站默认不预先置顶任何文章，避免替你决定优先级。首页推荐仍按其既有规则展示；置顶影响的是 Blog 与 Knowledge 的各自列表和详情页标记。
 
 ## 更新与归档
 

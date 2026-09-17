@@ -41,7 +41,7 @@ export default function RootLayout({
     >
       <body className="min-h-screen flex flex-col text-fg transition-colors">
         {/* Fixed background — auto-detects format */}
-        <div className="fixed inset-0 -z-10">
+        <div className="fixed left-0 top-0 -z-10 h-lvh w-screen">
           <Backdrop />
         </div>
 

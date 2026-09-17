@@ -1,13 +1,14 @@
 import type { PostMetadata } from '@/types/post'
-import { ARCHIVED_STATUS_CLASS } from '@/components/shared/content-status'
+import { ARCHIVED_STATUS_CLASS, PINNED_STATUS_CLASS } from '@/components/shared/content-status'
 
-export default function PostHeader({ title, date, tags, publication, readingTime }: PostMetadata) {
+export default function PostHeader({ title, date, tags, publication, pinned, readingTime }: PostMetadata) {
   return (
     <header className="mb-10">
       <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">{title}</h1>
       <div className="mt-4 flex flex-wrap items-center gap-3 text-base text-muted">
         <time>{date}</time>
         {publication === 'archived' && <span className={`rounded-full border px-2.5 py-1 text-xs ${ARCHIVED_STATUS_CLASS.archived}`}>归档</span>}
+        {pinned && <span className={`rounded-full border px-2.5 py-1 text-xs ${PINNED_STATUS_CLASS}`}>置顶</span>}
         {readingTime && (
           <>
             <span className="text-border">·</span>

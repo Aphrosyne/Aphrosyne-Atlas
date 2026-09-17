@@ -5,7 +5,7 @@ import TableOfContents from '@/components/blog/TableOfContents'
 import { KNOWLEDGE_ARTICLE_LOADERS } from '@/lib/knowledge-articles'
 import { getAllKnowledge, getKnowledgeBySlug, getKnowledgeSlugs } from '@/lib/knowledge'
 import { siteUrl } from '@/lib/site-url'
-import { ARCHIVED_STATUS_CLASS, KNOWLEDGE_STATUS_CLASSES, KNOWLEDGE_STATUS_LABELS } from '@/components/shared/content-status'
+import { ARCHIVED_STATUS_CLASS, KNOWLEDGE_STATUS_CLASSES, KNOWLEDGE_STATUS_LABELS, PINNED_STATUS_CLASS } from '@/components/shared/content-status'
 import { ARTICLE_PROSE_CLASS } from '@/components/content/article-prose'
 import PageTransition from '@/components/shared/PageTransition'
 
@@ -37,7 +37,7 @@ export default async function KnowledgeArticlePage({ params }: Props) {
   const categories = await getAllKnowledge()
 
   return (
-    <PageTransition><div className="mx-auto w-full min-w-0 max-w-7xl px-4 py-12">
+    <div className="mx-auto w-full min-w-0 max-w-7xl px-4 py-12">
         <div className="min-w-0 rounded-[2rem] border border-border/40 bg-reading-surface p-5 shadow-[0_25px_80px_rgba(0,0,0,0.32)] backdrop-blur-md sm:p-8">
           <Link href="/knowledge" className="inline-flex min-h-11 items-center rounded-xl border border-border/20 bg-surface/40 px-4 py-2.5 text-base font-semibold text-fg/65 transition-colors hover:bg-surface/60 hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus">
             ← 返回知识库
@@ -58,12 +58,13 @@ export default async function KnowledgeArticlePage({ params }: Props) {
               </details>
             </aside>
 
-            <article id="article-content" className={`order-1 min-w-0 ${ARTICLE_PROSE_CLASS} lg:order-2`}>
+            <article id="article-content" className={`knowledge-article order-1 min-w-0 ${ARTICLE_PROSE_CLASS} lg:order-2`}>
               <header className="mb-10 not-prose">
                 <div className="flex flex-wrap items-center gap-2 text-xs">
                   <span className="rounded-full bg-accent/15 px-2.5 py-1 text-accent">{TYPE_LABELS[entry.type]}</span>
                   <span className={`rounded-full border px-2.5 py-1 ${KNOWLEDGE_STATUS_CLASSES[entry.status]}`}>{KNOWLEDGE_STATUS_LABELS[entry.status]}</span>
                   {entry.publication === 'archived' && <span className={`rounded-full border px-2.5 py-1 ${ARCHIVED_STATUS_CLASS.archived}`}>归档</span>}
+                  {entry.pinned && <span className={`rounded-full border px-2.5 py-1 ${PINNED_STATUS_CLASS}`}>置顶</span>}
                   {entry.gameVersion && <span className="text-fg/50">适用版本：{entry.gameVersion}</span>}
                 </div>
                 <h1 className="mt-4 text-3xl font-bold tracking-tight text-fg sm:text-4xl">{entry.title}</h1>
@@ -77,7 +78,7 @@ export default async function KnowledgeArticlePage({ params }: Props) {
                 <summary className="cursor-pointer rounded-lg px-2 py-1 text-sm font-semibold text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus">本篇目录</summary>
                 <div className="mt-3"><TableOfContents variant="mobile" /></div>
               </details>
-              <Article />
+              <PageTransition fade={false}><Article /></PageTransition>
               {(entry.related.length > 0 || entry.sources.length > 0) && (
                 <footer className="not-prose mt-12 space-y-5 rounded-2xl border border-border/40 bg-surface/50 p-5 backdrop-blur-md sm:p-6">
                   {entry.related.length > 0 && <p className="text-sm text-fg/60">相关文档：{entry.related.map((relatedSlug, index) => {
@@ -92,7 +93,7 @@ export default async function KnowledgeArticlePage({ params }: Props) {
             <aside className="order-3 hidden min-w-0 lg:block"><TableOfContents /></aside>
           </div>
         </div>
-    </div></PageTransition>
+    </div>
   )
 }
 

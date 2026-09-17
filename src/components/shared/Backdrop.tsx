@@ -40,12 +40,23 @@ function PanelImage({ panel, blur }: {
   panel: BackgroundPanel
   blur?: MotionValue<string>
 }) {
+  const src = publicPath(SITE.assets.backgrounds[panel])
+  const className = 'absolute inset-0 size-full object-cover'
+
+  // Blog/Knowledge/Projects have no scroll-driven filter. Keep their resting
+  // image native so hydration cannot recompose its overscan transform.
+  if (!blur) {
+    // Static export backgrounds intentionally use a native image element.
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img src={src} alt="" aria-hidden="true" className={className} style={{ transform: `scale(${BACKGROUND_SCALE})` }} onError={hideFailedBackground} />
+  }
+
   return (
     <motion.img
-      src={publicPath(SITE.assets.backgrounds[panel])}
+      src={src}
       alt=""
       aria-hidden="true"
-      className="absolute inset-0 size-full object-cover"
+      className={className}
       style={{ scale: BACKGROUND_SCALE, filter: blur }}
       onError={hideFailedBackground}
     />

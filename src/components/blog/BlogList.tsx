@@ -7,6 +7,7 @@ import type { PostMetadata } from '@/types/post'
 import ContentToolbar from '@/components/shared/ContentToolbar'
 import SortControls, { type SortDirection } from '@/components/shared/SortControls'
 import BlogCard from './BlogCard'
+import { comparePinned } from '@/lib/pinned-order'
 
 const fade = { initial: { opacity: 0 }, animate: { opacity: 1 } }
 const fadeT = (delay = 0) => ({ duration: 0.4, ease: 'easeOut' as const, delay })
@@ -23,6 +24,7 @@ export default function BlogList({ posts }: { posts: PostMetadata[] }) {
   const [activeTag, setActiveTag] = useState<string | null>(searchParams.get('tag'))
   const [sortBy, setSortBy] = useState<BlogSort>(searchParams.get('sort') === 'title' ? 'title' : 'date')
   const [sortDirection, setSortDirection] = useState<SortDirection>(searchParams.get('dir') === 'asc' ? 'asc' : 'desc')
+  const [showAllMobileTags, setShowAllMobileTags] = useState(false)
   const replace = (next: Record<string, string | null>) => {
     const params = new URLSearchParams(searchParams.toString())
     Object.entries(next).forEach(([key, value]) => value ? params.set(key, value) : params.delete(key))
@@ -44,6 +46,8 @@ export default function BlogList({ posts }: { posts: PostMetadata[] }) {
     : post.publication === 'published')
 
   const allTags = useMemo(() => [...new Set(visiblePosts.flatMap((p) => p.tags))].sort(), [visiblePosts])
+  const compactTags = allTags.slice(0, 4)
+  if (activeTag && allTags.includes(activeTag) && !compactTags.includes(activeTag)) compactTags.push(activeTag)
 
   const filtered = visiblePosts.filter((post) => {
     const matchesQuery =
@@ -54,6 +58,8 @@ export default function BlogList({ posts }: { posts: PostMetadata[] }) {
     return matchesQuery && matchesTag
   })
   const sortedPosts = [...filtered].sort((left, right) => {
+    const pinOrder = comparePinned(left, right)
+    if (pinOrder) return pinOrder
     const comparison = sortBy === 'date'
       ? left.date.localeCompare(right.date)
       : left.title.localeCompare(right.title, 'zh-CN')
@@ -103,7 +109,42 @@ export default function BlogList({ posts }: { posts: PostMetadata[] }) {
             className="self-start sm:self-auto"
           />
         </ContentToolbar>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 sm:hidden">
+          <motion.button
+            onClick={() => { setActiveTag(null); replace({ tag: null }) }}
+            {...fade}
+            transition={fadeT()}
+            className={`inline-flex min-h-11 items-center rounded-full px-3 text-xs font-medium transition-colors ${
+              !activeTag ? 'bg-accent-fill text-on-accent' : 'bg-surface/50 text-fg/70 backdrop-blur-sm hover:bg-surface/70 hover:text-accent'
+            }`}
+          >
+            All
+          </motion.button>
+          {(showAllMobileTags ? allTags : compactTags).map((tag) => (
+            <motion.button
+              key={tag}
+              onClick={() => { setActiveTag(tag); replace({ tag }) }}
+              {...fade}
+              transition={fadeT()}
+              className={`inline-flex min-h-11 items-center rounded-full px-3 text-xs font-medium transition-colors ${
+                activeTag === tag ? 'bg-accent-fill text-on-accent' : 'bg-surface/50 text-fg/70 backdrop-blur-sm hover:bg-surface/70 hover:text-accent'
+              }`}
+            >
+              {tag}
+            </motion.button>
+          ))}
+          {allTags.length > 4 && (
+            <button
+              type="button"
+              aria-expanded={showAllMobileTags}
+              onClick={() => setShowAllMobileTags((current) => !current)}
+              className="min-h-11 cursor-pointer rounded-full border border-border/60 bg-content-surface px-3 text-xs font-medium text-fg/80 transition-colors hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+            >
+              {showAllMobileTags ? '收起标签' : `展开全部标签（${allTags.length}）`}
+            </button>
+          )}
+        </div>
+        <div className="hidden flex-wrap gap-2 sm:flex">
           <motion.button
             onClick={() => { setActiveTag(null); replace({ tag: null }) }}
             {...fade}

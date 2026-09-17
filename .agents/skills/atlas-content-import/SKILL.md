@@ -40,6 +40,7 @@ description: 将用户提供的外部教程、笔记或文章安全转换为 Aph
 title: 中文标题
 date: YYYY-MM-DD
 publication: draft # published | archived | unlisted | draft
+pinned: false # true 仅用于需要置顶的 published 文章
 tags: [中文标签, English tag]
 excerpt: 可独立理解的简短摘要。
 readingTime: 5 min
@@ -58,6 +59,7 @@ title: 中文标题
 type: guide # guide | fix | experiment | reference
 status: needs-review # verified | needs-review | outdated
 publication: draft
+pinned: false # true 仅用于需要置顶的 published 条目
 excerpt: 可独立理解的简短摘要。
 tags: [Skyrim, 示例]
 game_version: Skyrim SE 1.6.x
@@ -72,6 +74,7 @@ sources:
 - `verified` 只能基于用户明确的实测或可靠来源；不确定时使用 `needs-review`。重新验证或发现结论过期时，同步更新 `status` 与 `last_edited`。
 - `sources` 记录正文实际参考的公开链接。没有可靠公开来源时留空数组，不捏造 URL。
 - `publication: archived` 适合仍可公开查阅的历史内容；`draft` 不生成公开路由；私人材料应留在 `.private/`，不进入 `src/content/`。
+- `pinned` 是可选布尔字段，但新建内容默认显式写为 `false`。只有 `publication: published` 的内容可设为 `true`；它会在各自的 Blog 或 Knowledge 列表中优先显示并带“置顶”标记。归档、未列出和草稿设为 `true` 会在构建校验时失败。
 
 ## 正文与图片
 

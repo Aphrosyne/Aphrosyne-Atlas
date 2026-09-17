@@ -18,6 +18,9 @@ export default function CopyAttribution({ children }: CopyAttributionProps) {
       const selection = document.getSelection()
       if (!selection || selection.isCollapsed) return
 
+      const range = selection.getRangeAt(0)
+      if ([...el.querySelectorAll('pre')].some((pre) => range.intersectsNode(pre))) return
+
       const selectedText = selection.toString().trim()
       if (!selectedText) return
 

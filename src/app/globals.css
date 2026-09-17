@@ -50,7 +50,7 @@
   --color-border: #2c2c2e;
   --color-expressive-surface: rgba(255, 255, 255, 0.03);
   --color-content-surface: rgba(26, 26, 28, 0.5);
-  --color-reading-surface: rgba(26, 26, 28, 0.5);
+  --color-reading-surface: rgba(26, 26, 28, 0.68);
   --color-reading-muted: #b8b8ba;
   --color-dialog-surface: #1a1a1cf2;
   --color-code-bg: #18181b;
@@ -78,6 +78,12 @@ html {
   scrollbar-gutter: stable;
 }
 
+@media (max-width: 767px) {
+  html {
+    scrollbar-gutter: auto;
+  }
+}
+
 html.light {
   --color-bg: #fafafa;
   --color-surface: #e5e5e5;
@@ -91,7 +97,7 @@ html.light {
   --color-border: #d4d4d4;
   --color-expressive-surface: rgba(255, 255, 255, 0.45);
   --color-content-surface: rgba(229, 229, 229, 0.5);
-  --color-reading-surface: rgba(229, 229, 229, 0.5);
+  --color-reading-surface: rgba(229, 229, 229, 0.72);
   --color-reading-muted: #545454;
   --color-dialog-surface: #fafafaf2;
   --color-code-bg: #e8e8e8;
@@ -177,6 +183,8 @@ body {
 
 /* Shared Blog/Knowledge MDX typography follows the semantic theme roles. */
 .article-prose {
+  font-size: 1.125rem;
+  line-height: 1.75;
   --tw-prose-body: color-mix(in srgb, var(--color-fg) 80%, transparent);
   --tw-prose-headings: var(--color-fg);
   --tw-prose-bold: var(--color-fg);
@@ -190,6 +198,11 @@ body {
   font-weight: 600;
   line-height: 1.45;
   scroll-margin-top: var(--size-anchor-offset);
+}
+
+/* Long identifiers in headings must wrap before they widen a mobile reading page. */
+.article-prose :where(h1, h2, h3, h4, h5, h6) {
+  overflow-wrap: anywhere;
 }
 
 .article-prose :where(h2, h3)[id] {
@@ -239,9 +252,62 @@ body {
   background-size: 100% 2px;
 }
 
+@property --pinned-border-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes pinned-border-spin {
+  to { --pinned-border-angle: 360deg; }
+}
+
+/* Pinned list cards share the article-link gradient as a border-only overlay. */
+.pinned-content-card {
+  border-color: transparent;
+}
+
+.pinned-content-card::before {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  padding: 2px;
+  border-radius: inherit;
+  pointer-events: none;
+  content: '';
+  background: conic-gradient(
+    from var(--pinned-border-angle),
+    var(--color-accent),
+    var(--color-avatar-ring),
+    var(--color-accent)
+  );
+  animation: pinned-border-spin 10s linear infinite;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pinned-content-card::before {
+    animation: none;
+  }
+}
+
 .article-prose :where(blockquote) {
   color: color-mix(in srgb, var(--color-fg) 82%, transparent);
   border-inline-start-color: var(--color-border);
+}
+
+.knowledge-article :where(blockquote) {
+  font-style: normal;
+  quotes: none;
+}
+
+.knowledge-article blockquote p:first-of-type::before,
+.knowledge-article blockquote p:last-of-type::after {
+  content: none;
 }
 
 .article-prose :where(hr) {

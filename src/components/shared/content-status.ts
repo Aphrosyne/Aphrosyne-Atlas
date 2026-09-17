@@ -20,6 +20,8 @@ export const ARCHIVED_STATUS_CLASS: Record<PublicationState, string> = {
   draft: '',
 }
 
+export const PINNED_STATUS_CLASS = 'border-accent/60 bg-accent/15 text-accent'
+
 export const PROJECT_STATUS = {
   public: { label: '公开', className: 'border-status-verified-border bg-status-verified-bg text-status-verified-fg' },
   archived: { label: '公开归档', className: 'border-status-archived-border bg-status-archived-bg text-status-archived-fg' },

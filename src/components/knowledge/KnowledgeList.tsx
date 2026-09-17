@@ -6,10 +6,11 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import type { KnowledgeMetadata, KnowledgeType } from '@/types/knowledge'
 import ContentToolbar from '@/components/shared/ContentToolbar'
-import { CONTENT_CARD_FOCUS, CONTENT_CARD_PADDING, CONTENT_CARD_SURFACE } from '@/components/shared/content-card'
+import { CONTENT_CARD_FOCUS, CONTENT_CARD_PADDING, CONTENT_CARD_SURFACE, PINNED_CONTENT_CARD_SURFACE } from '@/components/shared/content-card'
 import SortControls, { type SortDirection } from '@/components/shared/SortControls'
-import { ARCHIVED_STATUS_CLASS, KNOWLEDGE_STATUS_CLASSES, KNOWLEDGE_STATUS_LABELS } from '@/components/shared/content-status'
+import { ARCHIVED_STATUS_CLASS, KNOWLEDGE_STATUS_CLASSES, KNOWLEDGE_STATUS_LABELS, PINNED_STATUS_CLASS } from '@/components/shared/content-status'
 import { useMotionPolicy } from '@/lib/use-motion-policy'
+import { comparePinned } from '@/lib/pinned-order'
 
 const TYPE_LABELS: Record<KnowledgeType, string> = {
   guide: '教程',
@@ -47,6 +48,8 @@ export default function KnowledgeList({ entries }: { entries: KnowledgeMetadata[
   const visibleEntries = showingArchive ? archivedEntries : publishedEntries
   const filtered = activeType === 'all' ? visibleEntries : visibleEntries.filter((entry) => entry.type === activeType)
   const sortedEntries = useMemo(() => [...filtered].sort((left, right) => {
+    const pinOrder = comparePinned(left, right)
+    if (pinOrder) return pinOrder
     if (sortBy === 'title') {
       const comparison = left.title.localeCompare(right.title, 'zh-CN')
       return sortDirection === 'asc' ? comparison : -comparison
@@ -124,12 +127,13 @@ export default function KnowledgeList({ entries }: { entries: KnowledgeMetadata[
               initial={shouldReduceMotion ? false : { opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.3, ease: 'easeOut', delay: Math.min(index * 0.04, 0.16) }}
-              className={`${CONTENT_CARD_SURFACE} block ${CONTENT_CARD_PADDING} ${CONTENT_CARD_FOCUS}`}
+              className={`${CONTENT_CARD_SURFACE} ${entry.pinned ? PINNED_CONTENT_CARD_SURFACE : ''} block ${CONTENT_CARD_PADDING} ${CONTENT_CARD_FOCUS}`}
             >
               <div className="flex flex-wrap items-center gap-2 text-xs">
                 <span className="rounded-full bg-accent/15 px-2.5 py-1 text-accent">{TYPE_LABELS[entry.type]}</span>
                 <span className={`rounded-full border px-2.5 py-1 ${KNOWLEDGE_STATUS_CLASSES[entry.status]}`}>{KNOWLEDGE_STATUS_LABELS[entry.status]}</span>
                 {entry.publication === 'archived' && <span className={`rounded-full border px-2.5 py-1 ${ARCHIVED_STATUS_CLASS.archived}`}>归档</span>}
+                {entry.pinned && <span className={`rounded-full border px-2.5 py-1 ${PINNED_STATUS_CLASS}`}>置顶</span>}
                 {entry.gameVersion && <span className="text-fg/45">{entry.gameVersion}</span>}
               </div>
               <h2 className="mt-3 text-lg font-semibold leading-snug text-fg/90 transition-colors group-hover:text-accent sm:text-xl">{entry.title}</h2>

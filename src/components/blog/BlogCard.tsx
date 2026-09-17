@@ -3,8 +3,8 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import type { PublicationState } from '@/types/publication'
-import { CONTENT_CARD_FOCUS, CONTENT_CARD_PADDING, CONTENT_CARD_SURFACE } from '@/components/shared/content-card'
-import { ARCHIVED_STATUS_CLASS } from '@/components/shared/content-status'
+import { CONTENT_CARD_FOCUS, CONTENT_CARD_PADDING, CONTENT_CARD_SURFACE, PINNED_CONTENT_CARD_SURFACE } from '@/components/shared/content-card'
+import { ARCHIVED_STATUS_CLASS, PINNED_STATUS_CLASS } from '@/components/shared/content-status'
 import { useMotionPolicy } from '@/lib/use-motion-policy'
 
 interface BlogCardProps {
@@ -14,24 +14,25 @@ interface BlogCardProps {
   excerpt: string
   tags: string[]
   publication: PublicationState
+  pinned: boolean
   index: number
   onTagClick?: (tag: string) => void
 }
 
-export default function BlogCard({ slug, title, date, excerpt, tags, publication, index, onTagClick }: BlogCardProps) {
+export default function BlogCard({ slug, title, date, excerpt, tags, publication, pinned, index, onTagClick }: BlogCardProps) {
   const { shouldReduceMotion } = useMotionPolicy()
 
   return (
     <motion.div
       initial={shouldReduceMotion ? false : { x: 20 }}
       animate={{ x: 0 }}
-      whileHover={shouldReduceMotion ? undefined : { y: -3 }}
+      whileHover={shouldReduceMotion || pinned ? undefined : { y: -3 }}
       transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.3, ease: 'easeOut', delay: Math.min(index * 0.04, 0.16) }}
     >
-      <article className={CONTENT_CARD_SURFACE}>
+      <article className={`${CONTENT_CARD_SURFACE} ${pinned ? PINNED_CONTENT_CARD_SURFACE : ''}`}>
         <Link
           href={`/blog/${slug}`}
-          prefetch
+          prefetch={false}
           aria-label={`阅读文章：${title}`}
           className={`absolute inset-0 z-0 rounded-2xl ${CONTENT_CARD_FOCUS}`}
         />
@@ -40,6 +41,7 @@ export default function BlogCard({ slug, title, date, excerpt, tags, publication
             <time className="font-medium tabular-nums text-fg/75">{date}</time>
             <span className="hidden text-[0.65rem] tracking-[0.18em] text-fg/35 uppercase sm:block">Article</span>
             {publication === 'archived' && <span className={`rounded-full border px-2 py-0.5 ${ARCHIVED_STATUS_CLASS.archived}`}>归档</span>}
+            {pinned && <span className={`rounded-full border px-2 py-0.5 ${PINNED_STATUS_CLASS}`}>置顶</span>}
           </div>
           <div className="min-w-0">
             <h3 className="text-lg font-semibold leading-snug text-fg/90 transition-colors group-hover:text-accent sm:text-xl">{title}</h3>

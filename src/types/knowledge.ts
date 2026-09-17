@@ -18,6 +18,7 @@ export interface KnowledgeMetadata {
   type: KnowledgeType
   status: KnowledgeStatus
   publication: PublicationState
+  pinned: boolean
   excerpt: string
   tags: string[]
   gameVersion?: string

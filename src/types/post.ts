@@ -7,6 +7,7 @@ export interface PostMetadata {
   tags: string[]
   excerpt: string
   publication: PublicationState
+  pinned: boolean
   readingTime?: string
 }
 

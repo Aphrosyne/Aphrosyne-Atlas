@@ -1,6 +1,7 @@
 import type { MDXComponents } from 'mdx/types'
 import type { ComponentProps } from 'react'
 import ArticleScrollRegion from '@/components/content/ArticleScrollRegion'
+import CopyableCodeBlock from '@/components/content/CopyableCodeBlock'
 import { IMAGE_DIMENSIONS } from '@/lib/image-dimensions'
 import { publicPath } from '@/lib/public-path'
 
@@ -13,11 +14,7 @@ function ArticleTable(props: ComponentProps<'table'>) {
 }
 
 function ArticleCodeBlock(props: ComponentProps<'pre'>) {
-  return (
-    <ArticleScrollRegion label="可横向滚动的代码块">
-      <pre {...props} />
-    </ArticleScrollRegion>
-  )
+  return <CopyableCodeBlock {...props} />
 }
 
 function ArticleHeading({ id, children, ...props }: ComponentProps<'h2'>) {

@@ -29,7 +29,7 @@ export default async function BlogPostPage({ params }: Props) {
   const { prev, next } = await getAdjacentPosts(slug)
 
   return (
-    <PageTransition><div className="relative mx-auto w-full min-w-0 max-w-5xl px-4 py-12">
+    <div className="relative mx-auto w-full min-w-0 max-w-5xl px-4 py-12">
         <div className="min-w-0 rounded-[2rem] border border-border/40 bg-reading-surface p-5 shadow-[0_25px_80px_rgba(0,0,0,0.32)] backdrop-blur-md sm:p-8">
             {/* Back link */}
             <Link href="/blog" className="mb-8 inline-flex min-h-11 items-center gap-1 rounded-xl border border-border/10 bg-surface/40 px-4 py-2.5 text-base font-semibold text-fg/60 backdrop-blur-sm transition-colors hover:bg-surface/60 hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
@@ -46,7 +46,7 @@ export default async function BlogPostPage({ params }: Props) {
                       <summary className="cursor-pointer rounded-lg px-2 py-1 text-sm font-semibold text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus">本篇目录</summary>
                       <div className="mt-3"><TableOfContents variant="mobile" /></div>
                     </details>
-                    <Post />
+                    <PageTransition fade={false}><Post /></PageTransition>
                   </article>
                 </CopyAttribution>
 
@@ -74,7 +74,7 @@ export default async function BlogPostPage({ params }: Props) {
             </div>
 
       </div>
-    </div></PageTransition>
+    </div>
   )
 }
 

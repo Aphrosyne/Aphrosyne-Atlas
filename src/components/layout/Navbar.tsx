@@ -249,7 +249,7 @@ export default function Navbar() {
                 </NavDropdown>
               )
             }
-            const isActive = pathname === item.href
+            const isActive = isParentActive(pathname, item.href)
             return (
               <Link
                 key={item.href}

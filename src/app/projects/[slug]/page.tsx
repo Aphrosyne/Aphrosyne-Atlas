@@ -29,15 +29,16 @@ export default async function ProjectDetailPage({ params }: Props) {
   const statusMeta = PROJECT_STATUS[project.status]
 
   return (
-    <PageTransition>
-      <div className="mx-auto w-full max-w-3xl px-4 py-16">
+    <div className="mx-auto w-full max-w-3xl px-4 py-16">
         <div className="rounded-[2rem] border border-border/40 bg-surface/50 p-5 shadow-[0_25px_80px_rgba(0,0,0,0.24)] backdrop-blur-md sm:p-8">
           <Link
             href="/projects"
-            className="inline-flex rounded-xl border border-border/20 bg-surface/40 px-4 py-2.5 text-sm font-semibold text-fg/65 transition-colors hover:bg-surface/60 hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+            className="inline-flex min-h-11 items-center rounded-xl border border-border/20 bg-surface/40 px-4 py-2.5 text-sm font-semibold text-fg/65 transition-colors hover:bg-surface/60 hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
           >
             &larr; 返回项目
           </Link>
+
+          <PageTransition>
 
           <div className="mt-8 flex flex-wrap items-center gap-2 text-xs">
             <span className={`rounded-full border px-2.5 py-1 ${statusMeta.className}`}>{statusMeta.label}</span>
@@ -91,9 +92,9 @@ export default async function ProjectDetailPage({ params }: Props) {
               })}
             </div>
           )}
+          </PageTransition>
         </div>
       </div>
-    </PageTransition>
   )
 }
 

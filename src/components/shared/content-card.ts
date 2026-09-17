@@ -9,3 +9,6 @@ export const CONTENT_CARD_PADDING = 'p-5 sm:p-6'
 
 export const CONTENT_CARD_FOCUS =
   'focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-inset'
+
+// Pinned content keeps the normal glass fill but uses the article-link gradient as a 1px outline.
+export const PINNED_CONTENT_CARD_SURFACE = 'pinned-content-card'
