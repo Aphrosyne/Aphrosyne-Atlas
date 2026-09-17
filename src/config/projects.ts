@@ -47,6 +47,17 @@ export const projects: Project[] = [
     language: 'Python',
     links: [{ label: '查看源码', href: 'https://github.com/Aphrosyne/Skyrim-Content-Workbench' }],
   },
+  {
+    slug: 'cursor-parker',
+    title: 'CursorParker',
+    description: '轻量、免安装的 Windows 鼠标停放脚本，避免静止指针遮挡输入内容。',
+    longDescription:
+      '一个基于 Windows PowerShell 的轻量工具：检测到文字输入且鼠标静止一秒后，记录当前位置并将指针停放到当前显示器右下角；再次移动时自动恢复。它不替换系统光标、不安装键盘钩子，也不使用 UI Automation，并会在无标题栏全屏窗口或鼠标被程序捕获时暂停停放。',
+    tags: ['PowerShell', 'Windows', 'Automation', 'Productivity'],
+    status: 'public',
+    language: 'PowerShell',
+    links: [{ label: '查看源码', href: 'https://github.com/Aphrosyne/CursorParker' }],
+  },
 ]
 
 export function getProjectBySlug(slug: string): Project | undefined {

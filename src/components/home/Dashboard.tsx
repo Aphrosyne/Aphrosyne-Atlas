@@ -13,6 +13,7 @@ import type { PostMetadata } from '@/types/post'
 import type { KnowledgeMetadata } from '@/types/knowledge'
 import { publicPath } from '@/lib/public-path'
 import { useMotionPolicy } from '@/lib/use-motion-policy'
+import { MEME_IMAGES } from '@/lib/meme-images'
 
 interface DashboardProps {
   siteName: string
@@ -106,7 +107,7 @@ function ProjectSubCard({ project, shouldReduceMotion }: { project: DashboardPro
   return (
     <motion.div
       whileHover={shouldReduceMotion ? undefined : { y: -2, scale: 1.02 }}
-      className="rounded-2xl overflow-hidden bg-white/2 backdrop-blur-md border-t border-t-white/15 border-b border-b-white/5 p-3 shadow-[0_10px_25px_rgba(0,0,0,0.1)] hover:shadow-[0_14px_30px_rgba(75,169,178,0.08)] transition-shadow duration-300 group cursor-pointer"
+      className="rounded-2xl overflow-hidden bg-white/2 border-t border-t-white/15 border-b border-b-white/5 p-3 shadow-[0_10px_25px_rgba(0,0,0,0.1)] hover:shadow-[0_14px_30px_rgba(75,169,178,0.08)] transition-shadow duration-300 group cursor-pointer"
     >
       <div className="text-sm font-medium text-fg/90 group-hover:text-accent transition-colors truncate">{project.title}</div>
       <div className="text-[11px] text-muted leading-snug mt-1 line-clamp-2">{project.description}</div>
@@ -185,8 +186,8 @@ export default function Dashboard({ siteName, recentPosts, knowledgeEntries, pro
           {knowledgeEntries.length === 0 ? (
             <p className="text-sm text-muted">知识库正在整理中。</p>
           ) : (
-            <div className="max-h-52 space-y-0.5 overflow-y-auto pr-1">
-              {knowledgeEntries.map((entry) => (
+            <div className="space-y-0.5">
+              {knowledgeEntries.slice(0, 5).map((entry) => (
                 <Link key={entry.slug} href={`/knowledge/${entry.slug}`} className="flex min-h-11 items-center gap-3 rounded-lg px-1.5 py-2 text-sm transition-colors hover:bg-surface/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus">
                   <span className="text-base">📚</span>
                   <span className="min-w-0 flex-1 truncate text-fg/90">{entry.title}</span>
@@ -203,19 +204,21 @@ export default function Dashboard({ siteName, recentPosts, knowledgeEntries, pro
             <div className="text-[10px] tracking-widest text-muted uppercase">Blog</div>
             <Link href="/blog" className="rounded-lg text-xs text-accent transition-colors hover:text-avatar-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus">查看全部 →</Link>
           </div>
-          {recentPosts.map((p) => (
-            <Link key={p.slug} href={`/blog/${p.slug}`} className="group -mx-1.5 flex min-h-11 items-center gap-3 rounded-lg px-1.5 py-2 transition-colors hover:bg-surface/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus">
-              <div className="w-10 h-10 rounded-lg bg-accent/6 flex items-center justify-center shrink-0 text-sm group-hover:bg-accent/10 transition-colors">📄</div>
-              <div className="min-w-0">
-                <div className="text-sm font-medium text-fg/90 truncate group-hover:text-accent transition-colors">{p.title}</div>
-                <div className="text-[11px] text-muted">{p.date}</div>
-              </div>
-            </Link>
-          ))}
+          <div className="space-y-0.5">
+            {recentPosts.map((p) => (
+              <Link key={p.slug} href={`/blog/${p.slug}`} className="group flex min-h-11 items-center gap-3 rounded-lg px-1.5 py-2 transition-colors hover:bg-surface/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus">
+                <span className="shrink-0 text-base">📄</span>
+                <div className="min-w-0">
+                  <div className="text-sm font-medium text-fg/90 truncate group-hover:text-accent transition-colors">{p.title}</div>
+                  <div className="text-[11px] text-muted">{p.date}</div>
+                </div>
+              </Link>
+            ))}
+          </div>
         </Card>
 
         {/* Projects */}
-        <Card layout={DASHBOARD_LAYOUT.projects} direction={DIR.projects} shouldReduceMotion={shouldReduceMotion}>
+        <Card layout={DASHBOARD_LAYOUT.projects} direction={DIR.projects} withBackdropBlur={false} shouldReduceMotion={shouldReduceMotion}>
           <div className="mb-3 flex items-center justify-between">
             <div className="text-[10px] tracking-widest text-muted uppercase">Projects</div>
             <Link href="/projects" className="rounded-lg text-xs text-accent transition-colors hover:text-avatar-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus">查看全部 →</Link>
@@ -251,10 +254,6 @@ export default function Dashboard({ siteName, recentPosts, knowledgeEntries, pro
         <Card layout={DASHBOARD_LAYOUT.hitokoto} direction={DIR.hitokoto} className="flex flex-col" shouldReduceMotion={shouldReduceMotion}><HitokotoCard /></Card>
 
       </motion.div>
-
-      <p className="mt-5 rounded-xl bg-content-surface px-4 py-3 text-center text-xs leading-relaxed text-fg/80 backdrop-blur-md">
-        首页「一言」与「状态」会由你的浏览器分别向一言 API 和 GitHub Gist 请求公开内容，第三方会收到常规网络请求信息（如 IP 地址）；请求失败时显示本站预设文案。
-      </p>
 
     </section>
   )
@@ -357,18 +356,34 @@ function StatusCard() {
   )
 }
 
-const MEM_COUNT = 1 // 改这个数字，对应 public/images/mems/ 下的图片数量（从0开始编号）
-
 function MemCard() {
-  const [idx] = useState(() => Math.floor(Math.random() * MEM_COUNT))
+  const [index, setIndex] = useState(0)
   const { bounce, bounceStyle } = useBounce()
+  const image = MEME_IMAGES[index]
+
+  useEffect(() => {
+    const frameId = requestAnimationFrame(() => {
+      if (MEME_IMAGES.length) setIndex(Math.floor(Math.random() * MEME_IMAGES.length))
+    })
+    return () => cancelAnimationFrame(frameId)
+  }, [])
+
+  const showRandomMeme = () => {
+    bounce()
+    if (MEME_IMAGES.length < 2) return
+
+    const offset = 1 + Math.floor(Math.random() * (MEME_IMAGES.length - 1))
+    setIndex((currentIndex) => (currentIndex + offset) % MEME_IMAGES.length)
+  }
+
+  if (!image) return null
 
   return (
-    <button type="button" onClick={bounce} className="rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus" style={bounceStyle} aria-label="播放 Meme 弹跳动画">
+    <button type="button" onClick={showRandomMeme} className="rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus" style={bounceStyle} aria-label="随机切换 Meme 图片">
       {/* Static export meme: publicPath selects a local asset without a runtime image optimizer. */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={publicPath(`/images/mems/${idx}.webp`)}
+        src={publicPath(image)}
         alt="meme"
         className="max-h-28 rounded-2xl cursor-pointer select-none"
       />

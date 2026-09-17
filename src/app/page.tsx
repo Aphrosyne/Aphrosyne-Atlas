@@ -1,4 +1,4 @@
-import { getRecentPosts, getAllPosts } from '@/lib/posts'
+import { getAllPosts, getRecentPosts } from '@/lib/posts'
 import { getAllKnowledge } from '@/lib/knowledge'
 import { projects } from '@/config/projects'
 import { SITE } from '@/config/site'

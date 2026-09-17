@@ -8,6 +8,7 @@ const DIRECTORIES = [
   'assets/images-source/bg',
   'assets/images-source/blog',
   'assets/images-source/knowledge',
+  'assets/images-source/mems',
   '.private',
 ]
 

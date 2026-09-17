@@ -456,7 +456,7 @@ R0–R2 建立发布基线；R3–R8 解决发布前核心可用性；R9–R13 �
 | C5 | 正文链接线索 | **已完成：**强调色到头像环色的常驻 1px 渐变细线，hover 加粗至 2px；具备非颜色线索 |
 | C6 | 路由转场 | 保留明显横向方向；较短位移+轻纵移；最小中性过渡；实验 View Transition 仅可隔离验证 |
 | C7 | Blog 手机筛选 | **已完成：**默认前 4 个标签 + 当前选中标签，显式展开全部；桌面保持原布局 |
-| C8 | 首页第三方请求 | **已完成：**保留一言 API 与 GitHub Gist 动态内容，补明确说明并保留静态文案降级 |
+| C8 | 首页第三方请求 | **已确认：**保留一言 API 与 GitHub Gist 动态内容及静态文案降级；不设置常驻隐私提示 |
 | C9 | 复制体验 | **已选、已实施：**增加两类文章的代码复制；代码不加归因；Blog 普通正文保留归因，Knowledge 不加归因；用户实测复制正常 |
 | C10 | 置顶内容 | **已完成：**Blog 与 Knowledge 都可通过 `pinned: true` 置顶已发布内容；各列表分别在自身排序前优先显示置顶项，现有文章均显式为 `pinned: false` |
 | C11 | Hero 文案 | **已选、无需改动：**保留当前诗句、署名和全屏 Hero |
@@ -464,7 +464,7 @@ R0–R2 建立发布基线；R3–R8 解决发布前核心可用性；R9–R13 �
 ### R15 进行中记录（2026-09-16）
 
 - C2 已建立 Blog/Knowledge 共享的 18px/31.5px 正文，用户目测确认保留。之后单独调整 C1 阅读面板承托：深色 0.68、浅色 0.72，保留玻璃模糊，待深浅/桌面/手机目测。
-- C8 保留首页两个浏览器端动态请求和原有失败降级，在 Dashboard 下方补充第三方常规请求信息说明。C10 新增可选布尔 `pinned` 校验与列表置顶排序；只允许 `published` 内容置顶，不擅自修改现有文章 frontmatter。schema fixture、lint、类型、构建和根路径静态 smoke 通过。
+- C8 保留首页两个浏览器端动态请求和原有失败降级；曾在 Dashboard 下方补充第三方请求说明，后经用户确认删除，不设置常驻提示。C10 新增可选布尔 `pinned` 校验与列表置顶排序；只允许 `published` 内容置顶，不擅自修改现有文章 frontmatter。schema fixture、lint、类型、构建和根路径静态 smoke 通过。
 - C9 已在共享 MDX 代码块加入复制按钮及成功/失败反馈，并让 Blog 选区复制遇到代码块时跳过归因；用户实测复制正常。C7 已加入手机前 4 个标签 + 当前选择及展开/收起入口，桌面保留全部标签；待手机视口实际验收。C4 仅在 Knowledge 正文覆盖引用斜体和自动引号，Blog 维持原样；待两类长文视觉对照。
 - R15 预览反馈修复：Blog 详情页导航栏高亮延续到子路径；阅读玻璃壳不再随整页 opacity 入场（Blog/Knowledge/Projects/About），只让内部内容过渡；固定背景改用稳定的 `lvh` 高度以避免手机浏览器视口变动造成缩放；Blog 卡片禁用强制预取后，静态预览中 MDX 样式测试帖已能从列表打开，直接打开和上下篇导航也正常。手机背景变化与玻璃即时性仍需真机目测确认。R15 保持进行中；未提交、未推送、未部署。
 - 后续目测指出 Blog 返回按钮和目录、Knowledge 目录仍在子级 opacity 入场内，打开文章时短暂变色。进一步将 Blog/Knowledge 详情的玻璃控件移出过渡子树，仅让 MDX 正文做 6px 位移且不改变 opacity；根路径静态预览确认这些控件没有 opacity/transform 动画祖先，手机及实际视觉感受仍待用户复测。
@@ -479,6 +479,7 @@ R0–R2 建立发布基线；R3–R8 解决发布前核心可用性；R9–R13 �
 - 收尾时发现 Knowledge 长文的连续英文标题在 375px 手机视口撑宽页面，给共享文章标题增加 `overflow-wrap: anywhere`，没有隐藏内容或改动 MDX；375px/390px 静态预览复测 `scrollWidth = clientWidth`，Blog 列表稳定后也无页面级横向滚动。
 - 最终 `npm run lint`、`npm run typecheck`、`npm run build`、`npm run smoke:static`、`npm run verify:images` 均通过；`/Aphrosyne-Atlas` 子路径独立构建及 smoke 通过，随后恢复根路径构建。`git diff --check` 通过。未提交、未推送、未部署。
 - 用户在验收后追加 C10 的可见性增强：Blog 与 Knowledge 的置顶列表卡片使用与正文链接同色系的 2px 旋转渐变描边，玻璃填充、键盘焦点和“置顶”文字标签均保留。因 Blog 卡片上浮会让遮罩描边在合成时闪烁，置顶 Blog 卡片改为保持原位，仅普通卡片上浮；动画 10 秒一圈且在减少动效偏好下停用。用户曾置顶一篇 Blog 和一篇 Knowledge 作为实际样本，验证后已撤除测试置顶；现有 8 篇 Blog 与 13 篇 Knowledge 都显式声明 `pinned: false`。静态预览确认描边不染色、移动端无横向溢出，lint、类型、构建和静态 smoke 再次通过。
+- R15 验收后的首页细调：Meme 改为由本地 `assets/images-source/mems/` 生成的 WebP 清单，刷新和点击均可随机切换；Projects 及其子卡关闭 `backdrop-filter`，解决下方卡片 hover 触发的模糊图块接缝，并把该嵌套滤镜根因补入现有排障文章。首页 Blog 与 Knowledge 取消会劫持滚轮的内部滚动，按当前 Dashboard 行高固定为 3 篇 Blog、5 篇 Knowledge；Blog 行移除负外边距，hover 高亮与 Knowledge 保持圆角一致。新增 CursorParker 项目。用户已验收本轮外观，后续布局工作台调整时再重新评估列表容量。
 
 ## 持续性技术债
 

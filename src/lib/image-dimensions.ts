@@ -57,4 +57,7 @@ export const IMAGE_DIMENSIONS: Record<string, ImageDimensions> = {
   "/images/knowledge/colorful-bosses/boss-46.webp": { width: 1920, height: 1080 },
   "/images/knowledge/sog4/sog4-logo.webp": { width: 444, height: 444 },
   "/images/mems/0.webp": { width: 837, height: 754 },
+  "/images/mems/1.webp": { width: 300, height: 300 },
+  "/images/mems/2.webp": { width: 1006, height: 1006 },
+  "/images/mems/3.webp": { width: 1280, height: 1280 },
 }

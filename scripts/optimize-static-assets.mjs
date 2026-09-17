@@ -10,6 +10,7 @@ const FONT_DIR = path.join(ROOT, 'src/app/fonts')
 const IMAGE_SOURCE_DIR = path.join(ROOT, 'assets/images-source')
 const IMAGE_OUTPUT_DIR = path.join(ROOT, 'public/images')
 const IMAGE_DIMENSIONS_OUTPUT = path.join(ROOT, 'src/lib/image-dimensions.ts')
+const MEME_IMAGES_OUTPUT = path.join(ROOT, 'src/lib/meme-images.ts')
 const FORCE_IMAGE_BUILD = process.argv.includes('--force')
 const BACKGROUND_MAX_DIMENSION = 2048
 
@@ -213,7 +214,21 @@ async function generateImageDimensions() {
   console.log(`Generated image dimensions for ${entries.length} public images.`)
 }
 
+async function generateMemeImages() {
+  const memePaths = await globby('images/mems/*.webp', {
+    cwd: path.join(ROOT, 'public'),
+    caseSensitiveMatch: false,
+  })
+  const images = memePaths
+    .map((imagePath) => `/${imagePath.split(path.sep).join('/')}`)
+    .sort((left, right) => left.localeCompare(right, undefined, { numeric: true }))
+  const generated = `// 此文件由 scripts/optimize-static-assets.mjs 自动生成，请勿手动编辑。\n\nexport const MEME_IMAGES = ${JSON.stringify(images, null, 2)} as const\n`
+  const current = await fs.readFile(MEME_IMAGES_OUTPUT, 'utf8').catch(() => '')
+  if (current !== generated) await fs.writeFile(MEME_IMAGES_OUTPUT, generated, 'utf8')
+  console.log(`Generated meme image manifest with ${images.length} entries.`)
+}
+
 const characters = await collectSiteCharacters()
 console.log(`Subsetting fonts for ${[...characters].length} code points.`)
 await Promise.all([buildFontSubsets(characters), convertImages()])
-await generateImageDimensions()
+await Promise.all([generateImageDimensions(), generateMemeImages()])

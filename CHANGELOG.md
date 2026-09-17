@@ -9,6 +9,22 @@
 
 单篇文章的增补、日常勘误和状态更新时间不强制发布站点版本；它们应在条目的“最后编辑”字段与验证状态中记录。涉及导航、搜索、内容模型、部署或一批内容迁移的变更，才进入站点 Changelog。
 
+## [1.8.0] - 2026-09-18
+
+### Added
+
+- 项目页新增 CursorParker：一个免安装的 Windows PowerShell 鼠标停放工具，并提供公开源码入口。
+- 本地素材初始化新增 `assets/images-source/mems/`；JPG/JPEG/PNG 会转换为同路径 WebP，构建自动生成 Meme 图片清单，首页刷新与点击可随机切换本地图片。
+
+### Changed
+
+- 首页 Dashboard 的 Blog 与 Knowledge 均改为非滚动列表：按当前布局分别展示 3 篇最新 Blog 与 5 篇 Knowledge，保留“查看全部”入口。Blog 文件图标与 Knowledge 对齐为无底色 emoji，悬停高亮保持圆角。
+- Projects 卡片及其子卡移除 `backdrop-filter`，保留玻璃底色、边框、阴影和上浮，避免邻近卡片重绘时出现局部模糊带。
+
+### Removed
+
+- 移除首页一言与状态的常驻第三方请求提示；动态内容及其静态降级继续保留。
+
 ## [1.7.0] - 2026-09-18
 
 ### Added

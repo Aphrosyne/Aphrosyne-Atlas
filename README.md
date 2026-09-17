@@ -52,7 +52,7 @@ Status 的发布脚本是本地工具，不需要打开 GitHub 网页：
 不需要逐个页面搜索个人信息，建议按下面的顺序替换：
 
 1. 在 [`src/config/site.ts`](./src/config/site.ts) 修改站点名称、作者、线上地址、首页文案、About、导航和公开社交链接。
-2. 运行 `npm run setup:local-assets` 创建本地素材目录；替换头像或背景时，将原图放入相应目录、运行 `npm run optimize:assets`，再提交生成的发布 WebP。
+2. 运行 `npm run setup:local-assets` 创建本地素材目录（`avatar`、`bg`、`blog`、`knowledge` 与 `mems`）；替换头像、背景或 Meme 图片时，将原图放入相应目录、运行 `npm run optimize:assets`，再提交生成的发布 WebP。
 3. 在 [`src/config/projects.ts`](./src/config/projects.ts) 替换项目数组。`slug` 决定详情页 URL，`status` 支持 `public` 和 `archived`。
 4. 删除 `src/content/blog/` 和 `src/content/knowledge/` 中不需要的示例内容，再加入自己的 `.mdx`。Blog 文件直接自动发现；Knowledge 的动态导入表会在 `npm run dev` 和 `npm run build` 时自动生成，不要手改 `src/lib/knowledge-articles.ts`。
 5. 需要调整首页卡片位置时使用 Dashboard 布局工作台；颜色和玻璃效果位于 `src/app/globals.css`。
@@ -98,6 +98,10 @@ npm run setup:local-assets
 assets/images-source/knowledge/example/screenshot.png
   → public/images/knowledge/example/screenshot.webp
   → Markdown 中引用 /images/knowledge/example/screenshot.webp
+
+assets/images-source/mems/1.jpg
+  → public/images/mems/1.webp
+  → 首页 Meme 卡片会自动纳入随机图片池
 ```
 
 转换器会跳过没有变化的图片，并从所有发布图片生成 `src/lib/image-dimensions.ts`；MDX 文章图片据此在 HTML 中写入真实 `width`/`height`，以便加载前预留比例。修改压缩规则后可运行 `npm run optimize:assets -- --force` 强制重新生成。SVG 和动画 GIF 不经过此转换器，应按需直接放入 `public/images/`，视频动画建议另行转换为 WebM。静态构建后可运行 `npm run verify:images -- --base-path /Aphrosyne-Atlas --site-origin https://aphrosyne.github.io` 核对文章图片的尺寸、替代文本和实际资产。
