@@ -9,6 +9,26 @@
 
 单篇文章的增补、日常勘误和状态更新时间不强制发布站点版本；它们应在条目的“最后编辑”字段与验证状态中记录。涉及导航、搜索、内容模型、部署或一批内容迁移的变更，才进入站点 Changelog。
 
+## [1.9.0] - 2026-09-18
+
+### Added
+
+- 新增 `atlas-content-editor` skill：按轻度校对、结构优化和深度编辑区分授权范围，并要求文章编辑检查技术事实、Markdown/MDX 结构与真实编辑日期。
+- 新增季梓虞整合包建档流程与 MCM 配置 Knowledge 文章，保留来源正文并使用 `jzy-mcm-setup` 短 slug。
+
+### Changed
+
+- 收紧 `atlas-content-import` 规则：每次导入必须保持单一来源，禁止多篇内容合并、大幅删减或摘要化；正文默认只做最小必要修正，不自动串联文章编辑流程。
+- 新建内容文件名改用简短、易读、易懂的英文 kebab-case；已有稳定 slug 不因普通导入或编辑擅自变更。
+- 将现有 Knowledge 文件名收束为短 slug：`colorful-magic-bosses-loot`、`modpack-migration-files`、`sog4-guide-zh`，并同步更新文章注册表与审计文档路径。
+- 统一文章中的“鸡子鱼”为正式名称“季梓虞”。
+- 将 OpenShaders 实验与 SSE Engine Fixes 配置标记为过时并归档，将 Crimson Sin 构筑文章调整为待复核。
+- 简化 `.gitignore` 的 `.agents` 规则，仅保留 skills 目录及其内容，不再维护 Claude 或单个 skill 的例外规则。
+
+### Removed
+
+- 移除旧的冗长 Knowledge 文件名及其对应注册表入口，改由短 slug 文章承接。
+
 ## [1.8.0] - 2026-09-18
 
 ### Added

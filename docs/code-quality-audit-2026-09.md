@@ -170,7 +170,7 @@ SITE / projects / dashboard-layout
 ### CQ-009 · 导航“标签”链接是无效状态，Knowledge 相关文档也不是链接
 
 - **分类 / 严重程度 / 置信度 / 性质：**导航与内容关系；P2；高；已确认 Bug、一致性问题。
-- **位置：**`src/config/site.ts:69-75` → `src/components/blog/BlogList.tsx:20-30`；`src/content/knowledge/guides/mod-organizer-profile-migration-checklist.mdx:9` → `src/app/knowledge/[slug]/page.tsx:83-86`。
+- **位置：**`src/config/site.ts:69-75` → `src/components/blog/BlogList.tsx:20-30`；`src/content/knowledge/guides/modpack-migration-files.mdx:9` → `src/app/knowledge/[slug]/page.tsx:83-86`。
 - **调用链与触发条件：**点击 Navbar 的“标签”，或在迁移清单文章底部使用“相关文档”。
 - **证据：**Navbar 生成 `/blog?view=tags`，BlogList 只识别 `view=archive`，所以 tags 与普通列表完全相同；Knowledge 当前唯一非空 related 指向有效 slug，但渲染使用 `entry.related.join('、')`，只显示内部 slug 文本。
 - **实际影响：**两个明确的导航承诺都不能完成预期动作；Knowledge 关系模型存在却无法帮助读者跳转。

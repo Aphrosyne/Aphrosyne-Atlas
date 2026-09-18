@@ -1,0 +1,118 @@
+---
+title: 更换 Skyrim 整合包时的配置文件迁移清单
+type: guide
+status: verified
+publication: published
+pinned: false
+excerpt: 迁移整合包前应备份的各 MOD 配置、身形预设、RM 预设等配置清单。
+tags: [Skyrim, Mod Organizer 2, 迁移, BodySlide, RaceMenu, 配置备份]
+last_edited: 2026-09-18
+related: []
+sources: []
+---
+
+> 迁移时只备份需要的文件。不建议备份整个 overwrite 文件夹，因为它可能体积过大，而且其中大部分不是个人配置。
+
+## 原始迁移清单
+
+以下项目保留自原始清单。只有在后面的路径树中明确列出的文件，才可以直接按路径定位；没有对应路径的项目需要在实际迁移前单独确认。
+
+### 1. 主要迁移部分
+
+- RaceMenu 的捏脸文件：RM 滑块配置 jslot 文件，以及 dds、nif 头模文件
+- BodySlide 的身形预设 XML 文件
+
+### 2. 次要配置部分
+
+- ScreenArcherMenu 的配置文件，有保存的预设或收藏的动作名
+
+### 3. 其他 Mod 杂项
+
+- Immersive Equipment Displays 沉浸式装备展示配置文件
+- Skyrim Vanity System 服装幻化系统 套装保存文件
+- 其他自己修改的配置文件
+- 其他自己修改过文件的 MOD
+- 自己新增的 MOD
+
+## 参考开档教程：明确路径
+
+以下路径保持原文的目录关系。第一棵树位于 Skyrim Modpack 的 Mod Organizer 2 Root 下，第二棵树位于 Documents 下。右侧的 ← 注释紧跟对应的文件或目录，避免与远处的节点错配。
+
+~~~text
+Skyrim Modpack (MO2) \
+└─ overwrite\
+   ├─ CalienteTools\
+   │  └─ BodySlide\
+   │     └─ SliderPresets\
+   │        ├─ preset1.xml           ← BS 身形预设文件
+   │        ├─ preset2.xml
+   │        └─ ...
+   │
+   ├─ configs\
+   │  ├─ dse-display-model\
+   │  │  └─ settings\
+   │  │     └─ Custom.json
+   │  └─ dse-soulgem-oven\
+   │     └─ settings\
+   │        └─ Custom.json       ← 灵魂石鼎炉 SGO4 配置文件
+   │
+   ├─ FISS\
+   │  └─ iWant\
+   │     └─ iWantStatusBars\
+   │        └─ settings.xml      ← iWant 实验室状态栏 UI 位置配置文件
+   │
+   ├─ interface\
+   │  └─ modex\
+   │     └─ user\
+   │        └─ xxx.json          ← SVS 幻化系统套装保存文件
+   │
+   ├─ Sam\
+   │  ├─ config.yaml             ← ScreenArcherMenu 配置文件
+   │  └─ favorites.yaml          ← ScreenArcherMenu 收藏/预设配置
+   │
+   └─ SKSE\
+      └─ Plugins\
+         ├─ CharGen\
+         │  ├─ head.dds              ← RM 预设头模文件
+         │  ├─ head.nif
+         │  └─ Presets\
+         │     └─ racemenu.jslot     ← RM 预设滑块文件
+         │
+         ├─ IED\                     ← IED 配置文件
+         │  ├─ Exports\
+         │  │  └─ exports.json
+         │  └─ Profiles\
+         │     ├─ NodeOverrides\
+         │     │  └─ node.json
+         │     └─ Slot\
+         │        └─ slot.json
+         │
+         └─ PlayerEquipmentManager\
+            └─ pem.json              ← 转盘换装（龙裔衣柜）服装配置文件
+
+Documents\
+└─ My Games\
+   └─ Skyrim Special Edition\
+      ├─ Logs\                      ← 各类 MOD 日志
+      │  └─ Script\
+      │     ├─ Papyrus.log
+      │     └─ User\
+      │        └─ other.log
+      │
+      ├─ SKSE\
+      │  └─ logs\
+      │
+      └─ SpellHotbar\               ← 技能快捷键的三个配置文件
+         ├─ bars\
+         │  └─ bars.json
+         ├─ icon_edits\
+         │  └─ icon_edits.json
+         └─ presets\
+            └─ preset.json
+~~~
+
+路径树中的 xxx.json 是占位写法，... 表示原文没有继续列出的文件；迁移时应以实际文件名为准，不要把占位符当作必须存在的文件。
+
+## 迁移注意事项
+
+- Papyrus.log、User\other.log 和 SKSE\logs 下的日志主要用于排错，不应作为通用迁移内容。

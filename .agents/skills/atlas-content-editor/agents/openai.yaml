@@ -1,0 +1,4 @@
+interface:
+  display_name: "Atlas 文章编辑"
+  short_description: "按授权强度编辑既有 Atlas 文章"
+  default_prompt: "使用 $atlas-content-editor 按我明确授权的强度编辑既有 Blog 或 Knowledge 文章，并检查技术事实与 Markdown/MDX 结构。"

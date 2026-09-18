@@ -42,16 +42,10 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
-# claude
-.claude/
+# agents
 .agents/*
 !.agents/skills/
-.agents/skills/*
-!.agents/skills/atlas-stage/
-!.agents/skills/atlas-stage/**
-!.agents/skills/atlas-content-import/
-!.agents/skills/atlas-content-import/**
-skills-lock.json
+!.agents/skills/**
 
 # reference files
 .ref/
