@@ -12,13 +12,8 @@ const requiredRoutes = [
   '/',
   '/about/',
   '/blog/',
-  '/blog/framer-motion-blur/',
-  '/blog/dashboard-hover-backdrop-compositing/',
   '/knowledge/',
-  '/knowledge/engine-fixes-save-size-settings/',
-  '/knowledge/colorful-magic-light-bosses-loot/',
   '/projects/',
-  '/projects/aphrosyne-site/',
 ]
 
 function outputPathForRoute(route) {
@@ -29,6 +24,11 @@ function outputPathForRoute(route) {
 function sitemapUrlForRoute(route) {
   const pathname = route === '/' ? '/' : route.replace(/\/+$/, '')
   return `${config.siteUrl}${pathname}`
+}
+
+function routeWithTrailingSlash(href) {
+  const pathname = href.replace(/\/+$/, '')
+  return pathname ? `${pathname}/` : '/'
 }
 
 function external(value) {
@@ -45,7 +45,20 @@ async function allHtmlFiles(directory) {
   return files.flat()
 }
 
-for (const route of requiredRoutes) {
+let searchIndex = []
+try {
+  searchIndex = JSON.parse(await fs.readFile(path.join(outputRoot, 'search-index.json'), 'utf8'))
+  if (!Array.isArray(searchIndex)) throw new Error('search-index.json 顶层不是数组')
+} catch (error) {
+  failures.push(`无法读取有效的 search-index.json：${error.message}`)
+}
+
+const indexedRoutes = searchIndex
+  .filter((entry) => typeof entry?.href === 'string' && entry.href.startsWith('/'))
+  .map((entry) => routeWithTrailingSlash(entry.href))
+const expectedRoutes = [...new Set([...requiredRoutes, ...indexedRoutes])]
+
+for (const route of expectedRoutes) {
   const file = outputPathForRoute(route)
   try {
     await fs.access(file)
@@ -55,7 +68,7 @@ for (const route of requiredRoutes) {
       failures.push(`静态路由缺少正确 canonical：${route}`)
     }
   } catch {
-    failures.push(`缺少核心路由产物：${route}`)
+    failures.push(`缺少预期路由产物：${route}`)
   }
 }
 
@@ -95,23 +108,15 @@ try {
 
 if (robots && !robots.includes(`Sitemap: ${sitemapUrl}`)) failures.push('robots.txt 的 sitemap URL 与部署配置不一致')
 
-for (const route of requiredRoutes) {
+for (const route of expectedRoutes) {
   const expectedUrl = sitemapUrlForRoute(route)
   if (sitemap && !sitemap.includes(`<loc>${expectedUrl}</loc>`)) failures.push(`sitemap.xml 缺少公开路由：${expectedUrl}`)
 }
 if (sitemap.includes('/studio/')) failures.push('sitemap.xml 不应包含 Studio 路由')
 
-const searchIndex = JSON.parse(await fs.readFile(path.join(outputRoot, 'search-index.json'), 'utf8'))
 for (const entry of searchIndex) {
-  if (typeof entry.href !== 'string' || !entry.href.startsWith('/')) {
+  if (typeof entry?.href !== 'string' || !entry.href.startsWith('/')) {
     failures.push('search-index.json 含有无效 href')
-    break
-  }
-  const file = outputPathForRoute(`${entry.href.replace(/\/$/, '')}/`)
-  try {
-    await fs.access(file)
-  } catch {
-    failures.push(`search-index.json 指向不存在的静态路由：${entry.href}`)
   }
 }
 
@@ -120,5 +125,5 @@ if (failures.length) {
   for (const failure of failures) console.error(`- ${failure}`)
   process.exitCode = 1
 } else {
-  console.log(`静态 smoke 通过：${config.siteUrl || config.siteOrigin}，${requiredRoutes.length} 个核心路由与全部本地 HTML 资源已检查。`)
+  console.log(`静态 smoke 通过：${config.siteUrl || config.siteOrigin}，${expectedRoutes.length} 个固定与索引路由及全部本地 HTML 资源已检查。`)
 }

@@ -27,7 +27,7 @@
   - `/blog/mdx-style-test/`
   - `/blog/dashboard-hover-backdrop-compositing/`
   - `/knowledge/experience-skill-cap/`
-  - `/knowledge/colorful-magic-light-bosses-loot/`
+  - `/knowledge/colorful-magic-bosses-loot/`
 - 实测视口：1440×900、768×1024、390×844、320×720。
 - 四篇文章均切换过深色和浅色主题；重点页面另做了 hash 点击、hash 刷新、文末状态、图片加载、代码焦点和语义检查。
 - 精确浏览器 200% zoom 未完成：当前浏览器控制层没有暴露 zoom 能力，快捷键没有改变 CSS viewport；本报告没有把等效窄视口冒充成 200% zoom 通过。320px 与 768px 结果只能作为收缩压力证据，后续仍须用可验证 zoom 值的浏览器补测。

@@ -48,7 +48,7 @@ Aphrosyne Atlas 已经具有明确的个人视觉身份，也已完成一部分�
 | `/blog/mdx-style-test/` | 深、浅 | — | 浅 | 文章链接、标题/代码/表格/引用、深层刷新；V04 |
 | `/knowledge` | 深、浅 | 浅 | 浅 | 导航、分类“教程 5”、URL `?type=guide`、排序外框；V05 |
 | `/knowledge/experience-skill-cap/`（问题修复） | 深、浅 | 浅 | 深、浅 | 搜索结果进入、正文与导航、深层刷新；V06 |
-| `/knowledge/colorful-magic-light-bosses-loot/`（教程） | 浅 | — | — | 长表格、目录、点击 `1-226`、实际地图图片加载；V07 |
+| `/knowledge/colorful-magic-bosses-loot/`（教程） | 浅 | — | — | 长表格、目录、点击 `1-226`、实际地图图片加载；V07 |
 | `/projects` | 浅 | — | 浅 | 导航进入、卡片、返回列表；V08 |
 | `/projects/aphrosyne-site/` | 浅 | — | 浅 | 卡片进入、返回项目、浏览器后退/前进；V09 |
 | `/about` | 深、浅 | 浅 | 浅 | 手机菜单导航进入、桌面刷新、主题切换、技能跑马灯；V10 |
